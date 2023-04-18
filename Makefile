@@ -1,5 +1,5 @@
 #Инициализация всего проекта
-initProject: db backend frontend
+initProject: db backend
 #Создание папки для базы данных
 db: 
 	mkdir "_databases"
