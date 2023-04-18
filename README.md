@@ -5,7 +5,7 @@
 
 <ul>
  <li>[make initProject] - инициализация проекта с подтягиванием всех компонентов </li>
- <li>[updateProject] - обновление компонентов проекта (backend и frontend)  </li>
+ <li>[make updateProject] - обновление компонентов проекта (backend и frontend)  </li>
 </ul>
  <h2>Внутренние команды </h2>
  
