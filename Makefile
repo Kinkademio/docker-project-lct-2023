@@ -13,7 +13,7 @@ backend:
 
 #Обновление репозитория backend
 backendUpdate:
-	git fetch https://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@github.com/Kinkademio/backend-lct-2023.git
+	git pull https://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@github.com/Kinkademio/backend-lct-2023.git
 	echo '############# Backend successfully update from git ##############'
 
 #Команды для docker
