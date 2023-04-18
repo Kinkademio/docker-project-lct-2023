@@ -3,24 +3,23 @@
 
 <h2>Супер команды</h2>
 
- *[make initProject] - инициализация проекта с подтягиванием всех компонентов 
- 
- *[updateProject] - обновление компонентов проекта (backend и frontend) 
-
+<ul>
+ <li>[make initProject] - инициализация проекта с подтягиванием всех компонентов </li>
+ <li>[updateProject] - обновление компонентов проекта (backend и frontend)  </li>
+</ul>
  <h2>Внутренние команды </h2>
+ 
+<ul>
+ <li>[make db] - создание папки для базы данных                    *использовать если ранее папка не была создана</li>
+ <li>[make backend] - клонирует backend с git                      *нужен key для осуществления копирования с приватного репозитория  </li>
+ <li>[make backendUpdate] - обновляет backend с git                *нужен key для осуществления копирования с приватного репозитория  </li>
+</ul>
 
- *[make db] - создание папки для базы данных                    *использовать если ранее папка не была создана
- 
- *[make backend] - клонирует backend с git                      *нужен key для осуществления копирования с приватного репозитория
- 
- *[make backendUpdate] - обновляет backend с git                *нужен key для осуществления копирования с приватного репозитория
- 
   <h2>Команды Docker</h2>
 
- *[make docker] - запуск Docker приложения состоящего из контейнеров
- 
- *[make docker-stop] - останвливет Docker приложение
- 
- *[make docker-reset] - удаляет все установленные контейнеры данног и пересобирает приложение
- 
- *[make docker-rebuild] - [make docker-reset] + [make docker]
+<ul>
+ <li>[make docker] - запуск Docker приложения состоящего из контейнеров</li>
+ <li>[make docker-stop] - останвливет Docker приложение</li>
+ <li>[make docker-reset] - удаляет все установленные контейнеры данног и пересобирает приложение  </li>
+ <li>[make docker-rebuild] - [make docker-reset] + [make docker]  </li>
+</ul>
