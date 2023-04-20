@@ -1,5 +1,13 @@
 version: '3.4'
 services:
+  nginx:
+    image: nginx
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend-lct-2023
   mongodb:
     image: mongo
     container_name: "mongodb"
