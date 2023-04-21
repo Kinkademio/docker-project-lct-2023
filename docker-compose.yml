@@ -12,6 +12,9 @@ services:
     image: nginx
     build:
       context: ./nginx
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/.htpasswd:/etc/nginx/conf.d/.htpasswd
     ports:
       - "80:80"
     depends_on:
