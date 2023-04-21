@@ -1,5 +1,13 @@
 version: '3.4'
 services:
+  proxy:
+    image: proxy
+    build:
+      context: ./proxy
+    volumes:
+      - ./proxy:/usr/src/proxy
+    ports:
+      - "8080:8080"
   nginx:
     image: nginx
     build:
