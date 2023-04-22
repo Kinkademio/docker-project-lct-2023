@@ -10,7 +10,7 @@ COPY . /usr/src/proxy/
 
 RUN npm install
 
-ARG _HOST='127.0.0.1'
+ARG _HOST='0.0.0.0'
 ARG _PORT='8080'
 
 
