@@ -321,7 +321,7 @@ function getHandler(options, proxy) {
       // See https://github.com/Rob--W/cors-anywhere/issues/238#issuecomment-629638853
       if (/^\/https?:\/[^/]/i.test(req.url)) {
         res.writeHead(400, 'Missing slash', cors_headers);
-        res.end('The URL is invalid: two slashes are needed after the http(s):.');
+        res.end('The URL is invalid: two slashes are needed after the http(s):. your url is:   '+req.url);
         return;
       }
       // Invalid API call. Show how to correctly use the API
