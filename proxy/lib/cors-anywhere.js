@@ -309,7 +309,9 @@ function getHandler(options, proxy) {
       return;
     }
 
-    var location = parseURL(req.url.slice(1));
+    //Костыль для работы с nginx
+    var url = string.replace(new RegExp(':/', 'g'), '://');
+    var location = parseURL(url.slice(1));
 
     if (corsAnywhere.handleInitialRequest && corsAnywhere.handleInitialRequest(req, res, location)) {
       return;
