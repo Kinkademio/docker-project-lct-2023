@@ -6,9 +6,11 @@ RUN chmod +x /wait && npm install --global nodemon && npm install --gloabal yarn
 
 WORKDIR /usr/src/proxy/
 
+COPY . /usr/src/proxy/
+
 RUN npm install
 
-ARG _HOST='0.0.0.0'
+ARG _HOST='127.0.0.1'
 ARG _PORT='8080'
 
 
@@ -18,4 +20,4 @@ ENV PORT=$_PORT
 
 EXPOSE $_PORT
 
-CMD /wait && node server.js /usr/src/proxy
+CMD /wait && npm install && node server.js /usr/src/proxy
