@@ -310,7 +310,7 @@ function getHandler(options, proxy) {
     }
 
     //Костыль для работы с nginx
-    var url = string.replace(new RegExp(':/', 'g'), '://');
+    var url = req.url.replace(new RegExp(':/', 'g'), '://');
     var location = parseURL(url.slice(1));
 
     if (corsAnywhere.handleInitialRequest && corsAnywhere.handleInitialRequest(req, res, location)) {
