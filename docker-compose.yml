@@ -1,5 +1,13 @@
 version: '3.4'
 services:
+  auth:
+    image: auth
+    build:
+      context: ./auth
+    volumes:
+      - ./auth:/usr/src/auth
+    ports:
+      - "4000:4000"
   proxy:
     image: proxy
     build:
