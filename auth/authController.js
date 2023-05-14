@@ -112,7 +112,7 @@ class authController {
             })
         }
     }
-    async upadate(req, res) {
+    async upadateRole(req, res) {
         const {
             id,
             newRole
@@ -156,6 +156,41 @@ class authController {
             res.status(400).json({
                 message: 'Error with new roles'
             })
+        }
+    }
+    async delete(req, res) {
+        const {
+            id,
+        } = req.body
+        try {
+            await User.findByIdAndDelete(id);
+            res.status(200).json({
+                message: "User deleted!"
+            });
+        } catch (err) {
+            res.status(404).json({
+                message: err.message
+            });
+        }
+    }
+    async updatePass(req, res) {
+        const {
+            id,
+            newPass
+        } = req.body
+        
+        try {
+            const hashPassword = bcrypt.hashSync(newPass, 7);
+            await User.findByIdAndUpdate(id, {
+                password: hashPassword
+            });
+            res.status(200).json({
+                message: "Pass updated!"
+            });
+        } catch (err) {
+            res.status(404).json({
+                message: err.message
+            });
         }
     }
 }
