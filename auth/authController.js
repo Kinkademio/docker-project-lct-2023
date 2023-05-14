@@ -163,9 +163,11 @@ class authController {
             id,
         } = req.body
         try {
-            await User.findByIdAndDelete(id);
+            let deleted = await User.findByIdAndDelete(id);
             res.status(200).json({
-                message: "User deleted!"
+                message: "User deleted!",
+                user: deleted,
+                id: id
             });
         } catch (err) {
             res.status(404).json({
