@@ -80,11 +80,13 @@ class authController {
                     message: `Пароль не правильный`
                 })
             }
-            const name = user.name
+            const name = user.name;
+            const user_id = user._id;
             const token = generateAccesToken(user._id, user.roles)
             return res.json({
                 token:token,
-                name:name
+                name:name,
+                id: user_id
             })
 
         } catch (error) {
