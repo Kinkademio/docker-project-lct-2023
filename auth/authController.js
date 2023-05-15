@@ -30,6 +30,7 @@ class authController {
                 })
             }
             const {
+                name,
                 username,
                 password
             } = req.body
@@ -47,6 +48,7 @@ class authController {
             const hashPassword = bcrypt.hashSync(password, 7);
             const user = new User({
                 username,
+                name,
                 password: hashPassword,
                 roles: [userRole.value]
             })
@@ -199,6 +201,25 @@ class authController {
             const hashPassword = bcrypt.hashSync(newPass, 7);
             await User.findByIdAndUpdate(id, {
                 password: hashPassword
+            });
+            res.status(200).json({
+                message: "Пароль обновлен"
+            });
+        } catch (err) {
+            res.status(404).json({
+                message: "Ошибка обновления пароля"
+            });
+        }
+    }
+    async updateUserName(req, res) {
+        const {
+            id,
+            name
+        } = req.body
+        
+        try {
+            await User.findByIdAndUpdate(id, {
+                name: name
             });
             res.status(200).json({
                 message: "Пароль обновлен"
