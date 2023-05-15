@@ -86,7 +86,7 @@ class authController {
             return res.json({
                 token:token,
                 name:name,
-                id: user_id
+
             })
 
         } catch (error) {
