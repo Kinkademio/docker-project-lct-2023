@@ -83,8 +83,8 @@ class authController {
             const name = user.name
             const token = generateAccesToken(user._id, user.roles)
             return res.json({
-                token,
-                name
+                token:token,
+                name:name
             })
 
         } catch (error) {
