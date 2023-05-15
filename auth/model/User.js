@@ -13,7 +13,7 @@ const User = new Schema({
     name:{
         type: String,
         required: true,
-        default: "User"
+        default: "User "
     },
     password: {
         type: String,
