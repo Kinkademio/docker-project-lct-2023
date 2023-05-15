@@ -17,7 +17,7 @@ router.get('/users', roleMiddleware(["ADMIN"]), controller.getUsers)
 router.get('/roles', roleMiddleware(["ADMIN"]), controller.getRoles)
 router.put('/updateRole', controller.upadateRole)
 router.post('/addRole', controller.addNewRole)
-router.post('/delete', controller.delete)
+router.post('/delete',roleMiddleware(["ADMIN"]), controller.delete)
 router.put('/updatePass', controller.upadateRole)
 
 
