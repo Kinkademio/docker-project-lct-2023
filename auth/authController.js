@@ -71,7 +71,7 @@ class authController {
             })
             if (!user) {
                 return res.status(400).json({
-                    message: `Пользовательс таким имем ${username} не найден`
+                    message: `Пользователь с имем ${username} не найден`
                 })
             }
             const validPassword = bcrypt.compareSync(password, user.password)
