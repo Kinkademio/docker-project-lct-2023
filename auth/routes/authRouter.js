@@ -15,10 +15,12 @@ router.post('/register', [check('username', "Username dont can is empty").notEmp
 router.post('/login', controller.login)
 router.get('/users', roleMiddleware(["ADMIN"]), controller.getUsers)
 router.get('/roles', roleMiddleware(["ADMIN"]), controller.getRoles)
+router.get('/user', controller.getUser)
 router.put('/updateRole', controller.upadateRole)
 router.post('/addRole', controller.addNewRole)
 router.post('/delete',roleMiddleware(["ADMIN"]), controller.delete)
 router.put('/updatePass', controller.upadateRole)
+router.put('/updateUserName', controller.updateUserName)
 
 
 module.exports = router
