@@ -25,7 +25,7 @@ class authController {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
                 return res.status(400).json({
-                    message: "Error at registration",
+                    message: "Ошибка при регистрации",
                     errors
                 })
             }
@@ -38,13 +38,13 @@ class authController {
             })
             if (candidate) {
                 return res.status(400).json({
-                    message: "User with this name now have"
+                    message: "Пользователь с таким именнем уже существует"
                 })
             }
-            const hashPassword = bcrypt.hashSync(password, 7);
             const userRole = await Roles.findOne({
                 value: "ADMIN"
             })
+            const hashPassword = bcrypt.hashSync(password, 7);
             const user = new User({
                 username,
                 password: hashPassword,
@@ -52,7 +52,7 @@ class authController {
             })
             await user.save()
             return res.json({
-                message: "User register sucsesfull"
+                message: "Регистарция прошлав успешно"
             })
         } catch (error) {
             console.log(error)
@@ -68,14 +68,14 @@ class authController {
                 username
             })
             if (!user) {
-                return res.json({
-                    message: `User with that ${username} dont find`
+                return res.status(400).json({
+                    message: `Пользовательс таким имем ${username} не найден`
                 })
             }
             const validPassword = bcrypt.compareSync(password, user.password)
             if (!validPassword) {
-                return res.json({
-                    message: `Passwortd dont current`
+                return res.status(400).json({
+                    message: `Пароль не правильный`
                 })
             }
             const token = generateAccesToken(user._id, user.roles)
@@ -86,7 +86,7 @@ class authController {
         } catch (error) {
             console.log(error)
             res.status(400).json({
-                message: 'Error with registration'
+                message: 'Ошибка при авторизации'
             })
         }
     }
@@ -96,8 +96,24 @@ class authController {
             res.json(users)
         } catch (error) {
             console.log(error)
+            res.status(403).json({
+                message: 'Пользователь не авторизован'
+            })
+        }
+    }
+    async getUser(req, res) {
+        const {
+            username
+        } = req.body
+        const user = await User.findOne({
+            username
+        })
+        try {
+            res.json(user)
+        } catch (error) {
+            console.log(error)
             res.status(400).json({
-                message: 'Error with login'
+                message: 'Пользователь не найден'
             })
         }
     }
@@ -107,8 +123,8 @@ class authController {
             res.json(users)
         } catch (error) {
             console.log(error)
-            res.status(400).json({
-                message: 'Error with login'
+            res.status(403).json({
+                message: 'Пользователь не авторизован'
             })
         }
     }
@@ -122,7 +138,7 @@ class authController {
                 roles: newRole
             });
             res.status(200).json({
-                message: "User role update succesfully!"
+                message: "Роль пользователя успешно обновлена"
             });
         } catch (err) {
             res.status(404).json({
@@ -140,7 +156,7 @@ class authController {
             })
             if (role) {
                 return res.json({
-                    message: `This role have now`
+                    message: `Такая роль уже есть`
                 })
             }
             const roles = new Roles({
@@ -148,13 +164,13 @@ class authController {
             })
             await roles.save()
             res.status(200).json({
-                message: 'New role add succesfully'
+                message: 'Роль успешно создана'
             })
 
         } catch (error) {
             console.log(error)
             res.status(400).json({
-                message: 'Error with new roles'
+                message: 'Ошибка при добавлении новой роли'
             })
         }
     }
@@ -165,13 +181,11 @@ class authController {
         try {
             let deleted = await User.findByIdAndDelete(id);
             res.status(200).json({
-                message: "User deleted!",
-                user: deleted,
-                id: id
+                message: "Пользователь удален!",
             });
         } catch (err) {
             res.status(404).json({
-                message: err.message
+                message: "Ошибка при удалении пользователя"
             });
         }
     }
@@ -187,11 +201,11 @@ class authController {
                 password: hashPassword
             });
             res.status(200).json({
-                message: "Pass updated!"
+                message: "Пароль обновлен"
             });
         } catch (err) {
             res.status(404).json({
-                message: err.message
+                message: "Ошибка обновления пароля"
             });
         }
     }
