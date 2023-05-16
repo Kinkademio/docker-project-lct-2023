@@ -29,8 +29,8 @@ class authController {
                     errors
                 })
             }
+            const name =req.body.name ?? 'User';
             const {
-                name,
                 username,
                 password
             } = req.body
