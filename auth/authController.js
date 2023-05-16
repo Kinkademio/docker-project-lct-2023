@@ -180,6 +180,26 @@ class authController {
             })
         }
     }
+    async removeRole(req, res) {
+        try {
+            const {
+                rolesName
+            } = req.body
+            const role = await Roles.findOne({
+                rolesName
+            })
+            await Roles.findByIdAndDelete(role._id);
+            res.status(200).json({
+                message: 'Роль удалена'
+            })
+
+        } catch (error) {
+            console.log(error)
+            res.status(400).json({
+                message: 'Ошибка при удалении роли'
+            })
+        }
+    }
     async delete(req, res) {
         const {
             id,

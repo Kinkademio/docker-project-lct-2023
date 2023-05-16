@@ -19,8 +19,9 @@ router.post('/user', controller.getUser)
 router.put('/updateRole', controller.upadateRole)
 router.post('/addRole', controller.addNewRole)
 router.post('/delete',roleMiddleware(["ADMIN"]), controller.delete)
-router.put('/updatePass', controller.upadateRole)
+router.put('/updatePass', controller.updatePass)
 router.put('/updateUserName', controller.updateUserName)
+router.post('/deleteRole', controller.removeRole)
 
 
 module.exports = router
