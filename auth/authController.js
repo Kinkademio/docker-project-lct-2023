@@ -20,6 +20,9 @@ const generateAccesToken = (id, roles) => {
 }
 
 class authController {
+
+    //*****************************ПОЛЬЗОВАТЕЛЬ*********************** */
+
     async registr(req, res) {
         try {
             const errors = validationResult(req)
@@ -86,6 +89,7 @@ class authController {
             return res.json({
                 token:token,
                 name:name,
+                id: user_id,
 
             })
 
@@ -123,6 +127,39 @@ class authController {
             })
         }
     }
+    async updateUser({params: {id}, body}, res){
+        try {
+            if(body.password){
+                body.password = bcrypt.hashSync(body.password, 7);
+            }
+            await User.findByIdAndUpdate(id, body, {new: true});
+            res.status(200).json({
+                message: "Данные пользователя успешно обновлены"
+            });
+        } catch (err) {
+            res.status(400).json({
+                message: err.message
+            });
+        }
+
+
+    }
+    async delete(req, res) {
+        const {
+            id,
+        } = req.body
+        try {
+            let deleted = await User.findByIdAndDelete(id);
+            res.status(200).json({
+                message: "Пользователь удален!",
+            });
+        } catch (err) {
+            res.status(404).json({
+                message: "Ошибка при удалении пользователя"
+            });
+        }
+    }
+    /**************************РОЛИ**************************** */
     async getRoles(req, res) {
         try {
             const users = await Roles.find()
@@ -134,24 +171,7 @@ class authController {
             })
         }
     }
-    async upadateRole(req, res) {
-        const {
-            id,
-            newRole
-        } = req.body
-        try {
-            await User.findByIdAndUpdate(id, {
-                roles: newRole
-            });
-            res.status(200).json({
-                message: "Роль пользователя успешно обновлена"
-            });
-        } catch (err) {
-            res.status(404).json({
-                message: err.message
-            });
-        }
-    }
+   
     async addNewRole(req, res) {
         try {
             const {
@@ -198,60 +218,6 @@ class authController {
             res.status(400).json({
                 message: 'Ошибка при удалении роли'
             })
-        }
-    }
-    async delete(req, res) {
-        const {
-            id,
-        } = req.body
-        try {
-            let deleted = await User.findByIdAndDelete(id);
-            res.status(200).json({
-                message: "Пользователь удален!",
-            });
-        } catch (err) {
-            res.status(404).json({
-                message: "Ошибка при удалении пользователя"
-            });
-        }
-    }
-    async updatePass(req, res) {
-        const {
-            id,
-            newPass
-        } = req.body
-        
-        try {
-            const hashPassword = bcrypt.hashSync(newPass, 7);
-            await User.findByIdAndUpdate(id, {
-                password: hashPassword
-            });
-            res.status(200).json({
-                message: "Пароль обновлен"
-            });
-        } catch (err) {
-            res.status(404).json({
-                message: "Ошибка обновления пароля"
-            });
-        }
-    }
-    async updateUserName(req, res) {
-        const {
-            id,
-            name
-        } = req.body
-        
-        try {
-            await User.findByIdAndUpdate(id, {
-                name: name
-            });
-            res.status(200).json({
-                message: "Пароль обновлен"
-            });
-        } catch (err) {
-            res.status(404).json({
-                message: "Ошибка обновления пароля"
-            });
         }
     }
 }

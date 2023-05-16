@@ -19,6 +19,9 @@ const User = new Schema({
         type: String,
         required: true
     },
+    age:{
+        type: String,
+      },
     roles: [{
         type: String,
         ref: 'Role'
