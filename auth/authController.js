@@ -53,7 +53,7 @@ class authController {
                 username,
                 name,
                 password: hashPassword,
-                roles: userRole.value
+                roles: [userRole.value]
             })
             await user.save()
             return res.json({
