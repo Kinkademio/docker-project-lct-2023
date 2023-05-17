@@ -18,7 +18,7 @@ const generateAccesToken = (id, roles) => {
         expiresIn: "24h"
     })
 }
-
+const ageParams=["4-7","8-10","11-13","14-17","18+"];
 class authController {
 
     //*****************************ПОЛЬЗОВАТЕЛЬ*********************** */
@@ -219,6 +219,17 @@ class authController {
                 message: 'Ошибка при удалении роли'
             })
         }
+    }
+    
+    /**
+     * Возвращает массив доступных к выбору параметров возраста
+     * @param {*} req 
+     * @param {*} res 
+     * @returns 
+     */
+    async getAgeParams(req, res){
+
+        return res.status(200).send({ageParams: ageParams})
     }
 }
 
