@@ -24,8 +24,8 @@ const User = new Schema({
         default: ""
     },
     registrDate:{
-        type: Date,
-        default: new Date(),
+        type: Number,
+        default: new Date().now(),
         required: true
     },
     age:{
