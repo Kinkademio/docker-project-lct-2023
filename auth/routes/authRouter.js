@@ -16,12 +16,11 @@ router.post('/login', controller.login)
 router.get('/users', roleMiddleware(["ADMIN"]), controller.getUsers)
 router.get('/roles', roleMiddleware(["ADMIN"]), controller.getRoles)
 router.post('/user', controller.getUser)
-router.put('/updateRole', controller.upadateRole)
 router.post('/addRole', controller.addNewRole)
 router.post('/delete',roleMiddleware(["ADMIN"]), controller.delete)
-router.put('/updatePass', controller.updatePass)
-router.put('/updateUserName', controller.updateUserName)
+router.put('/updateUser', controller.updateUser)
 router.post('/deleteRole', controller.removeRole)
+router.get('/getAgeParams', controller.getAgeParams)
 
 
 module.exports = router

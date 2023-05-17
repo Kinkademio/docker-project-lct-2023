@@ -19,6 +19,10 @@ const User = new Schema({
         type: String,
         required: true
     },
+    anonid:{
+        type:String,
+        default: ""
+    },
     age:{
         type: String,
       },
