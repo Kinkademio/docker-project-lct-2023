@@ -31,10 +31,10 @@ const User = new Schema({
     age:{
         type: String,
       },
-    roles: [{
+    roles:{
         type: String,
         ref: 'Role'
-    }]
+    }
 })
 
 module.exports = model('User', User)
