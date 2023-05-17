@@ -23,6 +23,11 @@ const User = new Schema({
         type:String,
         default: ""
     },
+    registrDate:{
+        type: Date,
+        default: new Date(),
+        required: true
+    },
     age:{
         type: String,
       },

@@ -231,6 +231,17 @@ class authController {
 
         return res.status(200).send({ageParams: ageParams})
     }
+    
+    async getByDateCreate(req, res){
+        try {
+            const items = await User.find( { create_date: { $gt:req.body.start,  $lt: req.body.end } } );
+            return res.status(200).send(items);
+
+        } catch (err) {
+            return res.status(400).send({message: "Ошибка получения данных", });
+        }
+    }
+  
 }
 
 module.exports = new authController()

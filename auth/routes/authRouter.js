@@ -21,6 +21,7 @@ router.post('/delete',roleMiddleware(["ADMIN"]), controller.delete)
 router.put('/updateUser', controller.updateUser)
 router.post('/deleteRole', controller.removeRole)
 router.get('/getAgeParams', controller.getAgeParams)
+router.post('/getCreated', controller.getByDateCreate)
 
 
 module.exports = router
