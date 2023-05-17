@@ -159,6 +159,33 @@ class authController {
             });
         }
     }
+    async upadateRole(req, res) {
+        const {
+            id,
+            newRole
+        } = req.body
+        try {
+            await User.findByIdAndUpdate(id, {
+                roles: newRole
+            });
+            res.status(200).json({
+                message: "Роль пользователя успешно обновлена"
+            });
+        } catch (err) {
+            res.status(404).json({
+                message: err.message
+            });
+        }
+    }
+    async getByDateCreate(req, res){
+        try {
+            const items = await User.find( { create_date: { $gt:req.body.start,  $lt: req.body.end } } );
+            return res.status(200).send(items);
+
+        } catch (err) {
+            return res.status(400).send({message: "Ошибка получения данных", });
+        }
+    }
     /**************************РОЛИ**************************** */
     async getRoles(req, res) {
         try {
@@ -232,15 +259,7 @@ class authController {
         return res.status(200).send({ageParams: ageParams})
     }
     
-    async getByDateCreate(req, res){
-        try {
-            const items = await User.find( { create_date: { $gt:req.body.start,  $lt: req.body.end } } );
-            return res.status(200).send(items);
-
-        } catch (err) {
-            return res.status(400).send({message: "Ошибка получения данных", });
-        }
-    }
+    
   
 }
 
