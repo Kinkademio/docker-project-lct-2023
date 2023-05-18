@@ -180,7 +180,7 @@ class authController {
     }
     async getByDateCreate(req, res){
         try {
-            const items = await User.find( { registrDate: { $gt :req.body.start,  $lt : req.body.end }});
+            const items = await User.find( { registrDate: { $gte :req.body.start,  $lte : req.body.end }});
             return res.status(200).send(items);
 
         } catch (err) {
