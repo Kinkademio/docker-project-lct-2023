@@ -1,6 +1,6 @@
 # Quasar App (clients)
 
-A Quasar Project
+Сайт для мониторинга и редактирования контента образовательного приложения.
 
 ## Install the dependencies
 ```bash
