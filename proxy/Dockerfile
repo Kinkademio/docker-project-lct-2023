@@ -11,7 +11,7 @@ COPY . /usr/src/proxy/
 RUN npm install
 
 ARG _HOST='0.0.0.0'
-ARG _PORT='8080'
+ARG _PORT='6000'
 
 
 #Константы портов для доступа внутри контейнеров

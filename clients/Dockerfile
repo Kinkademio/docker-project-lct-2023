@@ -15,11 +15,12 @@ RUN npm install
 #
 #        _FRONTEND_PORT  - порт для создания* и запуска контейнера FRONTEND
 
-ARG _FRONTEND_PORT=80
+ARG _FRONTEND_PORT=8080
 
 #Константы портов для доступа внутри контейнеров
 ENV FRONTEND_PORT=$_FRONTEND_PORT
 
 EXPOSE $_FRONTEND_PORT
 
-CMD /wait && yarn dev --watch /usr/src/clients
+CMD /wait && npm install && yarn dev --watch /usr/src/clients
+

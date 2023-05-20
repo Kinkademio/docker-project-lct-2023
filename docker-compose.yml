@@ -7,7 +7,7 @@ services:
     volumes:
       - ./clients:/usr/src/clients
     ports:
-      - "80:80"
+      - "8080:8080"
   auth:
     image: auth
     build:
@@ -23,7 +23,7 @@ services:
     volumes:
       - ./proxy:/usr/src/proxy
     ports:
-      - "8080:8080"
+      - "6000:6000"
   nginx:
     image: nginx
     build:
