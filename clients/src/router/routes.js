@@ -10,7 +10,7 @@ import Profile from '../pages/Profile.vue'
 
 import Login from '../components/Login_C.vue'
 import Register from '../components/Registr_C.vue'
-
+import VueCookies from "vue-cookies";
 
 
 const routes = [{
@@ -55,7 +55,18 @@ const routes = [{
         name: 'profile',
         component: Profile
       },
-    ]
+    ],
+    beforeEnter: (to, from, next) => {
+      if (!VueCookies.get('token') && to.name !== 'auth') {
+        return { name: 'auth' }
+      }
+
+    },
+    beforeUpdate() {
+      if (!VueCookies.get('token') && to.name !== 'auth') {
+        return { name: 'auth' }
+      }
+    },
   },
 
   // Always leave this as last one,
