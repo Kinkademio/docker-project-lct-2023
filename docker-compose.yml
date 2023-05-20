@@ -1,5 +1,13 @@
 version: '3.4'
 services:
+  clients:
+    image: clients
+    build:
+      context: ./clients
+    volumes:
+      - ./clients:/usr/src/clients
+    ports:
+      - "80:80"
   auth:
     image: auth
     build:
