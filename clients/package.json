@@ -1,9 +1,9 @@
 {
   "name": "clients",
   "version": "0.0.1",
-  "description": "A Quasar Project",
+  "description": "Сайт для мониторинга и редактирования контента образовательного приложения.",
   "productName": "МОСКОВСКИЕ ШКОЛЫ ИСКУССТВ Личный кабинет",
-  "author": "Ximanit",
+  "author": "Ximanit Kinkademio",
   "private": true,
   "scripts": {
     "test": "echo \"No test specified\" && exit 0",
