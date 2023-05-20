@@ -18,7 +18,7 @@ a direct visit from the browser.
 // Listen on a specific host via the HOST environment variable
 var host = process.env.HOST || '0.0.0.0';
 // Listen on a specific port via the PORT environment variable
-var port = process.env.PORT || 6000;
+var port = process.env.PORT || 8080;
 
 var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
@@ -31,6 +31,12 @@ cors_proxy.createServer({
 
 ```
 Request examples:
+
+* `http://localhost:8080/http://google.com/` - Google.com with CORS headers
+* `http://localhost:8080/google.com` - Same as previous.
+* `http://localhost:8080/google.com:443` - Proxies `https://google.com/`
+* `http://localhost:8080/` - Shows usage text, as defined in `lib/help.txt`
+* `http://localhost:8080/favicon.ico` - Replies 404 Not found
 
 Live examples:
 
@@ -139,10 +145,10 @@ the CORS Anywhere server only whitelists your site to prevent others from using 
 CORS Anywhere as an open proxy.
 
 For instance, to run a CORS Anywhere server that accepts any request from some example.com sites on
-port 6000, use:
+port 8080, use:
 ```
-export PORT=6000
-export CORSANYWHERE_WHITELIST=https://example.com,http://example.com,http://example.com:6000
+export PORT=8080
+export CORSANYWHERE_WHITELIST=https://example.com,http://example.com,http://example.com:8080
 node server.js
 ```
 
@@ -155,7 +161,7 @@ For example, to blacklist abuse.example.com and rate-limit everything to 50 requ
 except for my.example.com and my2.example.com (which may be unlimited), use:
 
 ```
-export PORT=6000
+export PORT=8080
 export CORSANYWHERE_BLACKLIST=https://abuse.example.com,http://abuse.example.com
 export CORSANYWHERE_RATELIMIT='50 3 my.example.com my2.example.com'
 node server.js

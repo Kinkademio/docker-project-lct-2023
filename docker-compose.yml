@@ -8,9 +8,6 @@ services:
       - ./clients:/usr/src/clients
     ports:
       - "8080:8080"
-    environment:
-      - PORT=8080
-      - WDS_SOCKET_PORT=0
   auth:
     image: auth
     build:
@@ -68,4 +65,3 @@ services:
 networks:
   backend-lct-2023:
   databases:
-  
