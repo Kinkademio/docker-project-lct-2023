@@ -6,7 +6,9 @@ RUN chmod +x /wait && npm install --global nodemon && npm install --gloabal yarn
 
 WORKDIR /usr/src/clients/
 
-COPY package.json /usr/src/clients/
+RUN  chmod +x  /wait && yarn build
+
+WORKDIR /usr/src/clients/dist
 
 RUN npm install
 
@@ -22,5 +24,5 @@ ENV FRONTEND_PORT=$_FRONTEND_PORT
 
 EXPOSE $_FRONTEND_PORT
 
-CMD /wait && npm install && yarn dev --watch /usr/src/clients
+CMD /wait && yarn start --watch /usr/src/clients/dist
 
