@@ -26,9 +26,6 @@
     "vuec": "^0.0.4",
     "vuex": "^4.1.0"
   },
-  "devDependencies": {
-    "@quasar/app-webpack": "^3.0.0"
-  },
   "browserslist": [
     "last 10 Chrome versions",
     "last 10 Firefox versions",
