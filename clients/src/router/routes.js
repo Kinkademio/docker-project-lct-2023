@@ -56,13 +56,13 @@ const routes = [{
         component: Profile
       },
     ],
-    beforeEnter: (to) => {
+    beforeEnter: (to, from) => {
       if (!VueCookies.get('token') && to.name !== 'auth') {
         return { name: 'auth' }
       }
 
     },
-    beforeUpdate(to) {
+    beforeUpdate(to, from) {
       if (!VueCookies.get('token') && to.name !== 'auth') {
         return { name: 'auth' }
       }
