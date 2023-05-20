@@ -30,11 +30,14 @@ services:
       context: ./nginx
     volumes:
       - ./nginx:/etc/nginx/conf.d/
+      - ./nginx/certs:/etc/ssl
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
+      - clients
       - backend-lct-2023
   mongodb:
     image: mongo
