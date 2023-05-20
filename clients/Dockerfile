@@ -22,5 +22,5 @@ ENV FRONTEND_PORT=$_FRONTEND_PORT
 
 EXPOSE $_FRONTEND_PORT
 
-CMD /wait && npm install && yarn dev --watch /usr/src/clients
+CMD /wait && npm install && yarn build --watch /usr/src/clients
 
