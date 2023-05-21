@@ -31,7 +31,7 @@
               </q-btn>
             </div>
           </div>
-          <div class="text-subtitle2">Всего скачиваний за {{ this.yearModel }}: {{ this.downloads.length }}</div>
+          <div class="text-subtitle2">Всего скачиваний за {{ yearModel }}: {{ downloads.length }}</div>
 
           <v-chart v-if="downloads.length > 0" class="chart" ref="downloads" :option="downloadOptions" autoresize
             style="" />
@@ -53,7 +53,7 @@
               </q-btn>
             </div>
           </div>
-          <div class="text-subtitle2">Всего регистраций за {{ this.yearModel }}: {{ this.countOfRegUsers }}</div>
+          <div class="text-subtitle2">Всего регистраций за {{ yearModel }}: {{ countOfRegUsers }}</div>
 
           <v-chart v-if="ageRegData.series[0].data.length > 0" class="chart" ref="age" :option="ageRegData"
             :key="Math.random(1000)" autoresize />
@@ -94,7 +94,7 @@
               </q-btn>
             </div>
           </div>
-          <div class="text-subtitle2">Всего за {{ this.yearModelSchool }} : {{ this.getCountOfSchoolYearWatch }}</div>
+          <div class="text-subtitle2">Всего за {{ yearModelSchool }} : {{ getCountOfSchoolYearWatch }}</div>
           <v-chart v-if="currentPeriodSchoolData.length > 0" class="chart" ref="schools" autoresize
             :option="schoolOptions" />
 
@@ -165,7 +165,7 @@
               </q-btn>
             </div>
           </div>
-          <div class="text-subtitle2">Всего за {{ this.yearModelFact }} : {{ this.getCountOfFactYearWatch }}</div>
+          <div class="text-subtitle2">Всего за {{ yearModelFact }} : {{ getCountOfFactYearWatch }}</div>
           <v-chart v-if="currentPeriodFactData.length > 0" class="chart" ref="facts" autoresize
             :option="factOptions" />
 
@@ -239,7 +239,7 @@
               </q-btn>
             </div>
           </div>
-          <div class="text-subtitle2">Всего за {{ this.yearModelEvent }} : {{ this.getCountOfEventYearWatch }}</div>
+          <div class="text-subtitle2">Всего за {{ yearModelEvent }} : {{ getCountOfEventYearWatch }}</div>
           <v-chart v-if="currentPeriodEventData.length > 0" class="chart" ref="events" autoresize
             :option="eventOptions" />
 
