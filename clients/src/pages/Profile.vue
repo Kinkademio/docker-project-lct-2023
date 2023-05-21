@@ -86,8 +86,7 @@ export default {
           username: VueCookies.get('login'),
         });
 
-        const response = await api.put("auth/updateUserName", {
-          id: res.data.id,
+        const response = await api.put("auth/updateUser/" + res.data._id, {
           name: this.name,
         });
         this.$q.notify({
@@ -145,9 +144,8 @@ export default {
           username: VueCookies.get('login'),
         });
 
-        await api.put("auth/updatePass", {
-          id: res.data._id,
-          newPass: this.password,
+        await api.put("auth/updateUser/" + res.data._id, {
+          password: this.password,
         });
         this.loaded = true;
         this.$q.notify({

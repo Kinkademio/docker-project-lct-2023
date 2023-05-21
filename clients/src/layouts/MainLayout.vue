@@ -16,7 +16,7 @@
         <q-img class="q-ma-lg" style="width: 200px;" src="../resources/LogoInside.svg"></q-img>
         <q-separator></q-separator>
         <div v-for="nav, key in navigation" :key="key">
-          <q-item exact clickable v-ripple @click="navugate(nav.route)" :active="currentRoute == nav.route">
+          <q-item exact clickable v-ripple @click="navugate(nav.route)" :active="currentRoute == nav.route" active-class="my-menu-link">
             <q-item-section avatar>
               <q-icon :name="nav.iconName" />
             </q-item-section>
@@ -124,5 +124,10 @@ export default defineComponent({
 <style scoped>
 .background {
   background: linear-gradient(0deg, #00000000 0%, #090249 99%);
+}
+</style>
+<style scoped>
+.my-menu-link{
+  background: #4136571f
 }
 </style>

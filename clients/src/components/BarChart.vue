@@ -147,7 +147,7 @@
 
 
   <q-card class="shadow-15 block" style="border-radius: 14px;">
-    <Caption title="Факты" icon-name="school"></Caption>
+    <Caption title="Факты" icon-name="history_edu"></Caption>
     <q-card-section>
       <div class="row justify-between">
         <div class="col-8" style="display: flex; flex-direction: column;">
@@ -221,7 +221,7 @@
 
 
   <q-card class="shadow-15 block" style="border-radius: 14px;">
-    <Caption title="Факты" icon-name="school"></Caption>
+    <Caption title="События" icon-name="emoji_events"></Caption>
     <q-card-section>
       <div class="row justify-between">
         <div class="col-8" style="display: flex; flex-direction: column;">

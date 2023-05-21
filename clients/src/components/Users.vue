@@ -71,7 +71,7 @@
             </q-td>
 
             <q-td key="control">
-              <q-btn @click="removeUser(props.row._id, props.row.username)" flat dense :color="'grey-8'"><q-icon
+              <q-btn @click="(confirm = true),(deleteRowId = props.row._id),(deletUserName = props.row.username)" flat dense :color="'grey-8'"><q-icon
                   name="delete_forever" />
                 <q-tooltip>Удалить</q-tooltip></q-btn>
             </q-td>
@@ -84,6 +84,18 @@
       <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
     </div>
   </div>
+  <q-dialog v-model="confirm" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+         <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+      </q-card-section>
+
+      <q-card-actions align="between">
+        <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
+        <q-btn flat label="Удалить"  @click="removeUser(deleteRowId, deletUserName)" color="primary" v-close-popup></q-btn>
+      </q-card-actions>
+    </q-card>
+   </q-dialog>
 </template>
 
 <script>
@@ -93,6 +105,9 @@ import VueCookies from "vue-cookies";
 export default {
   data() {
     return {
+      deletUserName: "",
+      deleteRowId: -1,
+      confirm: ref(false),
       searchSelected: "",
       newPass: "",
       text: "",
@@ -217,8 +232,7 @@ export default {
         return;
       }
       try {
-        const response = await api.put("auth/updateUserName", {
-          id: id,
+        const response = await api.put("auth/updateUser/" + id, {
           name: name,
         });
         this.$q.notify({
@@ -324,9 +338,8 @@ export default {
         return;
       }
       try {
-        const res = await api.put("auth/updatePass", {
-          id: user_id,
-          newPass: newPass,
+        const res = await api.put("auth/updateUser/" + user_id, {
+          password: newPass,
         });
         this.loaded = true;
         this.$q.notify({

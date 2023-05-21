@@ -128,7 +128,7 @@
             </q-td>
 
             <q-td key="control">
-              <q-btn @click="removeSchool(props.row._id)" flat dense :color="'grey-8'"><q-icon name="delete_forever" />
+              <q-btn @click="(confirm = true),(deleteRowId = props.row._id)" flat dense :color="'grey-8'"><q-icon name="delete_forever" />
                 <q-tooltip>Удалить</q-tooltip></q-btn>
             </q-td>
           </q-tr>
@@ -154,6 +154,18 @@
       <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
     </div>
   </div>
+  <q-dialog v-model="confirm" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+         <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+      </q-card-section>
+
+      <q-card-actions align="between">
+        <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
+        <q-btn flat label="Удалить"  @click="removeSchool(deleteRowId)" color="primary" v-close-popup></q-btn>
+      </q-card-actions>
+    </q-card>
+   </q-dialog>
 </template>
 
 <script>
@@ -170,6 +182,8 @@ export default {
   },
   data() {
     return {
+      deleteRowId: -1,
+      confirm: ref(false),
       iconn: ref(false),
       icon: ref(false),
       newPass: "",

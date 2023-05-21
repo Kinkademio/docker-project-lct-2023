@@ -102,7 +102,7 @@
             </q-td>
 
             <q-td key="control">
-              <q-btn @click="removeFacts(props.row._id)" flat dense :color="'grey-8'"><q-icon name="delete_forever" />
+              <q-btn @click="(confirm = true),(deleteRowId = props.row._id)" flat dense :color="'grey-8'"><q-icon name="delete_forever" />
                 <q-tooltip>Удалить</q-tooltip></q-btn>
             </q-td>
           </q-tr>
@@ -114,6 +114,18 @@
       <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
     </div>
   </div>
+  <q-dialog v-model="confirm" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+         <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+      </q-card-section>
+
+      <q-card-actions align="between">
+        <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
+        <q-btn flat label="Удалить"  @click="removeFacts(deleteRowId)" color="primary" v-close-popup></q-btn>
+      </q-card-actions>
+    </q-card>
+   </q-dialog>
 </template>
 
 <script>
@@ -124,9 +136,11 @@ export default {
 
   data() {
     return {
+      deleteRowId: -1,
       icon: ref(false),
       newPass: "",
       text: "",
+      confirm: ref(false),
       roles: [],
       searchSelected: "",
       auth: "12GradMapAdmin345SRscx:23pdmtF334slkRDcS5EREc2",
@@ -158,7 +172,7 @@ export default {
         {
           name: "fact_text",
           align: "left",
-          label: "Тест",
+          label: "Текст",
           field: "fact_text",
           canEdit: true,
           sortable: true,
