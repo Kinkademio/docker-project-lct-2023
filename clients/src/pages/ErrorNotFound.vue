@@ -2,7 +2,7 @@
   <particles></particles>
   <div class=" text-white text-center">
     <div class="absolute-center">
-      <img class="image" src="../resources/404безошибкиcпузырямиv3.svg">
+      <img class="image" src="../resources/404безошибкиcпузырями.svg">
       <div class="text-h2 transparent-text">
         Станица, котоую вы ищете <br>
         не существует.
