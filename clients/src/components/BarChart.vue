@@ -25,7 +25,7 @@
                 </q-select>
               </div>
             </div>
-            <div class="inline" v-if="this.downloads.length > 0">
+            <div class="inline" v-if="downloads.length > 0">
               <q-btn flat dense icon="download" size="m" class="mr-10" @click="SaveImage('downloads')" :color="'grey-8'">
                 <q-tooltip>Скачать</q-tooltip>
               </q-btn>
@@ -33,7 +33,7 @@
           </div>
           <div class="text-subtitle2">Всего скачиваний за {{ this.yearModel }}: {{ this.downloads.length }}</div>
 
-          <v-chart v-if="this.downloads.length > 0" class="chart" ref="downloads" :option="downloadOptions" autoresize
+          <v-chart v-if="downloads.length > 0" class="chart" ref="downloads" :option="downloadOptions" autoresize
             style="" />
           <div v-else style="display: flex; justify-content: center; align-items: center; flex-grow: 3">
             <div>
@@ -88,14 +88,14 @@
                 </q-select>
               </div>
             </div>
-            <div class="inline" v-if="this.currentPeriodSchoolData.length > 0">
+            <div class="inline" v-if="currentPeriodSchoolData.length > 0">
               <q-btn flat dense icon="download" size="m" class="mr-10" @click="SaveImage('schools')" :color="'grey-8'">
                 <q-tooltip>Скачать</q-tooltip>
               </q-btn>
             </div>
           </div>
           <div class="text-subtitle2">Всего за {{ this.yearModelSchool }} : {{ this.getCountOfSchoolYearWatch }}</div>
-          <v-chart v-if="this.currentPeriodSchoolData.length > 0" class="chart" ref="schools" autoresize
+          <v-chart v-if="currentPeriodSchoolData.length > 0" class="chart" ref="schools" autoresize
             :option="schoolOptions" />
 
           <div v-else style="display: flex; justify-content: center; align-items: center; flex-grow: 3">
@@ -159,14 +159,14 @@
                 </q-select>
               </div>
             </div>
-            <div class="inline" v-if="this.currentPeriodFactData.length > 0">
+            <div class="inline" v-if="currentPeriodFactData.length > 0">
               <q-btn flat dense icon="download" size="m" class="mr-10" @click="SaveImage('facts')" :color="'grey-8'">
                 <q-tooltip>Скачать</q-tooltip>
               </q-btn>
             </div>
           </div>
           <div class="text-subtitle2">Всего за {{ this.yearModelFact }} : {{ this.getCountOfFactYearWatch }}</div>
-          <v-chart v-if="this.currentPeriodFactData.length > 0" class="chart" ref="facts" autoresize
+          <v-chart v-if="currentPeriodFactData.length > 0" class="chart" ref="facts" autoresize
             :option="factOptions" />
 
           <div v-else style="display: flex; justify-content: center; align-items: center; flex-grow: 3">
@@ -233,14 +233,14 @@
                 </q-select>
               </div>
             </div>
-            <div class="inline" v-if="this.currentPeriodEventData.length > 0">
+            <div class="inline" v-if="currentPeriodEventData.length > 0">
               <q-btn flat dense icon="download" size="m" class="mr-10" @click="SaveImage('events')" :color="'grey-8'">
                 <q-tooltip>Скачать</q-tooltip>
               </q-btn>
             </div>
           </div>
           <div class="text-subtitle2">Всего за {{ this.yearModelEvent }} : {{ this.getCountOfEventYearWatch }}</div>
-          <v-chart v-if="this.currentPeriodEventData.length > 0" class="chart" ref="events" autoresize
+          <v-chart v-if="currentPeriodEventData.length > 0" class="chart" ref="events" autoresize
             :option="eventOptions" />
 
           <div v-else style="display: flex; justify-content: center; align-items: center; flex-grow: 3">
