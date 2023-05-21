@@ -406,8 +406,17 @@ export default {
         },
         series: [
           {
-            name: 'Traffic Sources',
+            name: '',
             type: 'pie',
+            color:[
+            "#D794AB",
+            "#B678B8",
+            "#B284C9",
+            "#A395B9",
+            "#806FAF"
+
+          ],
+
             radius: '70%',
             center: ['50%', '40%'],
             data: [],
@@ -908,6 +917,7 @@ export default {
             name: element.year,
             data: element.values,
             type: "bar",
+            color:"#806FAF",
             smooth: true,
           });
       });
@@ -996,6 +1006,7 @@ export default {
             name: element.year,
             data: element.values,
             type: "bar",
+            color:"#806FAF",
             smooth: true,
           });
       });
@@ -1112,6 +1123,7 @@ export default {
             name: element.year,
             data: element.values,
             type: "bar",
+            color:"#806FAF",
             smooth: true,
           });
       });
@@ -1221,6 +1233,7 @@ export default {
             name: element.year,
             data: element.values,
             type: "bar",
+            color:"#806FAF",
             smooth: true,
           });
       });

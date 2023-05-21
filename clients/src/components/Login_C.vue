@@ -1,5 +1,5 @@
 <template>
-  <q-card flat>
+  <q-card style="background-color: #FAFAFA;" flat>
     <q-card-section>
       <q-input filled v-model="username" label="Логин" />
       <q-separator></q-separator>

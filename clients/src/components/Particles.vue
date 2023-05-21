@@ -7,7 +7,7 @@ export default {
     particlesJS("particles-js", {
       particles: {
         number: {
-          value: 52,
+          value: 25,
           density: {
             enable: true,
             value_area: 631.3280775270874
@@ -37,12 +37,12 @@ export default {
           }
         },
         size: {
-          value: 5,
+          value: 30,
           random: true,
           anim: {
             enable: false,
             speed: 40,
-            size_min: 0.1,
+            size_min: 20,
             sync: false
           }
         },
@@ -55,7 +55,7 @@ export default {
         },
         move: {
           enable: true,
-          speed: 1.5,
+          speed: 0.5,
           direction: "top",
           random: false,
           straight: false,
@@ -127,7 +127,7 @@ export default {
 }
 
 .normal_gradient {
-  background: linear-gradient(145deg, #1976D2 15%, #992953 70%);
+  background: linear-gradient(0deg,  #7D5260 0%, #6650a4 100%);
 }
 </style>
 

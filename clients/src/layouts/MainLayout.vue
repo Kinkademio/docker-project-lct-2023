@@ -13,7 +13,7 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" :breakpoint="600">
 
       <q-list>
-        <q-img class="q-ma-lg" style="width: 200px;" src="../resources/Logo.svg"></q-img>
+        <q-img class="q-ma-lg" style="width: 200px;" src="../resources/LogoInside.svg"></q-img>
         <q-separator></q-separator>
         <div v-for="nav, key in navigation" :key="key">
           <q-item exact clickable v-ripple @click="navugate(nav.route)" :active="currentRoute == nav.route">

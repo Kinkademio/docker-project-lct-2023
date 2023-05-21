@@ -151,7 +151,7 @@
     </q-dialog>
     <div class="text-center" v-if="error == 403">
       <div class="text-h4" style="opacity: 0.5">У вас нет прав</div>
-      <img class="image" src="../resources/Уваснедостаточноправ.svg" />
+      <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
     </div>
   </div>
 </template>

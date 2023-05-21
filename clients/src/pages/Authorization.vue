@@ -1,7 +1,8 @@
 <template>
   <q-card class="my-card" flat bordered>
     <q-card-section>
-      <div class="text-h5 text-center caption-text">Вход в систему</div>
+      <q-img style = " width: 100px;" src="../resources/Logo.svg"></q-img>
+
     </q-card-section>
     <q-tabs v-model="tab" active-color="white" class="text-teal ">
       <q-tab v-for="panel in tabPanels" :label="panel.lable" :name="panel.name" class="text" @click="changeTab()" />
@@ -64,8 +65,8 @@ export default {
 }
 
 .my-card {
-  width: 450px;
-  height: 250px;
+  width: 40vh;
+  height: 25vh;
   background-color: rgba(7, 7, 7, 0.288);
 }
 </style>
