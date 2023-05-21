@@ -7,7 +7,7 @@ services:
     volumes:
       - ./clients:/usr/src/clients
     ports:
-      - "8080:8080"
+      - "8080:3000"
   auth:
     image: auth
     build:
@@ -59,7 +59,7 @@ services:
     depends_on:
       - mongodb
     ports:
-      - 3000:3000
+      - 3000:13000
     environment:
      WAIT_HOST: mongodb:27017
     networks:
