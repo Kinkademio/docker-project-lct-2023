@@ -1,0 +1,49 @@
+{
+  "name": "clients",
+  "version": "0.0.1",
+  "description": "Сайт для мониторинга и редактирования контента образовательного приложения.",
+  "author": "Ximanit Kinkademio",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@2gis/mapgl": "1.36.0",
+    "@types/source-map": "0.5.2",
+    "axios": "1.4.0",
+    "core-js": "3.30.2",
+    "echarts": "5.4.2",
+    "quasar": "2.12.0",
+    "quasar-app-extension-auth": "1.0.1",
+    "vue": "3.3.4",
+    "vue-cookies": "1.8.3",
+    "vue-echarts": "6.5.5",
+    "vue-good-table": "2.21.11",
+    "vue-router": "4.2.1",
+    "vuec": "0.0.4",
+    "vuex": "4.1.0",
+    "compression": "^1.0.0",
+    "express": "^4.0.0",
+    "@quasar/ssr-helpers": "2.2.2",
+    "@quasar/babel-preset-app": "2.0.2"
+  },
+  "engines": {
+    "node": ">= 12.22.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "quasar": {
+    "ssr": true
+  }
+}

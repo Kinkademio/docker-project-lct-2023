@@ -1,24 +1,12 @@
-FROM node:14
+FROM node:16
 
-WORKDIR /usr/src/clients/dist
-
-COPY dist /usr/src/clients/dist
-
-WORKDIR /usr/src/clients/dist/spa
-
-RUN npm install
+WORKDIR /usr/src/clients/dist/ssr
 
 
-#        УСТАНОВКА ПОРТОВ ДЛЯ ЗАПУСКА КОНТЕЙНЕРОВ
-#
-#        _FRONTEND_PORT  - порт для создания* и запуска контейнера FRONTEND
-
-ARG _FRONTEND_PORT=8080
-
-#Константы портов для доступа внутри контейнеров
+ARG _FRONTEND_PORT=3000
 ENV FRONTEND_PORT=$_FRONTEND_PORT
-
 EXPOSE $_FRONTEND_PORT
 
-CMD /wait && yarn start --watch /usr/src/clients/dist
+CMD npm install && yarn --prod && node index.js
+
 
