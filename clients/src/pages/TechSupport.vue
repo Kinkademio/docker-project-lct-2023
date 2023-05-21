@@ -121,6 +121,7 @@ export default {
 }
 
 .img {
-  height: 70vh;
+  height: 60%;
+  width: 60%;
 }
 </style>
