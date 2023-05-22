@@ -118,7 +118,7 @@
                     :type="isPwd ? 'password' : 'text'"
                     hint="Новый пароль"
                     validate
-                    :rule="[/^[a-zA-Z._0-9]+$/ || 'Пароль не подходит']"
+                    :rule="rulePas"
                   >
                     <template v-slot:append>
                       <q-icon
@@ -181,6 +181,11 @@ import { api } from "../boot/axios";
 import { ref } from "vue";
 import VueCookies from "vue-cookies";
 export default {
+  setup() {
+    const passwordRegex = /^[a-zA-Z._0-9]+$/;
+    rulePas: [val => !passwordRegex.test(val) || "Пароль не подходит"];
+  },
+
   data() {
     return {
       deletUserName: "",
