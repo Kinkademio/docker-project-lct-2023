@@ -114,11 +114,13 @@
                   @hide="changeUserPass(props.row._id, newPass)"
                 >
                   <q-input
+                    @update:model-value="inputRef.value.resetValidation()"
                     v-model="newPass"
                     :type="isPwd ? 'password' : 'text'"
                     hint="Новый пароль"
                     validate
-                    :rule="rulePas"
+                    ref="inputRef"
+                    :rule="[val => val.match('/^[a-zA-Z._0-9]+$/') || 'Проль должен содержать только разрешенные символы (_, ., a-z, A-Z, 0-9)']"
                   >
                     <template v-slot:append>
                       <q-icon
@@ -181,13 +183,9 @@ import { api } from "../boot/axios";
 import { ref } from "vue";
 import VueCookies from "vue-cookies";
 export default {
-  setup() {
-    const passwordRegex = /^[a-zA-Z._0-9]+$/;
-    rulePas: [val => !passwordRegex.test(val) || "Пароль не подходит"];
-  },
-
   data() {
     return {
+      inputRef: ref(null),
       deletUserName: "",
       deleteRowId: -1,
       confirm: ref(false),
