@@ -47,10 +47,10 @@ class authController {
             }
 
             // Проверка пароля с использованием регулярного выражения
-            const passwordRegex = /^[a-zA-Z._]+$/;
+            const passwordRegex = /^[a-zA-Z._0-9]+$/;
             if (!passwordRegex.test(password)) {
                 return res.status(400).json({
-                    message: "Пароль должен содержать только буквы a-z, A-Z, точку (.) и символ подчеркивания (_)"
+                    message: "Пароль должен содержать только буквы a-z, A-Z, цифры 0-9, точку (.) и символ подчеркивания (_)"
                 })
             }
 
@@ -96,10 +96,10 @@ class authController {
             }
 
             // Проверка пароля с использованием регулярного выражения
-            const passwordRegex = /^[a-zA-Z._]+$/;
+            const passwordRegex = /^[a-zA-Z._0-9]+$/;
             if (!passwordRegex.test(password)) {
                 return res.status(400).json({
-                    message: "Пароль должен содержать только буквы a-z, A-Z, точку (.) и символ подчеркивания (_)"
+                    message: "Пароль должен содержать только буквы a-z, A-Z, цифры 0-9, точку (.) и символ подчеркивания (_)"
                 })
             }
 
@@ -170,8 +170,17 @@ class authController {
         body
     }, res) {
         try {
+            
             if (body.password) {
                 body.password = bcrypt.hashSync(body.password, 7);
+                 // Проверка пароля с использованием регулярного выражения
+                const passwordRegex = /^[a-zA-Z._0-9]+$/;
+                if (!passwordRegex.test(body.password)) {
+                    return res.status(400).json({
+                        message: "Пароль должен содержать только буквы a-z, A-Z, цифры 0-9, точку (.) и символ подчеркивания (_)"
+                    })
+            }
+
             }
             await User.findByIdAndUpdate(id, body, {
                 new: true
