@@ -32,7 +32,7 @@ class authController {
                     errors
                 })
             }
-            const name = req.body.name ? ? 'User';
+            const name = req.body.name ?? 'User';
             const {
                 username,
                 password
