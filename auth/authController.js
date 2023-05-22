@@ -18,7 +18,7 @@ const generateAccesToken = (id, roles) => {
         expiresIn: "24h"
     })
 }
-const ageParams=["4-7","8-10","11-13","14-17","18+"];
+const ageParams = ["4-7", "8-10", "11-13", "14-17", "18+"];
 class authController {
 
     //*****************************ПОЛЬЗОВАТЕЛЬ*********************** */
@@ -32,11 +32,28 @@ class authController {
                     errors
                 })
             }
-            const name =req.body.name ?? 'User';
+            const name = req.body.name ? ? 'User';
             const {
                 username,
                 password
             } = req.body
+
+            // Проверка username с использованием регулярного выражения
+            const usernameRegex = /^([\w]+\.?)+(?<!\.)@(?!\.)[a-zа-я0-9ё\.-]+\.?[a-zа-яё]{2,}$/ui;
+            if (!usernameRegex.test(username)) {
+                return res.status(400).json({
+                    message: "Некорректный формат логина"
+                })
+            }
+
+            // Проверка пароля с использованием регулярного выражения
+            const passwordRegex = /^[a-zA-Z._]+$/;
+            if (!passwordRegex.test(password)) {
+                return res.status(400).json({
+                    message: "Пароль должен содержать только буквы a-z, A-Z, точку (.) и символ подчеркивания (_)"
+                })
+            }
+
             const candidate = await User.findOne({
                 username
             })
@@ -69,9 +86,27 @@ class authController {
                 username,
                 password
             } = req.body
+
+            // Проверка username с использованием регулярного выражения
+            const usernameRegex = /^([\w]+\.?)+(?<!\.)@(?!\.)[a-zа-я0-9ё\.-]+\.?[a-zа-яё]{2,}$/ui;
+            if (!usernameRegex.test(username)) {
+                return res.status(400).json({
+                    message: "Некорректный формат логина"
+                })
+            }
+
+            // Проверка пароля с использованием регулярного выражения
+            const passwordRegex = /^[a-zA-Z._]+$/;
+            if (!passwordRegex.test(password)) {
+                return res.status(400).json({
+                    message: "Пароль должен содержать только буквы a-z, A-Z, точку (.) и символ подчеркивания (_)"
+                })
+            }
+
             const user = await User.findOne({
                 username
             })
+
             if (!user) {
                 return res.status(400).json({
                     message: `Пользователь с логином ${username} не найден`
@@ -87,8 +122,8 @@ class authController {
             const user_id = user._id;
             const token = generateAccesToken(user._id, user.roles)
             return res.json({
-                token:token,
-                name:name,
+                token: token,
+                name: name,
 
                 id: user_id,
 
@@ -128,12 +163,19 @@ class authController {
             })
         }
     }
-    async updateUser({params: {id}, body}, res){
+    async updateUser({
+        params: {
+            id
+        },
+        body
+    }, res) {
         try {
-            if(body.password){
+            if (body.password) {
                 body.password = bcrypt.hashSync(body.password, 7);
             }
-            await User.findByIdAndUpdate(id, body, {new: true});
+            await User.findByIdAndUpdate(id, body, {
+                new: true
+            });
             res.status(200).json({
                 message: "Данные пользователя успешно обновлены"
             });
@@ -178,13 +220,20 @@ class authController {
             });
         }
     }
-    async getByDateCreate(req, res){
+    async getByDateCreate(req, res) {
         try {
-            const items = await User.find( { registrDate: { $gt :req.body.start,  $lt : req.body.end }});
+            const items = await User.find({
+                registrDate: {
+                    $gt: req.body.start,
+                    $lt: req.body.end
+                }
+            });
             return res.status(200).send(items);
 
         } catch (err) {
-            return res.status(400).send({message: "Ошибка получения данных", });
+            return res.status(400).send({
+                message: "Ошибка получения данных",
+            });
         }
     }
     /**************************РОЛИ**************************** */
@@ -199,7 +248,7 @@ class authController {
             })
         }
     }
-   
+
     async addNewRole(req, res) {
         try {
             const {
@@ -248,20 +297,22 @@ class authController {
             })
         }
     }
-    
+
     /**
      * Возвращает массив доступных к выбору параметров возраста
      * @param {*} req 
      * @param {*} res 
      * @returns 
      */
-    async getAgeParams(req, res){
+    async getAgeParams(req, res) {
 
-        return res.status(200).send({ageParams: ageParams})
+        return res.status(200).send({
+            ageParams: ageParams
+        })
     }
-    
-    
-  
+
+
+
 }
 
 module.exports = new authController()
