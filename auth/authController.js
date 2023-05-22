@@ -42,7 +42,7 @@ class authController {
             })
             if (candidate) {
                 return res.status(400).json({
-                    message: "Пользователь с таким именнем уже существует"
+                    message: `Пользователь с логином ${username} уже существует`
                 })
             }
             const userRole = await Roles.findOne({
@@ -74,7 +74,7 @@ class authController {
             })
             if (!user) {
                 return res.status(400).json({
-                    message: `Пользователь с имем ${username} не найден`
+                    message: `Пользователь с логином ${username} не найден`
                 })
             }
             const validPassword = bcrypt.compareSync(password, user.password)
