@@ -83,7 +83,7 @@
               <div>
                 {{
                   new Date(props.row.registrDate).toLocaleString("ru-RU", {
-                    timeZone: "Europe/Moscow"
+                    timeZone: "Europe/Moscow",
                   })
                 }}
               </div>
@@ -118,9 +118,6 @@
                     v-model="newPass"
                     :type="isPwd ? 'password' : 'text'"
                     hint="Новый пароль"
-                    validate
-                    ref="inputRef"
-                    :rule="[val => val.match('/^[a-zA-Z._0-9]+$/') || 'Проль должен содержать только разрешенные символы (_, ., a-z, A-Z, 0-9)']"
                   >
                     <template v-slot:append>
                       <q-icon
@@ -201,7 +198,7 @@ export default {
           align: "left",
           field: "name",
           canEdit: true,
-          sortable: true
+          sortable: true,
         },
         {
           name: "username",
@@ -209,7 +206,7 @@ export default {
           align: "left",
           field: "username",
           canEdit: false,
-          sortable: true
+          sortable: true,
         },
         {
           name: "registrDate",
@@ -217,7 +214,7 @@ export default {
           label: "Дата регистрации",
           field: "registrDate",
           canEdit: false,
-          sortable: true
+          sortable: true,
         },
         {
           name: "roles",
@@ -225,25 +222,25 @@ export default {
           label: "Роль",
           field: "roles",
           canEdit: true,
-          sortable: true
+          sortable: true,
         },
         {
           name: "password",
           align: "left",
           label: "Пароль",
-          canEdit: true
+          canEdit: true,
         },
         {
           name: "control",
           align: "left",
-          label: "Управление"
-        }
+          label: "Управление",
+        },
       ],
       rows: [],
       error: 0,
       loaded: false,
       password: ref(""),
-      isPwd: ref(true)
+      isPwd: ref(true),
     };
   },
   mounted() {
@@ -261,11 +258,11 @@ export default {
       try {
         const res = await api.get("auth/users", {
           headers: {
-            Authorization: "Bearer " + VueCookies.get("token")
-          }
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
         });
         this.rows = res.data;
-        this.rows.forEach(e => {
+        this.rows.forEach((e) => {
           e.roles = e.roles[0];
         });
         this.loaded = true;
@@ -284,11 +281,11 @@ export default {
       try {
         await api.put("auth/updateRole", {
           id: id,
-          newRole: role
+          newRole: role,
         });
         this.$q.notify({
           type: "positive",
-          message: "Роль пользователя сохранена"
+          message: "Роль пользователя сохранена",
         });
         if (VueCookies.get("login") == login) {
           VueCookies.remove("token");
@@ -308,17 +305,17 @@ export default {
       if (name == "") {
         this.$q.notify({
           type: "negative",
-          message: "Имя пользователя не может быть пустым"
+          message: "Имя пользователя не может быть пустым",
         });
         return;
       }
       try {
         const response = await api.put("auth/updateUser/" + id, {
-          name: name
+          name: name,
         });
         this.$q.notify({
           type: "positive",
-          message: "Имя пользователя сохранено"
+          message: "Имя пользователя сохранено",
         });
 
         //Обновляем куки если пользователь обновил свое имя
@@ -339,10 +336,10 @@ export default {
       try {
         const res = await api.get("auth/roles", {
           headers: {
-            Authorization: "Bearer " + VueCookies.get("token")
-          }
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
         });
-        this.roles = res.data.map(role => role.value);
+        this.roles = res.data.map((role) => role.value);
         this.loaded = true;
       } catch (error) {
         this.onError(error);
@@ -357,7 +354,7 @@ export default {
       if (!error.response || !error.response.status) {
         this.$q.notify({
           type: "negative",
-          message: "Нет соединения с сервером"
+          message: "Нет соединения с сервером",
         });
         return;
       }
@@ -365,7 +362,7 @@ export default {
       if (this.error != 403) {
         this.$q.notify({
           type: "negative",
-          message: error.response.data.message ?? "Ошибка сервера"
+          message: error.response.data.message ?? "Ошибка сервера",
         });
       }
     },
@@ -379,12 +376,12 @@ export default {
         const res = await api.post(
           "auth/delete",
           {
-            id: user_id
+            id: user_id,
           },
           {
             headers: {
-              Authorization: "Bearer " + VueCookies.get("token")
-            }
+              Authorization: "Bearer " + VueCookies.get("token"),
+            },
           }
         );
         this.loaded = true;
@@ -398,7 +395,7 @@ export default {
 
         this.$q.notify({
           type: "positive",
-          message: "Пользователь удален"
+          message: "Пользователь удален",
         });
         this.getUsers();
       } catch (error) {
@@ -411,26 +408,28 @@ export default {
      * @param {*} newPass
      */
     async changeUserPass(user_id, newPass) {
-      if (newPass == "" || newPass.length < 4) {
+      const passwordRegex = /^[a-zA-Z._0-9]+$/;
+      if (!passwordRegex.test(newPass)) {
         this.$q.notify({
           type: "negative",
-          message: "Новый пароль должен быть более 3 символов"
+          message:
+            "Проль должен содержать только разрешенные символы (_, ., a-z, A-Z, 0-9)",
         });
         return;
       }
       try {
         const res = await api.put("auth/updateUser/" + user_id, {
-          password: newPass
+          password: newPass,
         });
         this.loaded = true;
         this.$q.notify({
           type: "positive",
-          message: "Пароль изменен"
+          message: "Пароль изменен",
         });
       } catch (error) {
         this.onError(error);
       }
-    }
+    },
   },
   //Поиск по талице
   computed: {
@@ -444,21 +443,21 @@ export default {
         let searchFiled;
 
         //Определяем по какому полю будм искать
-        this.columns.forEach(element => {
+        this.columns.forEach((element) => {
           if (element.label == this.searchSelected) {
             searchFiled = element.field;
           }
         });
 
         let searchFields = searchFiled.split(".");
-        this.rows.map(function(r) {
+        this.rows.map(function (r) {
           let object = r[searchFields[0]];
           for (let index = 1; index < searchFields.length; index++) {
             object = object[searchFields[index]];
           }
 
           if (typeof object == "object") {
-            object.forEach(elem => {
+            object.forEach((elem) => {
               if (
                 elem
                   .toString()
@@ -488,14 +487,14 @@ export default {
      */
     getSearchParamsArray() {
       let result = [];
-      this.columns.forEach(element => {
+      this.columns.forEach((element) => {
         if (element.field) {
           result.push(element.label);
         }
       });
       return result;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
