@@ -172,15 +172,14 @@ class authController {
         try {
             
             if (body.password) {
-                body.password = bcrypt.hashSync(body.password, 7);
-                 // Проверка пароля с использованием регулярного выражения
                 const passwordRegex = /^[a-zA-Z._0-9]+$/;
+                // Проверка пароля с использованием регулярного выражения
                 if (!passwordRegex.test(body.password)) {
                     return res.status(400).json({
                         message: "Пароль должен содержать только буквы a-z, A-Z, цифры 0-9, точку (.) и символ подчеркивания (_)"
                     })
-            }
-
+                }
+                body.password = bcrypt.hashSync(body.password, 7);
             }
             await User.findByIdAndUpdate(id, body, {
                 new: true
