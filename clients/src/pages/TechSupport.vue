@@ -121,7 +121,7 @@ export default {
 }
 
 .img {
-  height: 60%;
-  width: 60%;
+  height: 30%;
+  width: 30%;
 }
 </style>

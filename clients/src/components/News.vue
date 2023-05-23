@@ -33,19 +33,7 @@
                   <q-input v-model="newFactFooter" label="Авторсоке право на используемое изображение" />
                   <q-input v-model="newFactName" label="Название" />
                   <q-input v-model="newFactText" label="Текст" />
-                  <q-input v-model="newImgUrl" label="Ссылка на изображение">
-                    <q-btn  flat dense :color="'grey-8'">
-                <q-icon name="upload" />
-                <q-popup-edit>
-                  <q-input
-                     @update:model-value="(val => { file = val[0] }), uploadFile()"
-                      filled
-                     type="file"
-                    ></q-input>
-                </q-popup-edit>
-                <q-tooltip>Загрузить новове изображение</q-tooltip>
-              </q-btn>
-            </q-input>
+                  <q-input v-model="newImgUrl" label="Ссылка на изображение" />
                   <q-btn flat style="width: 100%;  background-color: rgba(7, 7, 7, 0.050);"
                     @click="addNewFacts()">Принять</q-btn>
                 </q-card-section>
@@ -83,7 +71,7 @@
 
             <q-td key="fact_name" :props="props">
               <div>{{ getShortText(props.row.fact_name) }}</div>
-              <q-popup-edit v-model="props.row.fact_name" @hide="changeName(props.row._id, props.row.fact_name)">
+              <q-popup-edit v-model="props.row.fact_name" @hide="changeTitle(props.row._id, props.row.fact_name)">
                 <q-input type="textarea" v-model="props.row.fact_name" label="Название"></q-input>
               </q-popup-edit>
             </q-td>
@@ -145,7 +133,7 @@
 
       <q-card-actions align="between">
         <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-        <q-btn flat label="Удалить"  @click="removeFacts(deleteRowId)" color="primary" v-close-popup></q-btn>
+        <q-btn flat label="Удалить"  @click="removeNews(deleteRowId)" color="primary" v-close-popup></q-btn>
       </q-card-actions>
     </q-card>
    </q-dialog>
@@ -165,39 +153,22 @@ export default {
       newPass: "",
       text: "",
       confirm: ref(false),
-      roles: [],
       searchSelected: "",
       auth: "12GradMapAdmin345SRscx:23pdmtF334slkRDcS5EREc2",
       columns: [
         {
-          name: "author",
-          label: "О ком",
+          name: "title",
+          label: "Заголовок",
           align: "left",
-          field: "author",
+          field: "title",
           canEdit: true,
           sortable: true,
         },
         {
-          name: "fact_footer",
-          align: "left",
-          label: "Авторское право на используемое изображение",
-          field: "fact_footer",
-          canEdit: true,
-          sortable: true,
-        },
-        {
-          name: "fact_name",
-          align: "left",
-          label: "Название",
-          field: "fact_name",
-          canEdit: true,
-          sortable: true,
-        },
-        {
-          name: "fact_text",
+          name: "text",
           align: "left",
           label: "Текст",
-          field: "fact_text",
+          field: "text",
           canEdit: true,
           sortable: true,
         },
@@ -209,40 +180,17 @@ export default {
           canEdit: true,
           sortable: true,
         },
-        {
-          name: "views",
-          align: "left",
-          label: "Просмотры",
-          field: "viewCount",
-          canEdit: false,
-          sortable: true,
-        },
-        {
-          name: "like",
-          align: "left",
-          label: "Лайки",
-          field: "likeCount",
-          canEdit: false,
-          sortable: true,
-        },
-        {
-          name: "control",
-          align: "left",
-          label: "Управление",
-        },
       ],
       rows: [],
       error: 0,
       loaded: false,
-      newAuthor: "",
-      newFactFooter: "",
-      newFactName: "",
-      newFactText: "",
+      newTitle: "",
+      newText: "",
       newImgUrl: "",
     };
   },
   mounted() {
-    this.getFacts();
+    this.getNews();
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
@@ -279,31 +227,14 @@ export default {
         this.onError(error);
       }
     },
-    async uploadFile(){
-      let formData = new FormData();
-      formData.append('file', this.file);
-      try {
-        const res = await api.post("api/uploads", {
-          formData
-        },{
-          headers: {
-            Authorization: "Basic " + btoa(this.auth),
-            "x-requested-with": "*",
-          },
-        });
-        this.newImgUrl = res.data;
-      } catch (error) {
-        this.onError(error);
-      }
-    },
     /**
      * Получить все факты из бд
      */
-    async getFacts() {
+    async getNews() {
       this.loaded = false;
       this.error = 0;
       try {
-        const res = await api.get("api/fact", {
+        const res = await api.get("api/news", {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
@@ -350,9 +281,9 @@ export default {
      * Удаелине факта
      * @param {*} facts_id
      */
-    async removeFacts(facts_id) {
+    async removeNews(facts_id) {
       try {
-        const res = await api.delete("api/fact/" + facts_id, {
+        const res = await api.delete("api/news/" + facts_id, {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
@@ -362,65 +293,9 @@ export default {
 
         this.$q.notify({
           type: "positive",
-          message: "Факт удален",
+          message: "Новость удалена",
         });
-        this.getFacts();
-      } catch (error) {
-        this.onError(error);
-      }
-    },
-
-    /**
-     * Изменение автора факта
-     * @param {*} id
-     * @param {*} name
-     */
-    async changeAuthor(id, name) {
-      try {
-        await api.put(
-          "api/fact/" + id,
-          {
-            author: name,
-          },
-          {
-            headers: {
-              Authorization: "Basic " + btoa(this.auth),
-              "x-requested-with": "*",
-            },
-          }
-        );
-        this.$q.notify({
-          type: "positive",
-          message: "Автор сохранен",
-        });
-      } catch (error) {
-        this.onError(error);
-      }
-    },
-
-    /**
-     * Изменение копирайта на изображение
-     * @param {*} id
-     * @param {*} footer
-     */
-    async changeFooter(id, footer) {
-      try {
-        await api.put(
-          "api/fact/" + id,
-          {
-            fact_footer: footer,
-          },
-          {
-            headers: {
-              Authorization: "Basic " + btoa(this.auth),
-              "x-requested-with": "*",
-            },
-          }
-        );
-        this.$q.notify({
-          type: "positive",
-          message: "Копирайт сохранен",
-        });
+        this.getNews();
       } catch (error) {
         this.onError(error);
       }
@@ -429,14 +304,14 @@ export default {
     /**
      * Изменение названия (заголовка) факта
      * @param {*} id
-     * @param {*} name
+     * @param {*} title
      */
-    async changeName(id, name) {
+    async changeTitle(id, title) {
       try {
         await api.put(
-          "api/fact/" + id,
+          "api/news/" + id,
           {
-            fact_name: name,
+            title: title,
           },
           {
             headers: {
@@ -447,7 +322,7 @@ export default {
         );
         this.$q.notify({
           type: "positive",
-          message: "Название сохранено",
+          message: "Заголовок сохранен",
         });
       } catch (error) {
         this.onError(error);
@@ -457,14 +332,14 @@ export default {
     /**
      * Изменение описание факта
      * @param {*} id
-     * @param {*} desc
+     * @param {*} text
      */
-    async changeDescription(id, desc) {
+    async changeDescription(id, text) {
       try {
         await api.put(
-          "api/fact/" + id,
+          "api/news/" + id,
           {
-            fact_text: desc,
+            text: text,
           },
           {
             headers: {
@@ -475,7 +350,7 @@ export default {
         );
         this.$q.notify({
           type: "positive",
-          message: "Автор сохранен",
+          message: "Текст сохранен",
         });
       } catch (error) {
         this.onError(error);
@@ -490,7 +365,7 @@ export default {
     async changeUrl(id, url) {
       try {
         await api.put(
-          "api/fact/" + id,
+          "api/news/" + id,
           {
             image_url: url,
           },
@@ -513,12 +388,10 @@ export default {
     async addNewFacts() {
       try {
         const response = await api.post(
-          "api/fact",
+          "api/news",
           {
-            author: this.newAuthor,
-            fact_footer: this.newFactFooter,
-            fact_name: this.newFactName,
-            fact_text: this.newFactText,
+            title: this.newTitle,
+            text: this.newText,
             image_url: this.newImgUrl,
           },
           {
@@ -530,13 +403,12 @@ export default {
         );
         this.$q.notify({
           type: "positive",
-          message: "Новый факт успешно добавлен.",
+          message: "Новость успешно добавлена.",
         });
         this.icon = false;
-        this.getFacts();
-        this.newAuthor = "";
-        this.newFactName = "";
-        this.newFactText = "";
+        this.getNews();
+        this.newTitle = "";
+        this.newText = "";
         this.newImgUrl = "";
       } catch (error) {
         this.onError(error);

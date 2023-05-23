@@ -10,6 +10,7 @@
       <facts v-if="selectedTable === 'Факты'" />
       <event v-if="selectedTable === 'Мероприятия'" />
       <school v-if="selectedTable === 'Школы'" />
+      <news v-if = "selectedTable === 'Новости'" ></news>
     </q-card-section>
   </q-card>
 </template>
@@ -20,6 +21,7 @@ import Roles from "../components/Roles.vue";
 import Facts from "../components/Facts.vue";
 import Event from "../components/Event.vue";
 import School from "../components/School.vue";
+import News from "../components/News.vue";
 export default {
   components: {
     Roles,
@@ -27,11 +29,12 @@ export default {
     Facts,
     Event,
     School,
+    News
   },
   data() {
     return {
       selectedTable: "",
-      tableOptions: ["Роли", "Пользователи", "Факты", "Мероприятия", "Школы"],
+      tableOptions: ["Роли", "Пользователи", "Факты", "Мероприятия", "Школы", "Новости"],
     };
   },
 };

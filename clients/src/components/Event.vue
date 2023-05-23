@@ -739,7 +739,9 @@ export default {
   },
 };
 </script>
-<style scoped>.image {
-  height: 60%;
-  width: 60%;
-}</style>
+<style scoped>
+.image {
+  height: 30%;
+  width: 30%;
+}
+</style>

@@ -409,11 +409,11 @@ export default {
             name: '',
             type: 'pie',
             color:[
-            "#D794AB",
-            "#B678B8",
-            "#B284C9",
-            "#A395B9",
-            "#806FAF"
+            "#CEA69A",
+            "#C57C76",
+            "#B96363",
+            "#977065",
+            "#644B4F"
 
           ],
 
@@ -917,7 +917,7 @@ export default {
             name: element.year,
             data: element.values,
             type: "bar",
-            color:"#806FAF",
+            color:"#CEA69A",
             smooth: true,
           });
       });
@@ -1006,7 +1006,7 @@ export default {
             name: element.year,
             data: element.values,
             type: "bar",
-            color:"#806FAF",
+            color:"#CEA69A",
             smooth: true,
           });
       });
@@ -1123,7 +1123,7 @@ export default {
             name: element.year,
             data: element.values,
             type: "bar",
-            color:"#806FAF",
+            color:"#CEA69A",
             smooth: true,
           });
       });
@@ -1233,7 +1233,7 @@ export default {
             name: element.year,
             data: element.values,
             type: "bar",
-            color:"#806FAF",
+            color:"#CEA69A",
             smooth: true,
           });
       });

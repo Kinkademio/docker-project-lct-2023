@@ -93,7 +93,7 @@ export default {
             size: 4,
             duration: 0.3,
             opacity: 1,
-            speed: 3
+            speed: 1
           },
           repulse: {
             distance: 200,
@@ -127,7 +127,7 @@ export default {
 }
 
 .normal_gradient {
-  background: linear-gradient(0deg,  #7D5260 0%, #6650a4 100%);
+  background: linear-gradient(0deg,  #644B4F 0%, #CEA69A 100%);
 }
 </style>
 

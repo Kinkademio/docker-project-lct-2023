@@ -123,11 +123,11 @@ export default defineComponent({
 </script>
 <style scoped>
 .background {
-  background: linear-gradient(0deg, #00000000 0%, #090249 99%);
+  background: linear-gradient(0deg, #00000000 0%, #594545 99%);
 }
 </style>
 <style scoped>
 .my-menu-link{
-  background: #4136571f
+  background: #462a2a21
 }
 </style>
