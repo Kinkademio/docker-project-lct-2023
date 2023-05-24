@@ -38,7 +38,8 @@
                 <q-icon name="upload" />
                 <q-popup-edit>
                   <q-input
-                     @update:model-value="(val => { file = val[0] }), uploadFile()"
+                      v-model="file"
+                     @update="uploadFile()"
                       filled
                      type="file"
                     ></q-input>
@@ -104,7 +105,8 @@
                 <q-icon name="upload" />
                 <q-popup-edit>
                   <q-input
-                     @update:model-value="(val => { file = val[0] }), uploadFile(props.row._id)"
+                  v-model="file"
+                     @update:model-value="uploadFile(props.row._id)"
                       filled
                      type="file"
                     ></q-input>
@@ -259,11 +261,11 @@ export default {
     },
     async uploadFile(prop){
       let formData = new FormData();
-      formData.append('file', this.file);
+      formData.append("file", this.file);
+      console.log(this.file);
+      console.log(formData);
       try {
-        const res = await api.post("api/uploads/create/", {
-          formData
-        },{
+        const res = await api.post("api/uploads/create/", formData ,{
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
@@ -281,11 +283,11 @@ export default {
     },
     async uploadFile(){
       let formData = new FormData();
-      formData.append('file', this.file);
+      formData.append("file", this.file);
+      console.log(this.file);
+      console.log(formData.getAll('files'));
       try {
-        const res = await api.post("api/uploads/create/", {
-          formData
-        },{
+        const res = await api.post("api/uploads/create/", formData,{
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
