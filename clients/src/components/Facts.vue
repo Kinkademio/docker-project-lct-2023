@@ -34,19 +34,15 @@
                   <q-input v-model="newFactName" label="Название" />
                   <q-input v-model="newFactText" label="Текст" />
                   <q-input v-model="newImgUrl" label="Ссылка на изображение">
-                    <q-btn  flat dense :color="'grey-8'">
-                <q-icon name="upload" />
-                <q-popup-edit>
-                  <q-input
-                      v-model="file"
-                     @update="uploadFile()"
-                      filled
-                     type="file"
-                    ></q-input>
-                </q-popup-edit>
-                <q-tooltip>Загрузить новове изображение</q-tooltip>
-              </q-btn>
-            </q-input>
+                    <q-btn flat dense :color="'grey-8'">
+                      <q-icon name="upload" />
+                      <q-popup-edit>
+                        <q-file v-model="file" label="Выберете изображение" outlined accept=".jpg, .jpeg, .png" use-chips
+                          style="max-width: 300px" @update:model-value="uploadFileA()"></q-file>
+                      </q-popup-edit>
+                      <q-tooltip>Загрузить новове изображение</q-tooltip>
+                    </q-btn>
+                  </q-input>
                   <q-btn flat style="width: 100%;  background-color: rgba(7, 7, 7, 0.050);"
                     @click="addNewFacts()">Принять</q-btn>
                 </q-card-section>
@@ -101,15 +97,11 @@
                 :color="'grey-8'"><q-icon name="link" />
                 <q-tooltip>Перейти по ссылке</q-tooltip></q-btn>
               {{ getShortText(props.row.image_url) }}
-              <q-btn  flat dense :color="'grey-8'">
+              <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit>
-                  <q-input
-                  v-model="file"
-                     @update:model-value="uploadFile(props.row._id)"
-                      filled
-                     type="file"
-                    ></q-input>
+                <q-popup-edit @hide="uploadFileB(props.row._id)">
+                  <q-file v-model="file" label="Выберете изображение" outlined accept=".jpg, .jpeg, .png" use-chips
+                    style="max-width: 300px"></q-file>
                 </q-popup-edit>
                 <q-tooltip>Загрузить новове изображение</q-tooltip>
               </q-btn>
@@ -119,7 +111,7 @@
             </q-td>
 
             <q-td key="views" :props="props">
-              {{ props.row.viewCount}}
+              {{ props.row.viewCount }}
             </q-td>
 
             <q-td key="like" :props="props">
@@ -127,7 +119,8 @@
             </q-td>
 
             <q-td key="control">
-              <q-btn @click="(confirm = true),(deleteRowId = props.row._id)" flat dense :color="'grey-8'"><q-icon name="delete_forever" />
+              <q-btn @click="(confirm = true), (deleteRowId = props.row._id)" flat dense :color="'grey-8'"><q-icon
+                  name="delete_forever" />
                 <q-tooltip>Удалить</q-tooltip></q-btn>
             </q-td>
           </q-tr>
@@ -142,15 +135,15 @@
   <q-dialog v-model="confirm" persistent>
     <q-card>
       <q-card-section class="row items-center">
-         <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+        <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
       </q-card-section>
 
       <q-card-actions align="between">
         <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-        <q-btn flat label="Удалить"  @click="removeFacts(deleteRowId)" color="primary" v-close-popup></q-btn>
+        <q-btn flat label="Удалить" @click="removeFacts(deleteRowId)" color="primary" v-close-popup></q-btn>
       </q-card-actions>
     </q-card>
-   </q-dialog>
+  </q-dialog>
 </template>
 
 <script>
@@ -259,41 +252,50 @@ export default {
       }
       return descr;
     },
-    async uploadFile(prop){
+    async uploadFileB(prop) {
+      if(this.file == null) return;
       let formData = new FormData();
       formData.append("file", this.file);
-      console.log(this.file);
-      console.log(formData);
       try {
-        const res = await api.post("api/uploads/create/", formData ,{
+        const res = await api.post("api/uploads/create/", formData, {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
           },
         });
-        this.rows.forEach(el =>{
 
-          if(el._id == prop){
+        this.rows.forEach(el => {
+          console.log(el)
+          if (el._id == prop) {
             el.image_url = res.data;
           }
         })
+        this.file = null;
+        this.$q.notify({
+          type: "positive",
+          message: "Изображение загружено",
+        });
       } catch (error) {
         this.onError(error);
       }
     },
-    async uploadFile(){
+    async uploadFileA() {
+      if(this.file == null) return;
       let formData = new FormData();
       formData.append("file", this.file);
-      console.log(this.file);
-      console.log(formData.getAll('files'));
       try {
-        const res = await api.post("api/uploads/create/", formData,{
+        const res = await api.post("api/uploads/create/", formData, {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
           },
         });
         this.newImgUrl = res.data;
+        this.file = null;
+        this.$q.notify({
+          type: "positive",
+          message: "Изображение загружено",
+        });
       } catch (error) {
         this.onError(error);
       }
@@ -311,12 +313,12 @@ export default {
             "x-requested-with": "*",
           },
         });
-        res.data.forEach(el=>{
+        res.data.forEach(el => {
           let likeCount = 0;
-          if(el.views != null){
-            Object.values(el.views).forEach(v=>{
-            if(v.like) likeCount++;
-          })
+          if (el.views != null) {
+            Object.values(el.views).forEach(v => {
+              if (v.like) likeCount++;
+            })
           }
           el['likeCount'] = likeCount;
           el['viewCount'] = el.views ? Object.values(el.views).length : 0;
@@ -561,7 +563,7 @@ export default {
     /**
      * Поиск по выбранному критерию
      */
-     getRows() {
+    getRows() {
       if (this.text !== "") {
         let text = this.text;
         let result = [];
@@ -577,7 +579,7 @@ export default {
         let searchFields = searchFiled.split('.');
         this.rows.map(function (r) {
           let object = r[searchFields[0]];
-          for(let index = 1; index<searchFields.length; index ++){
+          for (let index = 1; index < searchFields.length; index++) {
             object = object[searchFields[index]];
           }
 
@@ -588,7 +590,7 @@ export default {
               }
             });
           }
-          else{
+          else {
             if (object.toString().toLowerCase().includes(text.toString().toLowerCase())) {
               result.push(r);
             }
