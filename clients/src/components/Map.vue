@@ -5,13 +5,13 @@
       <q-card class="map-card">
         <q-toolbar>
           <q-toolbar-title>
-            <q-img :src="img" class="img"></q-img>
+            <q-img :src="img" class="img q-mt-lg"></q-img>
           </q-toolbar-title>
         </q-toolbar>
 
         <q-card-section>
-          <p>Название школы : {{ nameSchool }}</p>
-          <p>Адресс школы: {{ addressStr }}</p>
+          <p>{{ nameSchool }}</p>
+          <p>{{ addressStr }}</p>
           <p>Телефон школы : {{ phone }}</p>
           <p>Електронный адресс: {{ email }}</p>
         </q-card-section>
@@ -89,15 +89,15 @@ export default {
           this.email = this.rows[i].contacts.mail;
           this.img = this.rows[i].image_url;
         });
-        const clusterer = new Clusterer(map, {
-          clusterStyle: {
-            icon: "https://docs.2gis.com/img/mapgl/cluster.svg",
-            hoverIcon: "https://docs.2gis.com/img/mapgl/clusterHover.svg",
-            labelColor: "#ffffff",
-            labelFontSize: 16,
-          },
-        });
-        clusterer.load(this.markers[i]);
+        // const clusterer = new Clusterer(map, {
+        //   clusterStyle: {
+        //     icon: "https://docs.2gis.com/img/mapgl/cluster.svg",
+        //     hoverIcon: "https://docs.2gis.com/img/mapgl/clusterHover.svg",
+        //     labelColor: "#ffffff",
+        //     labelFontSize: 16,
+        //   },
+        // });
+        // clusterer.load(this.markers[i]);
         // clusterer.load(this.markers);
       }
     },
