@@ -32,7 +32,16 @@
                 <q-card-section class="q-pt-none">
                   <q-input v-model="newName" label="Название" />
                   <q-input v-model="newDescription" label="Описание" />
-                  <q-input v-model="newSchoolImg" label="Фотография школы" />
+                  <q-input v-model="newSchoolImg" label="Ссылка на изображение школы">
+                    <q-btn flat dense :color="'grey-8'">
+                      <q-icon name="upload" />
+                      <q-popup-edit>
+                        <q-file v-model="file" label="Выберете изображение" outlined accept=".jpg, .jpeg, .png" use-chips
+                          style="max-width: 300px" @update:model-value="uploadFileA()"></q-file>
+                      </q-popup-edit>
+                      <q-tooltip>Загрузить новове изображение</q-tooltip>
+                    </q-btn>
+                  </q-input>
                   <q-input v-model="newShoolAddressName" label="Адресс школы" readonly />
                   <q-input v-model="newAddressComment" label="Комментарий адреса" />
                   <div id="container"></div>
@@ -80,6 +89,14 @@
                 :color="'grey-8'"><q-icon name="link" />
                 <q-tooltip>Перейти по ссылке</q-tooltip></q-btn>
               {{ getShortText(props.row.image_url) }}
+              <q-btn flat dense :color="'grey-8'">
+                <q-icon name="upload" />
+                <q-popup-edit @hide="uploadFileB(props.row._id)">
+                  <q-file v-model="file" label="Выберете изображение" outlined accept=".jpg, .jpeg, .png" use-chips
+                    style="max-width: 300px"></q-file>
+                </q-popup-edit>
+                <q-tooltip>Загрузить новове изображение</q-tooltip>
+              </q-btn>
               <q-popup-edit v-model="props.row.image_url" @hide="changeSchoolImage(props.row._id, props.row.image_url)">
                 <q-input type="textarea" v-model="props.row.image_url" label="Ссылка на изображение школы"></q-input>
               </q-popup-edit>
@@ -182,6 +199,7 @@ export default {
   },
   data() {
     return {
+      file: ref(null),
       deleteRowId: -1,
       confirm: ref(false),
       iconn: ref(false),
@@ -287,6 +305,54 @@ export default {
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
+    async uploadFileB(prop) {
+      if(this.file == null) return;
+      let formData = new FormData();
+      formData.append("file", this.file);
+      try {
+        const res = await api.post("api/uploads/create/", formData, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+
+        this.rows.forEach(el => {
+          console.log(el)
+          if (el._id == prop) {
+            el.image_url = res.data;
+          }
+        })
+        this.file = null;
+        this.$q.notify({
+          type: "positive",
+          message: "Изображение загружено",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async uploadFileA() {
+      if(this.file == null) return;
+      let formData = new FormData();
+      formData.append("file", this.file);
+      try {
+        const res = await api.post("api/uploads/create/", formData, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+        this.newSchoolImg = res.data;
+        this.file = null;
+        this.$q.notify({
+          type: "positive",
+          message: "Изображение загружено",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
     /**
      * Сокращение длинного теста при выводе в таблицу
      * @param {*} descr
@@ -598,7 +664,7 @@ export default {
               },
             },
             contacts: {
-              mail: this.newmail,
+              mail: this.newMail,
               web_site: this.newWebSite,
             },
           },
