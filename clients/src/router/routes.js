@@ -12,13 +12,18 @@ import Login from '../components/Login_C.vue'
 import Register from '../components/Registr_C.vue'
 import VueCookies from "vue-cookies";
 
+import Map from '../components/Map.vue'
 
 const routes = [{
+    path: '/map',
+    component: Map,
+    name: 'map',
+  }, {
+
     path: '/auth',
     component: AuthLayout,
     name: 'auth',
-    children: [
-      {
+    children: [{
         path: 'login',
         name: 'login',
         component: Login
@@ -34,8 +39,7 @@ const routes = [{
   {
     path: '/',
     component: MainLayout,
-    children: [
-      {
+    children: [{
         path: 'statistic',
         name: 'statistic',
         component: Statistic
@@ -58,13 +62,17 @@ const routes = [{
     ],
     beforeEnter: (to, from) => {
       if (!VueCookies.get('token') && to.name !== 'auth') {
-        return { name: 'auth' }
+        return {
+          name: 'auth'
+        }
       }
 
     },
     beforeUpdate(to, from) {
       if (!VueCookies.get('token') && to.name !== 'auth') {
-        return { name: 'auth' }
+        return {
+          name: 'auth'
+        }
       }
     },
   },
