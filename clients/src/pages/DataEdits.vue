@@ -10,7 +10,8 @@
       <facts v-if="selectedTable === 'Факты'" />
       <event v-if="selectedTable === 'Мероприятия'" />
       <school v-if="selectedTable === 'Школы'" />
-      <news v-if = "selectedTable === 'Новости'" ></news>
+      <news v-if = "selectedTable === 'Новости'" />
+      <direction v-if = "selectedTable === 'Направления(теги)'"></direction>
     </q-card-section>
   </q-card>
 </template>
@@ -22,6 +23,7 @@ import Facts from "../components/Facts.vue";
 import Event from "../components/Event.vue";
 import School from "../components/School.vue";
 import News from "../components/News.vue";
+import Direction from "../components/Direction.vue";
 export default {
   components: {
     Roles,
@@ -29,12 +31,13 @@ export default {
     Facts,
     Event,
     School,
-    News
+    News,
+    Direction
   },
   data() {
     return {
       selectedTable: "",
-      tableOptions: ["Роли", "Пользователи", "Факты", "Мероприятия", "Школы", "Новости"],
+      tableOptions: ["Роли", "Пользователи", "Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"],
     };
   },
 };
