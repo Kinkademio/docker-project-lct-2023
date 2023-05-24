@@ -261,7 +261,7 @@ export default {
       let formData = new FormData();
       formData.append('file', this.file);
       try {
-        const res = await api.post("api/uploads", {
+        const res = await api.post("api/uploads/create/", {
           formData
         },{
           headers: {
@@ -283,7 +283,7 @@ export default {
       let formData = new FormData();
       formData.append('file', this.file);
       try {
-        const res = await api.post("api/uploads", {
+        const res = await api.post("api/uploads/create/", {
           formData
         },{
           headers: {
