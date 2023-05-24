@@ -288,12 +288,9 @@ class authController {
     async removeRole(req, res) {
         try {
             const {
-                rolesName
+                id
             } = req.body
-            const role = await Roles.findOne({
-                rolesName
-            })
-            await Roles.findByIdAndDelete(role._id);
+            await Roles.findByIdAndDelete(id);
             res.status(200).json({
                 message: 'Роль удалена'
             })
