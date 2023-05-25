@@ -10,7 +10,7 @@ module.exports ={
      */
      async get({params: {id}}, res) {
         try {
-            const item = await ChildDirection.findById(id)
+            let  item = await ChildDirection.findById(id)
             item['parentColor'] = Direction.findById(item.parent).color;
             return res.status(200).send(item)
 
@@ -26,12 +26,11 @@ module.exports ={
      */
     async getAll(_, res) {
         try {
-            const items = await ChildDirection.find();
+            let items = await ChildDirection.find();
             items.forEach(item => {
                 item['parentColor'] = Direction.findById(item.parent).color;
             });
             return res.status(200).send(items)
-
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
         }
