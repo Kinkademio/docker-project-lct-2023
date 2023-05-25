@@ -14,7 +14,7 @@
             style="padding-bottom: 0px"
             bottom-slots
             borderless
-            v-model="text"
+            v-model="textSearch"
             label="Поиск"
           >
             <template v-slot:prepend>
@@ -41,7 +41,7 @@
 
                 <q-card-section class="q-pt-none">
                   <q-input v-model="newTitle" label="Заголовок" />
-                  <q-input v-model="newText" label="Описание" />
+                  <q-input v-model="newText" label="Текст" />
                   <q-input v-model="newImgUrl" label="Ссылка на изображение" />
                   <q-btn
                     class="q-mt-md"
@@ -89,13 +89,9 @@
               <div>{{ getShortText(props.row.title) }}</div>
               <q-popup-edit
                 v-model="props.row.title"
-                @hide="changeAuthor(props.row._id, props.row.title)"
+                @hide="changeTitle(props.row._id, props.row.title)"
               >
-                <q-input
-                  type="textarea"
-                  v-model="props.row.title"
-                  label="Заголовок"
-                ></q-input>
+                <q-input v-model="props.row.title" label="Заголовок"></q-input>
               </q-popup-edit>
             </q-td>
 
@@ -103,12 +99,12 @@
               <div>{{ getShortText(props.row.text) }}</div>
               <q-popup-edit
                 v-model="props.row.text"
-                @hide="changeFooter(props.row._id, props.row.text)"
+                @hide="changeDescription(props.row._id, props.row.text)"
               >
                 <q-input
                   type="textarea"
                   v-model="props.row.text"
-                  label="Описание"
+                  label="Текст"
                 ></q-input>
               </q-popup-edit>
             </q-td>
@@ -211,7 +207,7 @@ export default {
       deleteRowId: -1,
       icon: ref(false),
       newPass: "",
-      text: "",
+      textSearch: "",
       confirm: ref(false),
       searchSelected: "",
       auth: "12GradMapAdmin345SRscx:23pdmtF334slkRDcS5EREc2",

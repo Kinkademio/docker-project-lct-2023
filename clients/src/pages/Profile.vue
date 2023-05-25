@@ -154,7 +154,7 @@ export default {
         });
         return;
       }
-      const passwordRegex = /^[a-zA-Z._]+$/;
+      const passwordRegex = /^[a-zA-Z._0-9]+$/;
       if (!passwordRegex.test(this.password)) {
         this.$q.notify({
           type: "negative",
