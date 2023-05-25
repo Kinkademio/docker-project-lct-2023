@@ -3,8 +3,8 @@ var schema = new Schema({
   name:{
     type: String,
   },
-  color:{
+  parent:{
     type: String,
   }
 });
-module.exports = model('Direction', schema)
+module.exports = model('ChildDirection', schema)

@@ -9,6 +9,7 @@ const news = require('./News')
 const chource = require('./Chource')
 const direction = require('./Direction')
 const test = require('./Test')
+const childDir = require('./ChildDir')
 module.exports = {
     fact,
     uploads,
@@ -20,5 +21,6 @@ module.exports = {
     news,
     chource,
     direction,
-    test
+    test,
+    childDir
 };

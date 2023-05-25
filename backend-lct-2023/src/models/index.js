@@ -6,6 +6,7 @@ const News = require('./News')
 const Chource = require('./Chource')
 const Test = require('./Test')
 const Direction = require('./Direction')
+const ChildDirection = require('./ChildDir')
 module.exports ={
     Fact, 
     School, 
@@ -14,5 +15,6 @@ module.exports ={
     News,
     Chource,
     Direction,
-    Test
+    Test,
+    ChildDirection
 };
