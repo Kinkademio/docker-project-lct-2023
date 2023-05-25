@@ -13,7 +13,6 @@ module.exports ={
         try {
             let item = await ChildDirection.findById(id);
             let color = await Direction.findById(item.parent);
-            item.color = color ? color.color : "#000000";
             return res.status(200).send(item, color)
 
         } catch (err) {
