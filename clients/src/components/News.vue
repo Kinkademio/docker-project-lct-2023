@@ -40,9 +40,9 @@
                 </q-card-section>
 
                 <q-card-section class="q-pt-none">
-                  <q-input v-model="tittle" label="Заголовок" />
-                  <q-input v-model="text" label="Описание" />
-                  <q-input v-model="image_url" label="Ссылка на изображение" />
+                  <q-input v-model="newTitle" label="Заголовок" />
+                  <q-input v-model="newText" label="Описание" />
+                  <q-input v-model="newImgUrl" label="Ссылка на изображение" />
                   <q-btn
                     class="q-mt-md"
                     flat
