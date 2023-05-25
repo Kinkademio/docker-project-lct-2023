@@ -4,7 +4,7 @@
     <div class="absolute-center">
       <img class="image" src="../resources/404безошибкиcпузырями.svg" />
       <div class="text-h2 transparent-text">
-        Станица, которую вы ищете <br />
+        Страница, которую вы ищете <br />
         не существует.
       </div>
       <q-btn
