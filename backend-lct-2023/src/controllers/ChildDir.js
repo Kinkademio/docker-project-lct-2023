@@ -12,6 +12,7 @@ module.exports ={
      async get({params: {id}}, res) {
         try {
             let item = await ChildDirection.findById(id);
+            item.color = color.color;
             let color = await Direction.findById(item.parent);
             return res.status(200).send({item:item, color:color})
 
