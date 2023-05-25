@@ -413,6 +413,7 @@ export default {
           message: "Название сохранено",
         });
         this.getTegs();
+        this.getChildTag();
       } catch (error) {
         this.onError(error);
       }
@@ -432,6 +433,7 @@ export default {
           message: "Цвет сохранен",
         });
         this.getTegs();
+        this.getChildTag();
       } catch (error) {
         this.onError(error);
       }
