@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div id="map"></div>
     <q-dialog v-model="toolbar">
       <q-card style="width: 700px; max-width: 80vw;">
@@ -33,7 +32,6 @@
 
       </q-card>
     </q-dialog>
-  </div>
 </template>
 
 <script>
@@ -82,9 +80,6 @@ export default {
            labelFontSize: 16,
            },
       });
-      const marker = new mapglAPI.Marker(map, {
-        coordinates: [37.62199313139937, 55.754172570006155],
-      });
       try {
         const res = await api.get("api/school", {
           headers: {
@@ -120,8 +115,8 @@ export default {
           this.img = this.rows[i].image_url;
           this.description = this.rows[i].description;
         }else{
-          map.setZoom(map.getZoom() + 2);
           map.setCenter(event.lngLat);
+          map.setZoom(map.getZoom() + 2);
         }
       });
     },
@@ -129,10 +124,18 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+
+#q-app{
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
 #map {
-  width: 100vw;
-  height: 100vh;
+position: relative;
+height: 100%;
+width: 100%;
+min-height: 100%;
 }
 
 </style>
