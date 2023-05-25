@@ -7,7 +7,8 @@ var schema = new Schema({
     type: String,
   },
   color: {
-    type: String
+    type: String,
+    default: "",
   }
 });
 module.exports = model('ChildDirection', schema)
