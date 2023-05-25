@@ -110,6 +110,12 @@
               </q-popup-edit>
             </q-td>
 
+            <q-td key="tags" :props="props">
+              <div v-if="props.row.dir" v-for="dir in props.row.dir">
+              <q-chip  removable clickabl v-model="props.row.tagStatus" @remove="log('Icecream')" :style="{'background-color': `${dir.color}`}"  text-color="white"> {{dir.name}}  </q-chip>
+            </div>
+            </q-td>
+
             <q-td key="views" :props="props">
               {{ props.row.viewCount }}
             </q-td>
@@ -205,6 +211,14 @@ export default {
           sortable: true,
         },
         {
+          name: "tags",
+          align: "left",
+          label: "Теги",
+          field: "dir",
+          canEdit: true,
+          sortable: false,
+        },
+        {
           name: "views",
           align: "left",
           label: "Просмотры",
@@ -234,13 +248,33 @@ export default {
       newFactName: "",
       newFactText: "",
       newImgUrl: "",
+      tags: [],
     };
   },
-  mounted() {
+  async beforeMount() {
     this.getFacts();
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
+    async getTags(){
+      try {
+        const res = await api.get("api/direction", {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+        let tag_arr = [];
+        res.data.forEach(el =>{
+
+          tag_arr[el._id] = {name: el.name, color: el.color};
+        })
+        this.tags = tag_arr;
+
+      } catch (error) {
+        this.onError(error);
+      }
+    },
     /**
      * Сокращение длинного теста при выводе в таблицу
      * @param {*} descr
@@ -313,12 +347,22 @@ export default {
             "x-requested-with": "*",
           },
         });
+        await this.getTags();
         res.data.forEach(el => {
           let likeCount = 0;
           if (el.views != null) {
             Object.values(el.views).forEach(v => {
               if (v.like) likeCount++;
             })
+          }
+          if(el.dir.length > 0){
+
+            let newDir = [];
+            el.dir.forEach(di=>{
+              console.log(di)
+             newDir.push({ id: di, name:this.tags[di].name, color: this.tags[di].color, tagStatus: true});
+            })
+            el.dir = newDir;
           }
           el['likeCount'] = likeCount;
           el['viewCount'] = el.views ? Object.values(el.views).length : 0;
@@ -334,6 +378,7 @@ export default {
      * @param {*} error
      */
     onError(error) {
+      console.log(error)
       this.loaded = true;
       if (!error.response || !error.response.status) {
         this.$q.notify({
