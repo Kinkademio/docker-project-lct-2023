@@ -1,5 +1,6 @@
 const boom = require('boom');
 const { Fact } = require('../models');
+const {Direction} = require('../models');
 const path = require('path');
 
 const customCrud = () => ({
@@ -12,8 +13,19 @@ const customCrud = () => ({
     async get({ params: { id } }, res) {
         try {
             const item = await Fact.findById(id);
+           
+            let dirs = item.dir;
+            let newDirFormat = [];
+            dirs.forEach(el =>{
+                let parentItem = Direction.findById(el.parent);
+                if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
+                newDirFormat[parentItem.name].push({
+                    name: el.name,
+                    color: parentItem.color
+                })
+            })
+            item.dir = newDirFormat;
             return res.status(200).send(item);
-
         } catch (err) {
             return res.status(400).send({ status: false, err: boom.boomify(err) });
         }
@@ -27,6 +39,21 @@ const customCrud = () => ({
     async getAll(req, res) {
         try {
             const items = await Fact.find();
+
+            items.forEach(item =>{
+                let dirs = item.dir;
+                let newDirFormat = [];
+                dirs.forEach(el =>{
+                    let parentItem = Direction.findById(el.parent);
+                    if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
+                    newDirFormat[parentItem.name].push({
+                        name: el.name,
+                        color: parentItem.color
+                    })
+                })
+                item.dir = newDirFormat;
+            })
+
             return res.status(200).send(items);
 
         } catch (err) {
