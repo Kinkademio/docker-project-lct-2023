@@ -80,7 +80,7 @@ export default {
           type: "positive",
           message: "Пользователь успешно авторизован.",
         });
-        this.$router.replace("/");
+        this.$router.replace("/#/statistic");
       } catch (error) {
         this.onError(error);
       }
