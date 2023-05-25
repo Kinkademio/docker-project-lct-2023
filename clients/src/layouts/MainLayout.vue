@@ -1,20 +1,43 @@
 <template>
-  <q-layout view="lHh Lpr lFf" >
+  <q-layout view="lHh Lpr lFf">
     <particles :key="this.$route.name"> </particles>
     <q-header reveal class="background">
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+        />
         <q-toolbar-title class="text-h5">Личный кабинет</q-toolbar-title>
         <p class="q-pt-md q-pr-md text-h6">{{ name }}</p>
         <q-btn @click="logout()" flat round icon="logout" />
       </q-toolbar>
     </q-header>
-    <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" :breakpoint="600">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      :width="250"
+      :breakpoint="600"
+    >
       <q-list>
-        <q-img class="q-ma-lg" style="width: 200px;" src="../resources/LogoInside.svg"></q-img>
+        <q-img
+          class="q-ma-lg"
+          style="width: 200px"
+          src="../resources/LogoInside.svg"
+        ></q-img>
         <q-separator></q-separator>
-        <div v-for="nav, key in navigation" :key="key">
-          <q-item exact clickable v-ripple @click="navugate(nav.route)" :active="currentRoute == nav.route" active-class="my-menu-link">
+        <div v-for="(nav, key) in navigation" :key="key">
+          <q-item
+            exact
+            clickable
+            v-ripple
+            @click="navugate(nav.route)"
+            :active="currentRoute == nav.route"
+            active-class="my-menu-link"
+          >
             <q-item-section avatar>
               <q-icon :name="nav.iconName" />
             </q-item-section>
@@ -24,8 +47,8 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container >
-      <q-page style="margin: 0px 24px 0px 24px;" >
+    <q-page-container>
+      <q-page style="margin: 0px 24px 0px 24px">
         <router-view />
       </q-page>
     </q-page-container>
@@ -33,7 +56,6 @@
 </template>
 
 <script>
-
 import Particles from "../components/Particles.vue";
 import { api } from "../boot/axios";
 import { defineComponent, ref } from "vue";
@@ -46,7 +68,7 @@ export default defineComponent({
   components: {
     EssentialLink,
     Login,
-    Particles
+    Particles,
   },
   data() {
     return {
@@ -72,12 +94,16 @@ export default defineComponent({
           label: "Профиль",
           route: "profile",
           iconName: "account_circle",
-
         },
         {
           label: "Техническая поддержка",
           route: "techsupport",
           iconName: "help_outline",
+        },
+        {
+          label: "Конструктор тестов",
+          route: "test_constr",
+          iconName: "test",
         },
       ],
       name: VueCookies.get("uname"),
@@ -101,31 +127,30 @@ export default defineComponent({
     },
     navugate(route) {
       this.currentRoute = route;
-      if(this.currentRoute == "map"){
-        const routeData = this.$router.resolve({name: this.currentRoute});
-        window.open(routeData.href, '_blank');
-      }else{
+      if (this.currentRoute == "map") {
+        const routeData = this.$router.resolve({ name: this.currentRoute });
+        window.open(routeData.href, "_blank");
+      } else {
         this.$router.push({ name: this.currentRoute });
       }
-
     },
     reroute() {
-      if (!VueCookies.get('token')) {
+      if (!VueCookies.get("token")) {
         this.$router.replace("/auth");
       }
-    }
+    },
   },
   beforeMount() {
     this.reroute();
     this.currentRoute = this.$route.name;
-    if (this.$router.currentRoute.value.fullPath == '/') {
+    if (this.$router.currentRoute.value.fullPath == "/") {
       this.$router.push({ name: this.currentRoute });
     }
   },
   beforeUpdate() {
     this.reroute();
     this.$router.push({ name: this.currentRoute });
-  }
+  },
 });
 </script>
 <style scoped>
@@ -134,7 +159,7 @@ export default defineComponent({
 }
 </style>
 <style scoped>
-.my-menu-link{
-  background: #462a2a21
+.my-menu-link {
+  background: #462a2a21;
 }
 </style>

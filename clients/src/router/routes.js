@@ -15,6 +15,8 @@ import VueCookies from "vue-cookies";
 import Map from '../components/Map.vue'
 import MapInner from '../components/MapInsert.vue'
 
+import TestConstr from '../components/TestConstructor.vue'
+
 
 const routes = [{
     path: '/map',
@@ -65,6 +67,11 @@ const routes = [{
         path: '/schoolmap',
         component: MapInner,
         name: 'map_inside',
+      },
+      {
+        path: '/testconstr',
+        component: TestConstr,
+        name: 'test_constr',
       }
     ],
     beforeEnter: (to, from) => {
