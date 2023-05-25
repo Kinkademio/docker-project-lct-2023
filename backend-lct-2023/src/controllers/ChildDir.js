@@ -30,7 +30,7 @@ module.exports ={
         try {
             let items = await ChildDirection.find();
             for(let iterator = 0; iterator < items.lenght; iterator ++){
-                let color = await Direction.findById(item.parent);
+                let color = await Direction.findById(items[iterator].parent);
                 items[iterator].color = color.color;
             }  
             return res.status(200).send(items)
