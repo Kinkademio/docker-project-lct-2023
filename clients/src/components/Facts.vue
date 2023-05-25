@@ -34,7 +34,7 @@
             <q-dialog v-model="icon">
               <q-card class="bg-white text-black add-fact">
                 <q-card-section class="row items-center q-pb-none">
-                  <div class="text-h6">Добавления нового факта</div>
+                  <div class="text-h6">Добавление нового факта</div>
                   <q-space />
                   <q-btn icon="close" flat round dense v-close-popup />
                 </q-card-section>
@@ -43,7 +43,7 @@
                   <q-input v-model="newAuthor" label="О ком" />
                   <q-input
                     v-model="newFactFooter"
-                    label="Авторсоке право на используемое изображение"
+                    label="Авторское право на используемое изображение"
                   />
                   <q-input v-model="newFactName" label="Название" />
                   <q-input v-model="newFactText" label="Текст" />
@@ -53,7 +53,7 @@
                       <q-popup-edit>
                         <q-file
                           v-model="file"
-                          label="Выберете изображение"
+                          label="Выберите изображение"
                           outlined
                           accept=".jpg, .jpeg, .png"
                           use-chips
@@ -179,7 +179,7 @@
                 <q-popup-edit @hide="uploadFileB(props.row._id)">
                   <q-file
                     v-model="file"
-                    label="Выберете изображение"
+                    label="Выберите изображение"
                     outlined
                     accept=".jpg, .jpeg, .png"
                     use-chips

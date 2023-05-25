@@ -758,7 +758,7 @@ export default {
         );
         this.$q.notify({
           type: "positive",
-          message: "Название сохранено",
+          message: "Дата начала сохранена",
         });
       } catch (error) {
         this.onError(error);
@@ -788,7 +788,7 @@ export default {
         );
         this.$q.notify({
           type: "positive",
-          message: "Название сохранено",
+          message: "Дата окончания сохранена",
         });
       } catch (error) {
         this.onError(error);
@@ -911,7 +911,7 @@ export default {
         );
         this.$q.notify({
           type: "positive",
-          message: "Новое соьбытие успешно добавлен.",
+          message: "Новое событие успешно добавлено.",
         });
         this.icon = false;
         this.getEvents();

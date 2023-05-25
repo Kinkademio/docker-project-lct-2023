@@ -34,7 +34,7 @@
             <q-dialog v-model="icon">
               <q-card class="bg-white text-black add-fact">
                 <q-card-section class="row items-center q-pb-none">
-                  <div class="text-h6">Добавления новой новости</div>
+                  <div class="text-h6">Добавление новой новости</div>
                   <q-space />
                   <q-btn icon="close" flat round dense v-close-popup />
                 </q-card-section>
@@ -42,7 +42,23 @@
                 <q-card-section class="q-pt-none">
                   <q-input v-model="newTitle" label="Заголовок" />
                   <q-input v-model="newText" label="Текст" />
-                  <q-input v-model="newImgUrl" label="Ссылка на изображение" />
+                  <q-input v-model="newImgUrl" label="Ссылка на изображение">
+                    <q-btn flat dense :color="'grey-8'">
+                      <q-icon name="upload" />
+                      <q-popup-edit>
+                        <q-file
+                          v-model="file"
+                          label="Выберите изображение"
+                          outlined
+                          accept=".jpg, .jpeg, .png"
+                          use-chips
+                          style="max-width: 300px"
+                          @update:model-value="uploadFileA()"
+                        ></q-file>
+                      </q-popup-edit>
+                      <q-tooltip>Загрузить новове изображение</q-tooltip>
+                    </q-btn>
+                  </q-input>
                   <q-btn
                     class="q-mt-md"
                     flat
@@ -91,7 +107,11 @@
                 v-model="props.row.title"
                 @hide="changeTitle(props.row._id, props.row.title)"
               >
-                <q-input v-model="props.row.title" label="Заголовок"></q-input>
+                <q-input
+                  type="textarea"
+                  v-model="props.row.title"
+                  label="Заголовок"
+                ></q-input>
               </q-popup-edit>
             </q-td>
 
@@ -123,17 +143,15 @@
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit>
-                  <q-input
-                    @update:model-value="
-                      ((val) => {
-                        file = val[0];
-                      },
-                      uploadFile(props.row._id))
-                    "
-                    filled
-                    type="file"
-                  ></q-input>
+                <q-popup-edit @hide="uploadFileB(props.row._id)">
+                  <q-file
+                    v-model="file"
+                    label="Выберите изображение"
+                    outlined
+                    accept=".jpg, .jpeg, .png"
+                    use-chips
+                    style="max-width: 300px"
+                  ></q-file>
                 </q-popup-edit>
                 <q-tooltip>Загрузить новове изображение</q-tooltip>
               </q-btn>
@@ -261,26 +279,49 @@ export default {
       }
       return descr;
     },
-    async uploadFile(prop) {
+    async uploadFileB(prop) {
+      if (this.file == null) return;
       let formData = new FormData();
       formData.append("file", this.file);
       try {
-        const res = await api.post(
-          "api/uploads",
-          {
-            formData,
+        const res = await api.post("api/uploads/create/", formData, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
           },
-          {
-            headers: {
-              Authorization: "Basic " + btoa(this.auth),
-              "x-requested-with": "*",
-            },
-          }
-        );
+        });
+
         this.rows.forEach((el) => {
+          console.log(el);
           if (el._id == prop) {
             el.image_url = res.data;
           }
+        });
+        this.file = null;
+        this.$q.notify({
+          type: "positive",
+          message: "Изображение загружено",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async uploadFileA() {
+      if (this.file == null) return;
+      let formData = new FormData();
+      formData.append("file", this.file);
+      try {
+        const res = await api.post("api/uploads/create/", formData, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+        this.newImgUrl = res.data;
+        this.file = null;
+        this.$q.notify({
+          type: "positive",
+          message: "Изображение загружено",
         });
       } catch (error) {
         this.onError(error);
@@ -491,8 +532,8 @@ export default {
      * Поиск по выбранному критерию
      */
     getRows() {
-      if (this.text !== "") {
-        let text = this.text;
+      if (this.textSearch !== "") {
+        let text = this.textSearch;
         let result = [];
         let searchFiled;
 

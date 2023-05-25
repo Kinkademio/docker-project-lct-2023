@@ -3,7 +3,7 @@
     <q-card-section>
       <q-input filled v-model="name" label="Имя пользователя" />
       <q-separator></q-separator>
-      <q-input filled v-model="username" label="Адресс эл.почты" />
+      <q-input filled v-model="username" label="Адрес эл.почты" />
       <q-separator></q-separator>
       <q-input
         filled
