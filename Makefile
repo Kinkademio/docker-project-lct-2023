@@ -1,5 +1,3 @@
-#Инициализация всего проекта
-initProject: db backend
 db: 
 	mkdir "_databases"
 	echo '############# Database folder successfully created ##############'
