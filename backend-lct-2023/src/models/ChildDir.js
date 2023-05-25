@@ -5,6 +5,9 @@ var schema = new Schema({
   },
   parent:{
     type: String,
+  },
+  color: {
+    type: String
   }
 });
 module.exports = model('ChildDirection', schema)

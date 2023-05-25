@@ -11,8 +11,8 @@ module.exports ={
      async get({params: {id}}, res) {
         try {
             let item = await ChildDirection.findById(id);
-            let parentColor = {'parentColor': await Direction.findById(item.parent).color};
-            return res.status(200).send( {...item, ...parentColor})
+            item.color = await Direction.findById(item.parent).color; 
+            return res.status(200).send(item)
 
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
@@ -28,7 +28,7 @@ module.exports ={
         try {
             let items = await ChildDirection.find();
             for(let iterator = 0; iterator < items.lenght; iterator ++){
-                items[iterator].parentColor = await Direction.findById(items[iterator].parent).color;
+                items[iterator].color = await Direction.findById(items[iterator].parent).color;
             }  
             return res.status(200).send(items)
         } catch (err) {
