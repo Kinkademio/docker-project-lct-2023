@@ -1,6 +1,7 @@
 const genericCrud = require('./GenericController')
 const {ChildDirection} = require('../models');
 const {Direction} = require('../models');
+const boom = require('boom');
 module.exports ={
      /**
      * Получение одной записи по id
