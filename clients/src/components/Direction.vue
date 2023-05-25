@@ -1,5 +1,110 @@
 <template>
   <div>
+    <div class="text-h6">Родительские теги</div>
+    <q-spinner-ball v-if="!loaded" class="fixed-center" size="5rem" color="white" :thickness="3" />
+    <div v-if="loaded && !error">
+      <div class="row">
+        <div class="col-3">
+          <q-input style="padding-bottom: 0px" bottom-slots borderless v-model="text" label="Поиск">
+            <template v-slot:prepend>
+              <q-icon name="search"></q-icon>
+            </template>
+          </q-input>
+        </div>
+        <div class="col-2">
+          <q-select borderless v-model="searchSelected" :options="getSearchParamsArray" />
+        </div>
+        <div class="col-1 q-mt-sm">
+          <q-btn flat icon="add" @click="icon = true">
+            <q-dialog v-model="icon">
+              <q-card class="bg-white text-black add-fact">
+                <q-bar>
+                  <q-space />
+                  <q-btn dense flat icon="close" v-close-popup>
+                    <q-tooltip class="bg-white text-primary">Закрыть</q-tooltip>
+                  </q-btn>
+                </q-bar>
+
+                <q-card-section>
+                  <div class="text-h6">Добавление нового тега</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                  <q-input v-model="newName" label="Название" />
+                  <q-color v-model="newColor" no-header-tabs no-footer></q-color>
+                  <q-btn class="q-mt-lg" flat style="width: 100%;  background-color: rgba(7, 7, 7, 0.050);"
+                    @click="addTag()">Принять</q-btn>
+                </q-card-section>
+              </q-card>
+            </q-dialog></q-btn>
+        </div>
+      </div>
+      <q-separator></q-separator>
+
+
+
+
+
+      <q-table flat borderless separator="cell" :rows="getRows" :columns="columns" row-key="name"
+        no-data-label="Ничего не найдено">
+        <template v-slot:header-cell="props">
+          <q-th :props="props">
+            <q-icon v-if="props.col.canEdit" name="lock_open" size="1.5em"></q-icon>
+            <q-icon v-else-if="props.col.canEdit != null" name="lock" size="1.5em"></q-icon>
+            {{ props.col.label }}
+          </q-th>
+        </template>
+
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="name" :props="props">
+              <div>{{ props.row.name }}</div>
+              <q-popup-edit v-model="props.row.fact_text" @hide="changeTagName(props.row._id, props.row.name)">
+                <q-input type="textarea" v-model="props.row.name" label="Название тега"></q-input>
+              </q-popup-edit>
+            </q-td>
+
+            <q-td key="color" :props="props">
+              <q-chip :style="{'background-color': `${props.row.color}`}"  text-color="white">{{ props.row.name }}
+                <q-popup-edit v-model="props.row.fact_text" @hide="changeTagColor(props.row._id, props.row.color)">
+                  <q-color v-model="props.row.color" no-header-tabs no-footer></q-color>
+              </q-popup-edit>
+              </q-chip>
+            </q-td>
+
+            <q-td key="control">
+              <q-btn @click="(confirm = true), (deleteRowId = props.row._id)" flat dense :color="'grey-8'"><q-icon
+                  name="delete_forever" />
+                <q-tooltip>Удалить</q-tooltip></q-btn>
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
+    </div>
+
+    <div class="text-center" v-if="error == 403">
+      <div class="text-h4 " style="opacity: 0.5">У вас нет прав</div>
+      <img class="image" src="../resources/Уваснедостаточноправv2.svg">
+
+    </div>
+    <q-dialog v-model="confirm" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+      </q-card-section>
+
+      <q-card-actions align="between">
+        <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
+        <q-btn flat label="Удалить" @click="deleteTag(deleteRowId)" color="primary" v-close-popup></q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  </div>
+
+
+
+  <div>
+    <div class="text-h6">Дочерние теги</div>
     <q-spinner-ball v-if="!loaded" class="fixed-center" size="5rem" color="white" :thickness="3" />
     <div v-if="loaded && !error">
 
@@ -14,7 +119,7 @@
           </q-input>
         </div>
         <div class="col-2">
-          <q-select borderless v-model="this.searchSelected" :options="getSearchParamsArray" />
+          <q-select borderless v-model="searchSelected" :options="getSearchParamsArray" />
         </div>
         <div class="col-1 q-mt-sm">
           <q-btn flat icon="add" @click="icon = true">
