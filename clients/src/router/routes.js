@@ -13,6 +13,8 @@ import Register from '../components/Registr_C.vue'
 import VueCookies from "vue-cookies";
 
 import Map from '../components/Map.vue'
+import MapInner from '../components/MapInsert.vue'
+
 
 const routes = [{
     path: '/map',
@@ -59,6 +61,11 @@ const routes = [{
         name: 'profile',
         component: Profile
       },
+      {
+        path: '/schoolmap',
+        component: MapInner,
+        name: 'map_inside',
+      }
     ],
     beforeEnter: (to, from) => {
       if (!VueCookies.get('token') && to.name !== 'auth') {

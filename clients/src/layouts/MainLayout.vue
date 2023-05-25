@@ -1,6 +1,5 @@
 <template>
-  <q-layout class="#particles-js" view="lHh Lpr lFf">
-
+  <q-layout view="lHh Lpr lFf" >
     <particles :key="this.$route.name"> </particles>
     <q-header reveal class="background">
       <q-toolbar>
@@ -11,7 +10,6 @@
       </q-toolbar>
     </q-header>
     <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" :breakpoint="600">
-
       <q-list>
         <q-img class="q-ma-lg" style="width: 200px;" src="../resources/LogoInside.svg"></q-img>
         <q-separator></q-separator>
@@ -22,14 +20,12 @@
             </q-item-section>
             <q-item-section class="text-h7">{{ nav.label }}</q-item-section>
           </q-item>
-
         </div>
-
       </q-list>
     </q-drawer>
 
-    <q-page-container>
-      <q-page style="margin: 0px 24px 0px 24px;">
+    <q-page-container >
+      <q-page style="margin: 0px 24px 0px 24px;" >
         <router-view />
       </q-page>
     </q-page-container>
@@ -63,6 +59,11 @@ export default defineComponent({
           base: true,
         },
         {
+          label: "Карта школ",
+          route: "map_inside",
+          iconName: "map",
+        },
+        {
           label: "Редактирование данных ",
           route: "dataedit",
           iconName: "storage",
@@ -77,7 +78,7 @@ export default defineComponent({
           label: "Техническая поддержка",
           route: "techsupport",
           iconName: "help_outline",
-        }
+        },
       ],
       name: VueCookies.get("uname"),
       token: VueCookies.get("token"),
@@ -100,7 +101,13 @@ export default defineComponent({
     },
     navugate(route) {
       this.currentRoute = route;
-      this.$router.push({ name: this.currentRoute });
+      if(this.currentRoute == "map"){
+        const routeData = this.$router.resolve({name: this.currentRoute});
+        window.open(routeData.href, '_blank');
+      }else{
+        this.$router.push({ name: this.currentRoute });
+      }
+
     },
     reroute() {
       if (!VueCookies.get('token')) {
@@ -110,7 +117,7 @@ export default defineComponent({
   },
   beforeMount() {
     this.reroute();
-    this.currentRoute = this.navigation[0].route;
+    this.currentRoute = this.$route.name;
     if (this.$router.currentRoute.value.fullPath == '/') {
       this.$router.push({ name: this.currentRoute });
     }
