@@ -13,7 +13,7 @@ module.exports ={
         try {
             let item = await ChildDirection.findById(id);
             let color = await Direction.findById(item.parent);
-            return res.status(200).send(item, color)
+            return res.status(200).send({item:item, color:color})
 
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
