@@ -1,14 +1,20 @@
 <template>
   <particles></particles>
-  <div class=" text-white text-center">
+  <div class="text-white text-center">
     <div class="absolute-center">
-      <img class="image" src="../resources/404безошибкиcпузырями.svg">
+      <img class="image" src="../resources/404безошибкиcпузырями.svg" />
       <div class="text-h2 transparent-text">
-        Станица, котоую вы ищете <br>
+        Станица, которую вы ищете <br />
         не существует.
       </div>
-      <q-btn class="q-mt-sm text-h6 transparent-text" text-color="white" unelevated to="/" label="Вернуться на главную"
-        no-caps />
+      <q-btn
+        class="q-mt-sm text-h6 transparent-text"
+        text-color="white"
+        unelevated
+        to="/"
+        label="Вернуться на главную"
+        no-caps
+      />
     </div>
   </div>
 </template>
@@ -19,7 +25,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ErrorNotFound",
-  components: { Particles }
+  components: { Particles },
 });
 </script>
 <style scoped>

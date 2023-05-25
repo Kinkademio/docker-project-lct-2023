@@ -1,31 +1,42 @@
 <template>
   <div>
-    <q-spinner-ball v-if="!loaded" class="fixed-center" size="5rem" color="white" :thickness="3" />
+    <q-spinner-ball
+      v-if="!loaded"
+      class="fixed-center"
+      size="5rem"
+      color="white"
+      :thickness="3"
+    />
     <div v-if="loaded && !error">
       <div class="row">
         <div class="col-3">
-          <q-input style="padding-bottom: 0px" bottom-slots borderless v-model="text" label="Поиск">
+          <q-input
+            style="padding-bottom: 0px"
+            bottom-slots
+            borderless
+            v-model="text"
+            label="Поиск"
+          >
             <template v-slot:prepend>
               <q-icon name="search"></q-icon>
             </template>
           </q-input>
         </div>
         <div class="col-2">
-          <q-select borderless v-model="this.searchSelected" :options="getSearchParamsArray" />
+          <q-select
+            borderless
+            v-model="this.searchSelected"
+            :options="getSearchParamsArray"
+          />
         </div>
         <div class="col-1 q-mt-sm">
           <q-btn flat icon="add" @click="icon = true">
             <q-dialog v-model="icon">
               <q-card class="bg-white text-black add-fact">
-                <q-bar>
+                <q-card-section class="row items-center q-pb-none">
+                  <div class="text-h6">Добавления нового мероприятия</div>
                   <q-space />
-                  <q-btn dense flat icon="close" v-close-popup>
-                    <q-tooltip class="bg-white text-primary">Закрыть</q-tooltip>
-                  </q-btn>
-                </q-bar>
-
-                <q-card-section>
-                  <div class="text-h6">Добавление нового мероприятия</div>
+                  <q-btn icon="close" flat round dense v-close-popup />
                 </q-card-section>
 
                 <q-card-section class="q-pt-none">
@@ -34,11 +45,25 @@
                   <q-input v-model="newDateStart" label="Дата начала">
                     <template v-slot:prepend>
                       <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="newDateStart" mask="DD.MM.YYYY, HH:mm:ss" minimal first-day-of-week="1"
-                            :locale="localeCalend">
+                        <q-popup-proxy
+                          cover
+                          transition-show="scale"
+                          transition-hide="scale"
+                        >
+                          <q-date
+                            v-model="newDateStart"
+                            mask="DD.MM.YYYY, HH:mm:ss"
+                            minimal
+                            first-day-of-week="1"
+                            :locale="localeCalend"
+                          >
                             <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Закрыть" color="primary" flat></q-btn>
+                              <q-btn
+                                v-close-popup
+                                label="Закрыть"
+                                color="primary"
+                                flat
+                              ></q-btn>
                             </div>
                           </q-date>
                         </q-popup-proxy>
@@ -47,11 +72,25 @@
 
                     <template v-slot:append>
                       <q-icon name="access_time" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-time v-model="newDateStart" mask="DD.MM.YYYY, HH:mm:ss" format24h first-day-of-week="1"
-                            :locale="localeCalend">
+                        <q-popup-proxy
+                          cover
+                          transition-show="scale"
+                          transition-hide="scale"
+                        >
+                          <q-time
+                            v-model="newDateStart"
+                            mask="DD.MM.YYYY, HH:mm:ss"
+                            format24h
+                            first-day-of-week="1"
+                            :locale="localeCalend"
+                          >
                             <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Закрыть" color="primary" flat></q-btn>
+                              <q-btn
+                                v-close-popup
+                                label="Закрыть"
+                                color="primary"
+                                flat
+                              ></q-btn>
                             </div>
                           </q-time>
                         </q-popup-proxy>
@@ -62,11 +101,25 @@
                   <q-input v-model="newDateEnd" label="Дата окончания">
                     <template v-slot:prepend>
                       <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="newDateEnd" mask="DD.MM.YYYY, HH:mm:ss" minimal first-day-of-week="1"
-                            :locale="localeCalend">
+                        <q-popup-proxy
+                          cover
+                          transition-show="scale"
+                          transition-hide="scale"
+                        >
+                          <q-date
+                            v-model="newDateEnd"
+                            mask="DD.MM.YYYY, HH:mm:ss"
+                            minimal
+                            first-day-of-week="1"
+                            :locale="localeCalend"
+                          >
                             <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Закрыть" color="primary" flat></q-btn>
+                              <q-btn
+                                v-close-popup
+                                label="Закрыть"
+                                color="primary"
+                                flat
+                              ></q-btn>
                             </div>
                           </q-date>
                         </q-popup-proxy>
@@ -75,11 +128,25 @@
 
                     <template v-slot:append>
                       <q-icon name="access_time" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-time v-model="newDateEnd" mask="DD.MM.YYYY, HH:mm:ss" format24h first-day-of-week="1"
-                            :locale="localeCalend">
+                        <q-popup-proxy
+                          cover
+                          transition-show="scale"
+                          transition-hide="scale"
+                        >
+                          <q-time
+                            v-model="newDateEnd"
+                            mask="DD.MM.YYYY, HH:mm:ss"
+                            format24h
+                            first-day-of-week="1"
+                            :locale="localeCalend"
+                          >
                             <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Закрыть" color="primary" flat></q-btn>
+                              <q-btn
+                                v-close-popup
+                                label="Закрыть"
+                                color="primary"
+                                flat
+                              ></q-btn>
                             </div>
                           </q-time>
                         </q-popup-proxy>
@@ -87,11 +154,20 @@
                     </template>
                   </q-input>
 
-                  <q-checkbox v-model="newIsFree" label="Бесплатное" style="opacity: 60%" />
+                  <q-checkbox
+                    v-model="newIsFree"
+                    label="Бесплатное"
+                    style="opacity: 60%"
+                  />
                   <q-input v-model="newOrganizName" label="Организатор" />
                   <q-input v-model="newUrl" label="Адрес сайта" />
-                  <q-btn flat style="width: 100%;  background-color: rgba(7, 7, 7, 0.050);"
-                    @click="addNewEvent()">Принять</q-btn>
+                  <q-btn
+                    class="q-mt-md"
+                    flat
+                    style="width: 100%; background-color: rgba(7, 7, 7, 0.05)"
+                    @click="addNewEvent()"
+                    >Добавить</q-btn
+                  >
                 </q-card-section>
               </q-card>
             </q-dialog>
@@ -100,12 +176,27 @@
       </div>
       <q-separator></q-separator>
 
-      <q-table flat borderless separator="cell" :rows="getRows" :columns="columns" row-key="name"
-        no-data-label="Ничего не найдено">
+      <q-table
+        flat
+        borderless
+        separator="cell"
+        :rows="getRows"
+        :columns="columns"
+        row-key="name"
+        no-data-label="Ничего не найдено"
+      >
         <template v-slot:header-cell="props">
           <q-th :props="props">
-            <q-icon v-if="props.col.canEdit" name="lock_open" size="1.5em"></q-icon>
-            <q-icon v-else-if="props.col.canEdit != null" name="lock" size="1.5em"></q-icon>
+            <q-icon
+              v-if="props.col.canEdit"
+              name="lock_open"
+              size="1.5em"
+            ></q-icon>
+            <q-icon
+              v-else-if="props.col.canEdit != null"
+              name="lock"
+              size="1.5em"
+            ></q-icon>
             {{ props.col.label }}
           </q-th>
         </template>
@@ -114,22 +205,46 @@
           <q-tr :props="props">
             <q-td key="name" :props="props">
               <div>{{ getShortText(props.row.name) }}</div>
-              <q-popup-edit v-model="props.row.name" @hide="changeName(props.row._id, props.row.name)">
-                <q-input type="textarea" v-model="props.row.name" label="Название мероприятия"></q-input>
+              <q-popup-edit
+                v-model="props.row.name"
+                @hide="changeName(props.row._id, props.row.name)"
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.name"
+                  label="Название мероприятия"
+                ></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="date_start" :props="props">
               <div>{{ props.row.date_start }}</div>
-              <q-popup-edit v-model="props.row.date_start" @hide="changeDateStart(props.row._id, props.row.date_start)">
+              <q-popup-edit
+                v-model="props.row.date_start"
+                @hide="changeDateStart(props.row._id, props.row.date_start)"
+              >
                 <q-input v-model="props.row.date_start">
                   <template v-slot:prepend>
                     <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="props.row.date_start" mask="DD.MM.YYYY, HH:mm:ss" minimal first-day-of-week="1"
-                          :locale="localeCalend">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-date
+                          v-model="props.row.date_start"
+                          mask="DD.MM.YYYY, HH:mm:ss"
+                          minimal
+                          first-day-of-week="1"
+                          :locale="localeCalend"
+                        >
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Закрыть" color="primary" flat></q-btn>
+                            <q-btn
+                              v-close-popup
+                              label="Закрыть"
+                              color="primary"
+                              flat
+                            ></q-btn>
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -138,11 +253,25 @@
 
                   <template v-slot:append>
                     <q-icon name="access_time" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-time v-model="props.row.date_start" mask="DD.MM.YYYY, HH:mm:ss" format24h first-day-of-week="1"
-                          :locale="localeCalend">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-time
+                          v-model="props.row.date_start"
+                          mask="DD.MM.YYYY, HH:mm:ss"
+                          format24h
+                          first-day-of-week="1"
+                          :locale="localeCalend"
+                        >
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Закрыть" color="primary" flat></q-btn>
+                            <q-btn
+                              v-close-popup
+                              label="Закрыть"
+                              color="primary"
+                              flat
+                            ></q-btn>
                           </div>
                         </q-time>
                       </q-popup-proxy>
@@ -151,19 +280,35 @@
                 </q-input>
               </q-popup-edit>
             </q-td>
-
 
             <q-td key="date_end" :props="props">
               <div>{{ props.row.date_end }}</div>
-              <q-popup-edit v-model="props.row.date_end" @hide="changeDateEnd(props.row._id, props.row.date_end)">
+              <q-popup-edit
+                v-model="props.row.date_end"
+                @hide="changeDateEnd(props.row._id, props.row.date_end)"
+              >
                 <q-input v-model="props.row.date_end">
                   <template v-slot:prepend>
                     <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="props.row.date_end" mask="DD.MM.YYYY, HH:mm:ss" minimal first-day-of-week="1"
-                          :locale="localeCalend">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-date
+                          v-model="props.row.date_end"
+                          mask="DD.MM.YYYY, HH:mm:ss"
+                          minimal
+                          first-day-of-week="1"
+                          :locale="localeCalend"
+                        >
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Закрыть" color="primary" flat></q-btn>
+                            <q-btn
+                              v-close-popup
+                              label="Закрыть"
+                              color="primary"
+                              flat
+                            ></q-btn>
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -172,11 +317,25 @@
 
                   <template v-slot:append>
                     <q-icon name="access_time" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-time v-model="props.row.date_end" mask="DD.MM.YYYY, HH:mm:ss" format24h first-day-of-week="1"
-                          :locale="localeCalend">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-time
+                          v-model="props.row.date_end"
+                          mask="DD.MM.YYYY, HH:mm:ss"
+                          format24h
+                          first-day-of-week="1"
+                          :locale="localeCalend"
+                        >
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Закрыть" color="primary" flat></q-btn>
+                            <q-btn
+                              v-close-popup
+                              label="Закрыть"
+                              color="primary"
+                              flat
+                            ></q-btn>
                           </div>
                         </q-time>
                       </q-popup-proxy>
@@ -186,31 +345,51 @@
               </q-popup-edit>
             </q-td>
 
-
-
-
-
             <q-td key="isFree" :props="props">
-              <q-checkbox v-model="props.row.isFree" :color="'grey-8'"
-                @click="changeIsFree(props.row._id, props.row.isFree)"></q-checkbox>
+              <q-checkbox
+                v-model="props.row.isFree"
+                :color="'grey-8'"
+                @click="changeIsFree(props.row._id, props.row.isFree)"
+              ></q-checkbox>
             </q-td>
 
             <q-td key="organization_name" :props="props">
               <div>{{ getShortText(props.row.organization_name) }}</div>
-              <q-popup-edit v-model="props.row.organization_name" @hide="
-                changeOrganizName(props.row._id, props.row.organization_name)
-              ">
-                <q-input type="textarea" v-model="props.row.organization_name" label="Организация"></q-input>
+              <q-popup-edit
+                v-model="props.row.organization_name"
+                @hide="
+                  changeOrganizName(props.row._id, props.row.organization_name)
+                "
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.organization_name"
+                  label="Организация"
+                ></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="url" :props="props">
-              <q-btn v-if="props.row.url" :href="props.row.url" target="_blank" flat dense :color="'grey-8'"><q-icon
-                  name="link" />
-                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn>
+              <q-btn
+                v-if="props.row.url"
+                :href="props.row.url"
+                target="_blank"
+                flat
+                dense
+                :color="'grey-8'"
+                ><q-icon name="link" />
+                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn
+              >
               {{ getShortText(props.row.url) }}
-              <q-popup-edit v-model="props.row.url" @hide="changeUrl(props.row._id, props.row.url)">
-                <q-input type="textarea" v-model="props.row.url" label="Ссылка на мероприятие"></q-input>
+              <q-popup-edit
+                v-model="props.row.url"
+                @hide="changeUrl(props.row._id, props.row.url)"
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.url"
+                  label="Ссылка на мероприятие"
+                ></q-input>
               </q-popup-edit>
             </q-td>
 
@@ -221,8 +400,14 @@
             </q-td>
 
             <q-td key="control">
-              <q-btn @click="(confirm = true),(deleteRowId = props.row._id)"  flat dense :color="'grey-8'"><q-icon name="delete_forever" />
-                <q-tooltip>Удалить</q-tooltip></q-btn>
+              <q-btn
+                @click="(confirm = true), (deleteRowId = props.row._id)"
+                flat
+                dense
+                :color="'grey-8'"
+                ><q-icon name="delete_forever" />
+                <q-tooltip>Удалить</q-tooltip></q-btn
+              >
             </q-td>
           </q-tr>
         </template>
@@ -236,15 +421,21 @@
   <q-dialog v-model="confirm" persistent>
     <q-card>
       <q-card-section class="row items-center">
-         <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+        <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
       </q-card-section>
 
       <q-card-actions align="between">
         <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-        <q-btn flat label="Удалить"  @click="removeEvent(deleteRowId)" color="primary" v-close-popup></q-btn>
+        <q-btn
+          flat
+          label="Удалить"
+          @click="removeEvent(deleteRowId)"
+          color="primary"
+          v-close-popup
+        ></q-btn>
       </q-card-actions>
     </q-card>
-   </q-dialog>
+  </q-dialog>
 </template>
 
 <script>
@@ -262,10 +453,44 @@ export default {
       deleteRowId: -1,
       confirm: ref(false),
       localeCalend: {
-        monthsShort: ['Янв.', 'Фев.', 'Мар.', 'Апр.', 'Май.', 'Июн.', 'Июл.', 'Авг.', 'Сен.', 'Окт.', 'Ноя.', 'Дек.'],
-        months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+        monthsShort: [
+          "Янв.",
+          "Фев.",
+          "Мар.",
+          "Апр.",
+          "Май.",
+          "Июн.",
+          "Июл.",
+          "Авг.",
+          "Сен.",
+          "Окт.",
+          "Ноя.",
+          "Дек.",
+        ],
+        months: [
+          "Январь",
+          "Февраль",
+          "Март",
+          "Апрель",
+          "Май",
+          "Июнь",
+          "Июль",
+          "Август",
+          "Сентябрь",
+          "Октябрь",
+          "Ноябрь",
+          "Декабрь",
+        ],
         daysShort: ["Вс.", "Пн.", "Вт.", "Ср.", "Чт.", "Пт.", "Сб."],
-        days: ["Воскрксенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+        days: [
+          "Воскрксенье",
+          "Понедельник",
+          "Вторник",
+          "Среда",
+          "Четверг",
+          "Пятница",
+          "Суббота",
+        ],
       },
       newPass: "",
       text: "",
@@ -376,17 +601,15 @@ export default {
           },
         });
 
-
-        res.data.forEach(el => {
-
+        res.data.forEach((el) => {
           el.date_end = this.formDateToUserView(el.date_end);
           el.date_start = this.formDateToUserView(el.date_start);
-          el['viewCount'] = el.views != null ? Object.keys(el.views).length : 0;
-        })
+          el["viewCount"] = el.views != null ? Object.keys(el.views).length : 0;
+        });
         this.rows = res.data;
         this.loaded = true;
       } catch (error) {
-        console.log(error)
+        console.log(error);
         this.onError(error);
       }
     },
@@ -483,7 +706,9 @@ export default {
      * @param {*} date
      */
     formDateToUserView(date) {
-      let dateFormat = new Date(date).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
+      let dateFormat = new Date(date).toLocaleString("ru-RU", {
+        timeZone: "Europe/Moscow",
+      });
       return dateFormat;
     },
     /**
@@ -491,12 +716,23 @@ export default {
      * @param {*} date
      */
     formDateToDB(date_to_form) {
+      let date = date_to_form.split(",");
+      let date_date = date[0].split(".");
+      let time = date[1].split(":");
 
-      let date = date_to_form.split(',');
-      let date_date = date[0].split('.');
-      let time = date[1].split(':');
-
-      let formDBdate = date_date[2] + '-' + date_date[1] + '-' + date_date[0] + "T" + (Number(time[0]) - 3).toString().padStart(2, '0') + ":" + time[1] + ":" + time[2] + ".000Z";
+      let formDBdate =
+        date_date[2] +
+        "-" +
+        date_date[1] +
+        "-" +
+        date_date[0] +
+        "T" +
+        (Number(time[0]) - 3).toString().padStart(2, "0") +
+        ":" +
+        time[1] +
+        ":" +
+        time[2] +
+        ".000Z";
       return formDBdate;
     },
 
@@ -506,18 +742,20 @@ export default {
      * @param {*} dateStart
      */
     async changeDateStart(id, dateStart) {
-
       let formedDate = this.formDateToDB(dateStart);
       try {
-        await api.put("api/event/" + id, {
-          date_start: formedDate,
-        },
+        await api.put(
+          "api/event/" + id,
+          {
+            date_start: formedDate,
+          },
           {
             headers: {
               Authorization: "Basic " + btoa(this.auth),
               "x-requested-with": "*",
             },
-          });
+          }
+        );
         this.$q.notify({
           type: "positive",
           message: "Название сохранено",
@@ -533,19 +771,21 @@ export default {
      * @param {*} dateEnd
      */
     async changeDateEnd(id, dateEnd) {
-
       let formedDate = this.formDateToDB(dateEnd);
 
       try {
-        await api.put("api/event/" + id, {
-          date_end: dateEnd,
-        },
+        await api.put(
+          "api/event/" + id,
+          {
+            date_end: dateEnd,
+          },
           {
             headers: {
               Authorization: "Basic " + btoa(this.auth),
               "x-requested-with": "*",
             },
-          });
+          }
+        );
         this.$q.notify({
           type: "positive",
           message: "Название сохранено",
@@ -553,7 +793,6 @@ export default {
       } catch (error) {
         this.onError(error);
       }
-
     },
 
     /**
@@ -641,7 +880,6 @@ export default {
       }
     },
     async addNewEvent() {
-
       let date_start = this.formDateToDB(this.newDateStart);
       let date_end = this.formDateToDB(this.newDateEnd);
       let obj = {
@@ -651,7 +889,7 @@ export default {
         isFree: this.newIsFree,
         organization_name: this.newOrganizName,
         url: this.newUrl,
-      }
+      };
 
       try {
         const response = await api.post(
@@ -698,7 +936,7 @@ export default {
     /**
      * Поиск по фильтрам
      */
-     getRows() {
+    getRows() {
       if (this.text !== "") {
         let text = this.text;
         let result = [];
@@ -711,26 +949,34 @@ export default {
           }
         });
 
-        let searchFields = searchFiled.split('.');
+        let searchFields = searchFiled.split(".");
         this.rows.map(function (r) {
           let object = r[searchFields[0]];
-          for(let index = 1; index<searchFields.length; index ++){
+          for (let index = 1; index < searchFields.length; index++) {
             object = object[searchFields[index]];
           }
 
           if (typeof object == "object") {
             object.forEach((elem) => {
-              if (elem.toString().toLowerCase().includes(text.toString().toLowerCase())) {
+              if (
+                elem
+                  .toString()
+                  .toLowerCase()
+                  .includes(text.toString().toLowerCase())
+              ) {
                 result.push(r);
               }
             });
-          }
-          else{
-            if (object.toString().toLowerCase().includes(text.toString().toLowerCase())) {
+          } else {
+            if (
+              object
+                .toString()
+                .toLowerCase()
+                .includes(text.toString().toLowerCase())
+            ) {
               result.push(r);
             }
           }
-
         });
         return result;
       }

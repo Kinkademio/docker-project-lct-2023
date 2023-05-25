@@ -1,111 +1,160 @@
 <template>
   <div>
-    <q-spinner-ball v-if="!loaded" class="fixed-center" size="5rem" color="white" :thickness="3" />
+    <q-spinner-ball
+      v-if="!loaded"
+      class="fixed-center"
+      size="5rem"
+      color="white"
+      :thickness="3"
+    />
     <div v-if="loaded && !error">
       <div class="row">
         <div class="col-3">
-          <q-input style="padding-bottom: 0px" bottom-slots borderless v-model="text" label="Поиск">
+          <q-input
+            style="padding-bottom: 0px"
+            bottom-slots
+            borderless
+            v-model="text"
+            label="Поиск"
+          >
             <template v-slot:prepend>
               <q-icon name="search"></q-icon>
             </template>
           </q-input>
         </div>
         <div class="col-2">
-          <q-select borderless v-model="this.searchSelected" :options="getSearchParamsArray" />
+          <q-select
+            borderless
+            v-model="this.searchSelected"
+            :options="getSearchParamsArray"
+          />
         </div>
         <div class="col-1 q-mt-sm">
           <q-btn flat icon="add" @click="icon = true">
             <q-dialog v-model="icon">
               <q-card class="bg-white text-black add-fact">
-                <q-bar>
+                <q-card-section class="row items-center q-pb-none">
+                  <div class="text-h6">Добавления новой новости</div>
                   <q-space />
-                  <q-btn dense flat icon="close" v-close-popup>
-                    <q-tooltip class="bg-white text-primary">Закрыть</q-tooltip>
-                  </q-btn>
-                </q-bar>
-
-                <q-card-section>
-                  <div class="text-h6">Добавление нового факта</div>
+                  <q-btn icon="close" flat round dense v-close-popup />
                 </q-card-section>
 
                 <q-card-section class="q-pt-none">
-                  <q-input v-model="newAuthor" label="О ком" />
-                  <q-input v-model="newFactFooter" label="Авторсоке право на используемое изображение" />
-                  <q-input v-model="newFactName" label="Название" />
-                  <q-input v-model="newFactText" label="Текст" />
-                  <q-input v-model="newImgUrl" label="Ссылка на изображение" />
-                  <q-btn flat style="width: 100%;  background-color: rgba(7, 7, 7, 0.050);"
-                    @click="addNewFacts()">Принять</q-btn>
+                  <q-input v-model="tittle" label="Заголовок" />
+                  <q-input v-model="text" label="Описание" />
+                  <q-input v-model="image_url" label="Ссылка на изображение" />
+                  <q-btn
+                    class="q-mt-md"
+                    flat
+                    style="width: 100%; background-color: rgba(7, 7, 7, 0.05)"
+                    @click="addNewNews()"
+                    >Добавить</q-btn
+                  >
                 </q-card-section>
               </q-card>
-            </q-dialog></q-btn>
+            </q-dialog></q-btn
+          >
         </div>
       </div>
       <q-separator></q-separator>
 
-      <q-table flat borderless separator="cell" :rows="getRows" :columns="columns" row-key="name"
-        no-data-label="Ничего не найдено">
+      <q-table
+        flat
+        borderless
+        separator="cell"
+        :rows="getRows"
+        :columns="columns"
+        row-key="name"
+        no-data-label="Ничего не найдено"
+      >
         <template v-slot:header-cell="props">
           <q-th :props="props">
-            <q-icon v-if="props.col.canEdit" name="lock_open" size="1.5em"></q-icon>
-            <q-icon v-else-if="props.col.canEdit != null" name="lock" size="1.5em"></q-icon>
+            <q-icon
+              v-if="props.col.canEdit"
+              name="lock_open"
+              size="1.5em"
+            ></q-icon>
+            <q-icon
+              v-else-if="props.col.canEdit != null"
+              name="lock"
+              size="1.5em"
+            ></q-icon>
             {{ props.col.label }}
           </q-th>
         </template>
 
         <template v-slot:body="props">
           <q-tr :props="props">
-            <q-td key="author" :props="props">
-              <div>{{ getShortText(props.row.author) }}</div>
-              <q-popup-edit v-model="props.row.author" @hide="changeAuthor(props.row._id, props.row.author)">
-                <q-input type="textarea" v-model="props.row.author" label="О ком"></q-input>
+            <q-td key="title" :props="props">
+              <div>{{ getShortText(props.row.title) }}</div>
+              <q-popup-edit
+                v-model="props.row.title"
+                @hide="changeAuthor(props.row._id, props.row.title)"
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.title"
+                  label="Заголовок"
+                ></q-input>
               </q-popup-edit>
             </q-td>
 
-            <q-td key="fact_footer" :props="props">
-              <div>{{ getShortText(props.row.fact_footer) }}</div>
-              <q-popup-edit v-model="props.row.fact_footer" @hide="changeFooter(props.row._id, props.row.fact_footer)">
-                <q-input type="textarea" v-model="props.row.fact_footer" label="Авторское право"></q-input>
-              </q-popup-edit>
-            </q-td>
-
-            <q-td key="fact_name" :props="props">
-              <div>{{ getShortText(props.row.fact_name) }}</div>
-              <q-popup-edit v-model="props.row.fact_name" @hide="changeTitle(props.row._id, props.row.fact_name)">
-                <q-input type="textarea" v-model="props.row.fact_name" label="Название"></q-input>
-              </q-popup-edit>
-            </q-td>
-
-            <q-td key="fact_text" :props="props">
-              <div>{{ getShortText(props.row.fact_text) }}</div>
-              <q-popup-edit v-model="props.row.fact_text" @hide="changeDescription(props.row._id, props.row.fact_text)">
-                <q-input type="textarea" v-model="props.row.fact_text" label="Текст"></q-input>
+            <q-td key="text" :props="props">
+              <div>{{ getShortText(props.row.text) }}</div>
+              <q-popup-edit
+                v-model="props.row.text"
+                @hide="changeFooter(props.row._id, props.row.text)"
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.text"
+                  label="Описание"
+                ></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="image_url" :props="props">
-              <q-btn v-if="props.row.image_url" :href="props.row.image_url" target="_blank" flat dense
-                :color="'grey-8'"><q-icon name="link" />
-                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn>
+              <q-btn
+                v-if="props.row.image_url"
+                :href="props.row.image_url"
+                target="_blank"
+                flat
+                dense
+                :color="'grey-8'"
+                ><q-icon name="link" />
+                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn
+              >
               {{ getShortText(props.row.image_url) }}
-              <q-btn  flat dense :color="'grey-8'">
+              <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
                 <q-popup-edit>
                   <q-input
-                     @update:model-value="(val => { file = val[0] }), uploadFile(props.row._id)"
-                      filled
-                     type="file"
-                    ></q-input>
+                    @update:model-value="
+                      ((val) => {
+                        file = val[0];
+                      },
+                      uploadFile(props.row._id))
+                    "
+                    filled
+                    type="file"
+                  ></q-input>
                 </q-popup-edit>
                 <q-tooltip>Загрузить новове изображение</q-tooltip>
               </q-btn>
-              <q-popup-edit v-model="props.row.image_url" @hide="changeUrl(props.row._id, props.row.image_url)">
-                <q-input type="textarea" v-model="props.row.image_url" label="Ссылка на изображение"></q-input>
+              <q-popup-edit
+                v-model="props.row.image_url"
+                @hide="changeUrl(props.row._id, props.row.image_url)"
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.image_url"
+                  label="Ссылка на изображение"
+                ></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="views" :props="props">
-              {{ props.row.viewCount}}
+              {{ props.row.viewCount }}
             </q-td>
 
             <q-td key="like" :props="props">
@@ -113,8 +162,14 @@
             </q-td>
 
             <q-td key="control">
-              <q-btn @click="(confirm = true),(deleteRowId = props.row._id)" flat dense :color="'grey-8'"><q-icon name="delete_forever" />
-                <q-tooltip>Удалить</q-tooltip></q-btn>
+              <q-btn
+                @click="(confirm = true), (deleteRowId = props.row._id)"
+                flat
+                dense
+                :color="'grey-8'"
+                ><q-icon name="delete_forever" />
+                <q-tooltip>Удалить</q-tooltip></q-btn
+              >
             </q-td>
           </q-tr>
         </template>
@@ -124,19 +179,25 @@
       <div class="text-h4" style="opacity: 0.5">У вас нет прав</div>
       <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
     </div>
-  </div>
-  <q-dialog v-model="confirm" persistent>
-    <q-card>
-      <q-card-section class="row items-center">
-         <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
-      </q-card-section>
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+        </q-card-section>
 
-      <q-card-actions align="between">
-        <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-        <q-btn flat label="Удалить"  @click="removeNews(deleteRowId)" color="primary" v-close-popup></q-btn>
-      </q-card-actions>
-    </q-card>
-   </q-dialog>
+        <q-card-actions align="between">
+          <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
+          <q-btn
+            flat
+            label="Удалить"
+            @click="removeNews(deleteRowId)"
+            color="primary"
+            v-close-popup
+          ></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+  </div>
 </template>
 
 <script>
@@ -144,7 +205,6 @@ import { api } from "../boot/axios";
 import { ref } from "vue";
 import VueCookies from "vue-cookies";
 export default {
-
   data() {
     return {
       file: ref(null),
@@ -205,24 +265,27 @@ export default {
       }
       return descr;
     },
-    async uploadFile(prop){
+    async uploadFile(prop) {
       let formData = new FormData();
-      formData.append('file', this.file);
+      formData.append("file", this.file);
       try {
-        const res = await api.post("api/uploads", {
-          formData
-        },{
-          headers: {
-            Authorization: "Basic " + btoa(this.auth),
-            "x-requested-with": "*",
+        const res = await api.post(
+          "api/uploads",
+          {
+            formData,
           },
-        });
-        this.rows.forEach(el =>{
-
-          if(el._id == prop){
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.rows.forEach((el) => {
+          if (el._id == prop) {
             el.image_url = res.data;
           }
-        })
+        });
       } catch (error) {
         this.onError(error);
       }
@@ -240,16 +303,16 @@ export default {
             "x-requested-with": "*",
           },
         });
-        res.data.forEach(el=>{
+        res.data.forEach((el) => {
           let likeCount = 0;
-          if(el.views != null){
-            Object.values(el.views).forEach(v=>{
-            if(v.like) likeCount++;
-          })
+          if (el.views != null) {
+            Object.values(el.views).forEach((v) => {
+              if (v.like) likeCount++;
+            });
           }
-          el['likeCount'] = likeCount;
-          el['viewCount'] = el.views ? Object.values(el.views).length : 0;
-        })
+          el["likeCount"] = likeCount;
+          el["viewCount"] = el.views ? Object.values(el.views).length : 0;
+        });
         this.rows = res.data;
         this.loaded = true;
       } catch (error) {
@@ -385,7 +448,7 @@ export default {
       }
     },
 
-    async addNewFacts() {
+    async addNewNews() {
       try {
         const response = await api.post(
           "api/news",
@@ -431,7 +494,7 @@ export default {
     /**
      * Поиск по выбранному критерию
      */
-     getRows() {
+    getRows() {
       if (this.text !== "") {
         let text = this.text;
         let result = [];
@@ -444,26 +507,34 @@ export default {
           }
         });
 
-        let searchFields = searchFiled.split('.');
+        let searchFields = searchFiled.split(".");
         this.rows.map(function (r) {
           let object = r[searchFields[0]];
-          for(let index = 1; index<searchFields.length; index ++){
+          for (let index = 1; index < searchFields.length; index++) {
             object = object[searchFields[index]];
           }
 
           if (typeof object == "object") {
             object.forEach((elem) => {
-              if (elem.toString().toLowerCase().includes(text.toString().toLowerCase())) {
+              if (
+                elem
+                  .toString()
+                  .toLowerCase()
+                  .includes(text.toString().toLowerCase())
+              ) {
                 result.push(r);
               }
             });
-          }
-          else{
-            if (object.toString().toLowerCase().includes(text.toString().toLowerCase())) {
+          } else {
+            if (
+              object
+                .toString()
+                .toLowerCase()
+                .includes(text.toString().toLowerCase())
+            ) {
               result.push(r);
             }
           }
-
         });
         return result;
       }

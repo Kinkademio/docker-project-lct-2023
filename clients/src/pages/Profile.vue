@@ -22,7 +22,11 @@
             </template>
           </q-input>
 
-          <q-input :readonly="true" v-model="username" hint="Логин в системе" />
+          <q-input
+            :readonly="true"
+            v-model="username"
+            hint="Адресс эл. почты"
+          />
         </q-card-section>
       </div>
       <q-separator vertical inset></q-separator>
@@ -83,7 +87,7 @@ export default {
       isPwd: ref(true),
       username: "",
       name: "",
-      cantEdit: true
+      cantEdit: true,
     };
   },
   methods: {
@@ -92,7 +96,7 @@ export default {
       if (this.name == "") {
         this.$q.notify({
           type: "negative",
-          message: "Имя пользователя не может быть пустым"
+          message: "Имя пользователя не может быть пустым",
         });
         return;
       }
@@ -101,15 +105,15 @@ export default {
       }
       try {
         const res = await api.post("auth/user", {
-          username: VueCookies.get("login")
+          username: VueCookies.get("login"),
         });
 
         const response = await api.put("auth/updateUser/" + res.data._id, {
-          name: this.name
+          name: this.name,
         });
         this.$q.notify({
           type: "positive",
-          message: "Имя пользователя изменено"
+          message: "Имя пользователя изменено",
         });
         VueCookies.set("uname", this.name, "10h");
         window.location.reload();
@@ -123,7 +127,7 @@ export default {
       if (!error.response || !error.response.status) {
         this.$q.notify({
           type: "negative",
-          message: "Нет соединения с сервером"
+          message: "Нет соединения с сервером",
         });
         return;
       }
@@ -131,7 +135,7 @@ export default {
       if (this.error != 403) {
         this.$q.notify({
           type: "negative",
-          message: error.response.data.message ?? "Ошибка сервера"
+          message: error.response.data.message ?? "Ошибка сервера",
         });
       }
     },
@@ -139,14 +143,14 @@ export default {
       if (this.password == "" || this.password < 4) {
         this.$q.notify({
           type: "negative",
-          message: "Новый пароль должен быть более 3 символов"
+          message: "Новый пароль должен быть более 3 символов",
         });
         return;
       }
       if (this.password_again == "") {
         this.$q.notify({
           type: "negative",
-          message: "Введите подтверждение пароля"
+          message: "Введите подтверждение пароля",
         });
         return;
       }
@@ -155,35 +159,35 @@ export default {
         this.$q.notify({
           type: "negative",
           message:
-            "Пароль должен содержать только буквы a-z, A-Z, точку (.) и символ подчеркивания (_)"
+            "Пароль должен содержать только буквы a-z, A-Z, точку (.) и символ подчеркивания (_)",
         });
         return;
       }
       if (this.password_again != this.password) {
         this.$q.notify({
           type: "negative",
-          message: "Пароли не совпадают"
+          message: "Пароли не совпадают",
         });
         return;
       }
       try {
         const res = await api.post("auth/user", {
-          username: VueCookies.get("login")
+          username: VueCookies.get("login"),
         });
 
         await api.put("auth/updateUser/" + res.data._id, {
-          password: this.password
+          password: this.password,
         });
         this.loaded = true;
         this.$q.notify({
           type: "positive",
-          message: "Пароль изменен"
+          message: "Пароль изменен",
         });
       } catch (error) {
         this.onError(error);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
