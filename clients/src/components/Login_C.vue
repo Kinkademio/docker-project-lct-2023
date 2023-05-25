@@ -1,7 +1,7 @@
 <template>
   <q-card style="background-color: #fafafa" flat>
     <q-card-section>
-      <q-input filled v-model="username" label="Логин" />
+      <q-input filled v-model="username" label="Адресс эл.почты" />
       <q-separator></q-separator>
       <q-input
         filled
@@ -54,7 +54,7 @@ export default {
       if (this.username == "") {
         this.$q.notify({
           type: "negative",
-          message: "Введите логин",
+          message: "Введите адресс эл.почты",
         });
         return;
       }

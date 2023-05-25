@@ -1,11 +1,16 @@
 <template>
-  <q-card class="my-card" flat bordered>
+  <q-card class="my-card absolute-center" flat bordered>
     <q-card-section>
-      <q-img style = " width: 100px;" src="../resources/Logo.svg"></q-img>
-
+      <q-img style="width: 100px" src="../resources/Logo.svg"></q-img>
     </q-card-section>
-    <q-tabs v-model="tab" active-color="white" class="text-teal ">
-      <q-tab v-for="panel in tabPanels" :label="panel.lable" :name="panel.name" class="text" @click="changeTab()" />
+    <q-tabs v-model="tab" active-color="white" class="text-teal">
+      <q-tab
+        v-for="panel in tabPanels"
+        :label="panel.lable"
+        :name="panel.name"
+        class="text"
+        @click="changeTab()"
+      />
     </q-tabs>
     <q-separator />
     <router-view></router-view>
@@ -21,8 +26,8 @@ export default {
   param: {
     page: {
       type: String,
-      default: "login"
-    }
+      default: "login",
+    },
   },
   components: {
     Registr,
@@ -31,25 +36,27 @@ export default {
   data() {
     return {
       tab: ref("login"),
-      tabPanels: [{
-        name: "login",
-        lable: "Авторизация",
-      },
-      {
-        name: "registr",
-        lable: "Регистрация",
-      }],
+      tabPanels: [
+        {
+          name: "login",
+          lable: "Авторизация",
+        },
+        {
+          name: "registr",
+          lable: "Регистрация",
+        },
+      ],
     };
   },
 
   methods: {
     changeTab() {
       this.$router.push({ name: this.tab });
-    }
+    },
   },
   beforeMount() {
     this.$router.push({ name: this.tab });
-  }
+  },
 };
 </script>
 
@@ -65,7 +72,7 @@ export default {
 }
 
 .my-card {
-  width: 40vh;
+  width: 420px;
   height: 25vh;
   background-color: rgba(7, 7, 7, 0.288);
 }
