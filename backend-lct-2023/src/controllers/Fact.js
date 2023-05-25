@@ -12,18 +12,18 @@ const customCrud = () => ({
      */
     async get({ params: { id } }, res) {
         try {
-            const item = await Fact.findById(id);
+            let item = await Fact.findById(id);
            
             let dirs = item.dir;
             let newDirFormat = [];
-            dirs.forEach(el =>{
-                let parentItem = Direction.findById(el.parent);
+            for(let i = 0; i<dirs.length; i++){
+                let parentItem =  await Direction.findById(dirs[i].parent);
                 if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                 newDirFormat[parentItem.name].push({
-                    name: el.name,
+                    name: dirs[i].name,
                     color: parentItem.color
                 })
-            })
+            }
             item.dir = newDirFormat;
             return res.status(200).send(item);
         } catch (err) {
@@ -38,22 +38,20 @@ const customCrud = () => ({
      */
     async getAll(req, res) {
         try {
-            const items = await Fact.find();
-
-            items.forEach(item =>{
-                let dirs = item.dir;
+            let items = await Fact.find();
+            for(let j=0 ;j<items.length; j++){
+                let dirs = items[j].dir;
                 let newDirFormat = [];
-                dirs.forEach(el =>{
-                    let parentItem = Direction.findById(el.parent);
+                for(let i = 0; i<dirs.length; i++){
+                    let parentItem =  await Direction.findById(dirs[i].parent);
                     if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                     newDirFormat[parentItem.name].push({
-                        name: el.name,
+                        name: dirs[i].name,
                         color: parentItem.color
                     })
-                })
-                item.dir = newDirFormat;
-            })
-
+                }
+                items[j].dir = newDirFormat;
+            }
             return res.status(200).send(items);
 
         } catch (err) {

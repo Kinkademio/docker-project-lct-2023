@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="text-h6">Родительские теги</div>
+
     <q-spinner-ball v-if="!loaded" class="fixed-center" size="5rem" color="white" :thickness="3" />
     <div v-if="loaded && !error">
+      <div class="text-h6">Родительские теги</div>
       <div class="row">
         <div class="col-3">
           <q-input style="padding-bottom: 0px" bottom-slots borderless v-model="text" label="Поиск">
@@ -104,10 +105,9 @@
 
 
   <div>
-    <div class="text-h6">Дочерние теги</div>
     <q-spinner-ball v-if="!loaded" class="fixed-center" size="5rem" color="white" :thickness="3" />
     <div v-if="loaded && !error">
-
+      <div class="text-h6">Дочерние теги</div>
 
 
       <div class="row">
