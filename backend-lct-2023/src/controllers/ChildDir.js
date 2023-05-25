@@ -32,8 +32,9 @@ module.exports ={
             for(let iterator = 0; iterator < items.lenght; iterator ++){
                 let color = await Direction.findById(items[iterator].parent);
                 items[iterator].color = color.color;
+                items[iterator].name = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
             }  
-            return res.status(200).send(items)
+            return res.status(200).send({items:items, color:items[0].color})
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
         }
