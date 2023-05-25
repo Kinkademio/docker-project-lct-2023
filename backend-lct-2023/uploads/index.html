@@ -1,0 +1,338 @@
+<!-- 
+Online HTML, CSS and JavaScript editor to run code online.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Browser</title>
+</head>
+
+<body>
+  <h1>
+    Для автоматизации загрузки файлов на сервер
+  </h1>
+  <div>
+    <button onclick="checkJsonFile(1)">Посмотреть JSON Фактов</button>
+    <button onclick="placeFactsToServer()">Загрузить Факты</button>
+  </div>
+  <div>
+    <button onclick="checkJsonFile(2)">Посмотреть JSON Школ</button>
+    <button onclick="placeSchoolsToServer()">Загрузить Школы</button>
+  </div>
+  <div>
+    <button onclick="checkJsonFile(3)">Посмотреть JSON Событий</button>
+    <button onclick="placeEventsToServerSync()">Загрузить Событий</button>
+  </div>
+
+</body>
+
+</html>
+
+
+<script>
+
+  let auth = '12GradMapAdmin345SRscx:23pdmtF334slkRDcS5EREc2';
+  function checkJsonFile(type) {
+    let file = '';
+    switch (type) {
+      case 1:
+        file = 'facts.json';
+        break;
+      case 2:
+        file = 'Schools.json';
+        break;
+      case 3:
+        file = 'Events.json';
+        break;
+    }
+    fetch(file)
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+      });
+  }
+  function placeEventsToServerSync() {
+    let api = "https://opendata.mkrf.ru/v2/";
+    let proxy = "http://graduate-map.ru/proxy/";
+    let limit = 1000;
+    let headder = {
+      "X-API-KEY": "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757",
+      "x-requested-with": "*"
+    }
+    let regions = [
+      "Москва",
+      "Московская область"
+    ]
+    let list_of_APIS = [
+      "cinema",
+      "circuses",
+      "concert_halls",
+      "culture_palaces_clubs",
+      "education",
+      "libraries",
+      "museums",
+      "parks",
+      "philharmonic",
+      "theaters"
+    ]
+
+
+    let date = new Date();
+    let currentDay = String(date.getDate()).padStart(2, '0');
+    let currentMonth = String(date.getMonth() + 1).padStart(2, "0");
+    let currentYear = date.getFullYear();
+    date = `${currentYear}-${currentMonth}-${currentDay}`
+
+    //Получение всех id-шников организаций
+    let org_ids = [];
+    list_of_APIS.forEach(org => {
+      regions.forEach(reg => {
+        let srch_params = "$?f={\"data.general.locale.name\":{\"$search\":\"" + reg + "\"}}&l=" + limit;
+        let full_url = proxy + api + org + "/" + srch_params;
+        const request = new XMLHttpRequest();
+        request.open('GET', full_url, false);
+        request.setRequestHeader("X-API-KEY", "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757")
+        request.setRequestHeader("x-requested-with", "*")
+        request.send();
+        //Записываем в массив id полученные синхронно
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            let result = JSON.parse(request.responseText);
+            result.data.forEach(element => {
+              let id = element.data.general.id;
+              //Записываем все id в массив
+              org_ids.push(id);
+
+            })
+          }
+        }
+      })
+    })
+    // По полученным id совершаем СИНХРОННЫЙ запрос к Api для получения "Историй"
+    org_ids.forEach(id => {
+      let sub_url = proxy + api + "events/$?f={\"data.general.end\":{\"$gt\":\"" + date + "\"},\"data.general.organizerPlace.id\":{\"$eq\":\"" + id + "\"}}&l=" + limit;
+      const sub_request = new XMLHttpRequest();
+      sub_request.open('GET', sub_url, false);
+      sub_request.setRequestHeader("X-API-KEY", "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757");
+      sub_request.setRequestHeader("x-requested-with", "*");
+      sub_request.send();
+      if (sub_request.readyState === 4) {
+        if (sub_request.status === 200) {
+          let sub_result = JSON.parse(sub_request.responseText);
+          sub_result.data.forEach(async element => {
+            let api_id = element.data.general.id;
+            let body = {
+              name: element.data.general.name,
+              description: element.data.general.description,
+              isFree: element.data.general.isFree,
+              date_start: element.data.general.start,
+              date_end: element.data.general.end,
+              organization_id: element.data.general.organization.id,
+              organization_name: element.data.general.organization.name,
+              api_id: api_id,
+              image_url: element.data.general.image.url,
+              url: element.data.general.saleLink !== undefined ? element.data.general.saleLink : ''
+            }
+            fetch('http://graduate-map.ru/api/event', {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Basic ' + btoa(auth),
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(body)
+            }).then(res => {
+              console.log(res);
+            })
+          })
+        }
+      }
+    });
+  }
+  function placeEventsToServer() {
+    let api = "https://opendata.mkrf.ru/v2/";
+    let proxy = "http://graduate-map.ru/proxy/";
+    let limit = 1000;
+    let headder = {
+      "X-API-KEY": "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757",
+      "x-requested-with": "*"
+    }
+    let regions = [
+      "Москва",
+      "Московская область"
+    ]
+    let list_of_APIS = [
+      "cinema",
+      "circuses",
+      "concert_halls",
+      "culture_palaces_clubs",
+      "education",
+      "libraries",
+      "museums",
+      "parks",
+      "philharmonic",
+      "theaters"
+    ]
+
+
+    let date = new Date();
+    let currentDay = String(date.getDate()).padStart(2, '0');
+    let currentMonth = String(date.getMonth() + 1).padStart(2, "0");
+    let currentYear = date.getFullYear();
+    date = `${currentYear}-${currentMonth}-${currentDay}`
+
+    //Получение всех id-шников организаций
+    let org_ids = [];
+    list_of_APIS.forEach(org => {
+      regions.forEach(reg => {
+        let srch_params = "$?f={\"data.general.locale.name\":{\"$search\":\"" + reg + "\"}}&l=" + limit;
+        let full_url = proxy + api + org + "/" + srch_params;
+        const request = new XMLHttpRequest();
+        request.open('GET', full_url, true);
+        request.setRequestHeader("X-API-KEY", "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757")
+        request.setRequestHeader("x-requested-with", "*")
+        request.onload = (e) => {
+          if (request.readyState === 4) {
+            if (request.status === 200) {
+              let result = JSON.parse(request.responseText);
+              result.data.forEach(element => {
+                let id = element.data.general.id;
+                let sub_url = proxy + api + "events/$?f={\"data.general.end\":{\"$gt\":\"" + date + "\"},\"data.general.organizerPlace.id\":{\"$eq\":\"" + id + "\"}}&l=" + limit;
+                const sub_request = new XMLHttpRequest();
+                sub_request.open('GET', sub_url, true);
+                sub_request.setRequestHeader("X-API-KEY", "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757");
+                sub_request.setRequestHeader("x-requested-with", "*");
+                sub_request.onload = (e) => {
+                  if (sub_request.readyState === 4) {
+                    if (sub_request.status === 200) {
+                      let sub_result = JSON.parse(sub_request.responseText);
+                      sub_result.data.forEach(async element => {
+                        let api_id = element.data.general.id;
+                        let body = {
+                          name: element.data.general.name,
+                          description: element.data.general.description,
+                          isFree: element.data.general.isFree,
+                          date_start: element.data.general.start,
+                          date_end: element.data.general.end,
+                          organization_id: element.data.general.organization.id,
+                          organization_name: element.data.general.organization.name,
+                          api_id: api_id,
+                          image_url: element.data.general.image.url,
+                          url: element.data.general.saleLink !== undefined ? element.data.general.saleLink : ''
+                        }
+                        fetch('http://graduate-map.ru/api/event', {
+                          method: 'POST',
+                          headers: {
+                            'Authorization': 'Basic ' + btoa(auth),
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify(body)
+                        }).then(res => {
+                          console.log(res);
+                        })
+                      })
+                    }
+                  }
+
+                }
+                sub_request.send();
+              })
+            }
+          };
+        }
+        request.send();
+      })
+    })
+  }
+
+
+
+  function placeSchoolsToServer() {
+    fetch('Schools.json')
+      .then((response) => response.json())
+      .then((json) => {
+        json.forEach(element => {
+          if (element.data.general.locale.id == 2579 || element.data.general.locale.id == 7) {
+
+            let address = {
+              address_str: element.data.general.address.street,
+              comment: element.data.general.address.comment,
+              mapPos: {
+                x: element.data.general.address.mapPosition.coordinates[0],
+                y: element.data.general.address.mapPosition.coordinates[1]
+              }
+            }
+            let contacts = null
+            if (element.data.general.contacts !== undefined) {
+              contacts = {
+                web_site: element.data.general.contacts.website ?? '',
+                mail: element.data.general.contacts.email ?? '',
+                phone: element.data.general.contacts.phones ?? []
+              }
+            }
+            let school = {
+              organization_id: element.data.general.id,
+              image_url: element.data.general.image.url,
+              name: element.data.general.name,
+              description: element.data.general.description ?? '',
+              address: address,
+              contacts: contacts
+            }
+            console.log(school);
+
+            fetch('http://graduate-map.ru/api/school', {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Basic ' + btoa(auth),
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(school)
+            }).then(res => {
+              console.log(res);
+            })
+          }
+        });
+
+      });
+  }
+
+  function placeFactsToServer() {
+    fetch('facts.json')
+      .then((response) => response.json())
+      .then((json) => {
+        json.forEach(element => {
+          //Получаем файлы из ссылок
+          if (element.image) {
+            fetch('http://graduate-map.ru/proxy/' + element.image, {
+              headers: { 'x-requested-with': '*' },
+            })
+              .then(res => res.blob())
+              .then(blob => {
+                let file = new File([blob], 'img.jpg', { type: blob.type });
+                let formData = new FormData();
+                formData.append('author', element.author ?? '')
+                formData.append('fact_name', element.title ?? '')
+                formData.append('fact_text', element.text ?? '')
+                formData.append('fact_footer', element.footer ?? '')
+                formData.append('file', file)
+
+                fetch('http://graduate-map.ru/api/fact', {
+                  method: 'POST',
+                  headers: { 'Authorization': 'Basic ' + btoa(auth) },
+                  body: formData
+                }).then(res => {
+                  console.log(res);
+                })
+
+              })
+          };
+        });
+
+
+      })
+  }
+
+</script>
