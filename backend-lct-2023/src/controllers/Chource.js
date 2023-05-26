@@ -1,38 +1,74 @@
 const genericCrud = require('./GenericController')
 const {Chource} = require('../models');
 const {uploads} = require('../controllers');
+const {Direction} = require('../models');
+const {ChildDirection} = require('../models');
 const boom = require('boom')
 module.exports ={
-    /**
+        /**
      * Получение одной записи по id
      * @param {*} param0 
      * @param {*} res 
      * @returns 
      */
-    async get({params: {id}}, res) {
-        try {
-            const item = await Chource.findById(id)
-            return res.status(200).send(item)
-
-        } catch (err) {
-            return res.status(400).send({status: false, err: boom.boomify(err)});
-        }
-    },
-    /**
-     * Получение всех записей
-     * @param {*} _ 
-     * @param {*} res 
-     * @returns 
-     */
-    async getAll(_, res) {
-        try {
-            const items = await Chource.find()
-            return res.status(200).send(items)
-
-        } catch (err) {
-            return res.status(400).send({status: false, err: boom.boomify(err)});
-        }
-    },
+        async get({ params: { id } }, res) {
+            try {
+                let item = await Chource.findById(id);
+               
+                let dirs = item.dir;
+                let newDirFormat = {};
+    
+                for (const dir of dirs){
+                    let childDir = await ChildDirection(dir);
+                    let parentItem =  await Direction.findById(childDir.parent);
+               
+                    if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
+                    newDirFormat[parentItem.name].push({
+                        name: childDir.name,
+                        color: childDir.color
+                    })
+                }
+                item.dir = newDirFormat; 
+                return res.status(200).send(item);
+            } catch (err) {
+                return res.status(400).send({ status: false, err: boom.boomify(err)});
+            }
+        },
+        /**
+         * Получение всех записей
+         * @param {*} req 
+         * @param {*} res 
+         * @returns 
+         */
+        async getAll(req, res) {
+            try {
+                let items = await Chource.find();
+    
+                for(const item of items){
+    
+                    let dirs = item.dir;
+                    if(dirs == null){
+                        continue;
+                    }
+                    let newDirFormat = {};
+                    for(const dir of dirs){
+                        let childDir = await ChildDirection(dir);
+                        let parentItem =  await Direction.findById(childDir.parent);
+                        if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
+                        newDirFormat[parentItem.name].push({
+                            name: childDir.name,
+                            color: childDir.color
+                        })
+                    }
+                    item.dir = newDirFormat;
+                }
+              
+                return res.status(200).send(items);
+    
+            } catch (err) {
+                return res.status(400).send({ status: false, err: boom.boomify(err)});
+            }
+        },
     /**
      * Добавление записи
      * @param {*} req 

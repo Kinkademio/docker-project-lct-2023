@@ -1,6 +1,7 @@
 const boom = require('boom');
 const { Fact } = require('../models');
 const {Direction} = require('../models');
+const {ChildDirection} = require('../models');
 const path = require('path');
 
 const customCrud = () => ({
@@ -18,11 +19,13 @@ const customCrud = () => ({
             let newDirFormat = {};
 
             for (const dir of dirs){
-                let parentItem =  await Direction.findById(dir);
+                let childDir = await ChildDirection(dir);
+                let parentItem =  await Direction.findById(childDir.parent);
+           
                 if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                 newDirFormat[parentItem.name].push({
-                    name: dir.name,
-                    color: parentItem.color
+                    name: childDir.name,
+                    color: childDir.color
                 })
             }
             item.dir = newDirFormat; 
@@ -49,11 +52,12 @@ const customCrud = () => ({
                 }
                 let newDirFormat = {};
                 for(const dir of dirs){
-                    let parentItem =  await Direction.findById(dir);
+                    let childDir = await ChildDirection(dir);
+                    let parentItem =  await Direction.findById(childDir.parent);
                     if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                     newDirFormat[parentItem.name].push({
-                        name: dir.name,
-                        color: parentItem.color
+                        name: childDir.name,
+                        color: childDir.color
                     })
                 }
                 item.dir = newDirFormat;
@@ -158,7 +162,8 @@ const customCrud = () => ({
         try {
             let id = req.body.id;
             let delDir = req.body.dir;
-            let item = Fact.findById(id);
+
+            let item = await Fact.findById(id);
 
             if(item.dir.indexOf(delDir) == -1) 
             {
@@ -172,11 +177,10 @@ const customCrud = () => ({
             return res.status(400).send({ status: false, err: boom.boomify(err) });
         }
     },
-    async removeDir(req, res){
+    async removeDir({ params: { id } }, res){
         try {
-            let id = req.body.id;
             let newDir = req.body.dir;
-            let item = Fact.findById(id);
+            let item = await Fact.findById(id);
             let index = item.dir.indexOf(newDir);
             if(index != -1) 
             {

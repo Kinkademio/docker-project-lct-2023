@@ -10,5 +10,6 @@ router.route('/').post(event.create)
 router.route('/').get(event.getAll)
 router.route('/:id').put(event.update)
 router.route('/:id').delete(event.delete)
-
+router.route('/dir/:id').delete(event.removeDir)
+router.route('/dir/').post(event.addDir)
 module.exports = router
