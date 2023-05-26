@@ -1,6 +1,5 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <particles :key="this.$route.name"> </particles>
     <q-header reveal class="background">
       <q-toolbar>
         <q-btn
@@ -56,7 +55,6 @@
 </template>
 
 <script>
-import Particles from "../components/Particles.vue";
 import { api } from "../boot/axios";
 import { defineComponent, ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
@@ -68,7 +66,6 @@ export default defineComponent({
   components: {
     EssentialLink,
     Login,
-    Particles,
   },
   data() {
     return {
@@ -155,11 +152,11 @@ export default defineComponent({
 </script>
 <style scoped>
 .background {
-  background: linear-gradient(0deg, #00000000 0%, #594545 99%);
+  background: #738664;
 }
 </style>
 <style scoped>
 .my-menu-link {
-  background: #462a2a21;
+  background: #70cf5d21;
 }
 </style>
