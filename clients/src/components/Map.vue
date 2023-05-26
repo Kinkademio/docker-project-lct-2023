@@ -1,7 +1,7 @@
 <template>
     <div id="map"></div>
     <div style="position: absolute; bottom: 0; left:0; color:black; z-index: 9999;" class="text-h7"  >
-    © DeCode
+    © DeCode, 2023
   </div>
     <q-dialog v-model="toolbar">
       <q-card style="width: 700px; max-width: 80vw;">
