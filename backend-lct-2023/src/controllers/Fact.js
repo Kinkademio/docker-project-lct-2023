@@ -15,20 +15,20 @@ const customCrud = () => ({
             let item = await Fact.findById(id);
            
             let dirs = item.dir;
-            let newDirFormat = [];
+            let newDirFormat = {};
 
             for (const dir of dirs){
-                let parentItem =  await Direction.findById(dir.parent);
+                let parentItem =  await Direction.findById(dir);
                 if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                 newDirFormat[parentItem.name].push({
                     name: dir.name,
                     color: parentItem.color
                 })
             }
-            item.dir = newDirFormat;
+            item.dir = newDirFormat; 
             return res.status(200).send(item);
         } catch (err) {
-            return res.status(400).send({ status: false, err: boom.boomify(err) });
+            return res.status(400).send({ status: false, err: boom.boomify(err)});
         }
     },
     /**
@@ -40,11 +40,16 @@ const customCrud = () => ({
     async getAll(req, res) {
         try {
             let items = await Fact.find();
+
             for(const item of items){
+
                 let dirs = item.dir;
-                let newDirFormat = [];
+                if(dirs == null){
+                    continue;
+                }
+                let newDirFormat = {};
                 for(const dir of dirs){
-                    let parentItem =  await Direction.findById(dir.parent);
+                    let parentItem =  await Direction.findById(dir);
                     if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                     newDirFormat[parentItem.name].push({
                         name: dir.name,
@@ -57,7 +62,7 @@ const customCrud = () => ({
             return res.status(200).send(items);
 
         } catch (err) {
-            return res.status(400).send({ status: false, err: boom.boomify(err) });
+            return res.status(400).send({ status: false, err: boom.boomify(err)});
         }
     },
 
