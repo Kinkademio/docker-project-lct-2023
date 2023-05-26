@@ -31,7 +31,7 @@
 
     </q-page-container>
     <q-footer class="footer">
-          © DeCode
+          © DeCode, 2023
       </q-footer>
   </q-layout>
 </template>
