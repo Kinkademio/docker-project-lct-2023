@@ -17,7 +17,7 @@ module.exports ={
             let newDirFormat = {};
 
             for (const dir of dirs){
-                let childDir = await ChildDirection(dir);
+                let childDir = await ChildDirection.findById(dir);
                 let parentItem =  await Direction.findById(childDir.parent);
            
                 if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
@@ -50,7 +50,7 @@ module.exports ={
                 }
                 let newDirFormat = {};
                 for(const dir of dirs){
-                    let childDir = await ChildDirection(dir);
+                    let childDir = await ChildDirection.findById(dir);
                     let parentItem =  await Direction.findById(childDir.parent);
                     if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                     newDirFormat[parentItem.name].push({
