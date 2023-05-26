@@ -1,5 +1,8 @@
 <template>
     <div id="map"></div>
+    <div style="position: absolute; bottom: 0; left:0; color:black; z-index: 9999;" class="text-h7"  >
+    © DeCode
+  </div>
     <q-dialog v-model="toolbar">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-img :src="img"></q-img>
@@ -69,7 +72,7 @@ export default {
       // container — id of the div element in your html
       const map = new mapglAPI.Map("map", {
         center: [37.62199313139937, 55.754172570006155],
-        zoom: 18,
+        zoom: 8,
         key: "042b5b75-f847-4f2a-b695-b5f58adc9dfd",
       });
       const clusterer = new Clusterer(map, {

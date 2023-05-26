@@ -16,6 +16,7 @@ const customCrud = () => ({
            
             let dirs = item.dir;
             let newDirFormat = [];
+            
             for(let i = 0; i<dirs.length; i++){
                 let parentItem =  await Direction.findById(dirs[i].parent);
                 if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];

@@ -66,7 +66,7 @@
             </q-td>
 
             <q-td key="color" :props="props">
-              <q-chip :style="{'background-color': `${props.row.color}`}"  text-color="white">{{ props.row.name }}
+              <q-chip :style="{'background-color': `${props.row.color}`}" style="font-size: 16px;" text-color="white">{{ props.row.name }}
                 <q-popup-edit v-model="props.row.fact_text" @hide="changeTagColor(props.row._id, props.row.color)">
                   <q-color v-model="props.row.color" no-header-tabs no-footer></q-color>
               </q-popup-edit>
@@ -172,7 +172,7 @@
             </q-td>
 
             <q-td key="parent" :props="props">
-              <q-chip :style="{'background-color': `${props.row.color}`}"  text-color="white">{{ props.row.name }}
+              <q-chip :style="{'background-color': `${props.row.color}`}"  style="font-size: 16px;" text-color="white">{{ props.row.name }}
                 <q-popup-edit v-model="props.row.fact_text" @hide="changeChildDirParent(props.row._id, props.row.parent)">
                   <q-select v-model="props.row.parent"  emit-value map-options :options="getParentSelectOptions"></q-select>
               </q-popup-edit>
