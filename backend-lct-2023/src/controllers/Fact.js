@@ -13,7 +13,7 @@ const customCrud = () => ({
      */
      async get({params: {id}}, res) {
         try {
-            const item = await model.findById(id)
+            const item = await Fact.findById(id)
             return res.status(200).send(item)
 
         } catch (err) {
@@ -28,7 +28,7 @@ const customCrud = () => ({
      */
     async getAll(_, res) {
         try {
-            const items = await model.find()
+            const items = await Fact.find()
             return res.status(200).send(items)
 
         } catch (err) {
