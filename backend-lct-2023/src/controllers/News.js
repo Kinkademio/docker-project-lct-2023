@@ -3,13 +3,43 @@ const {Direction} = require('../models');
 const {ChildDirection} = require('../models');
 const {News} = require('../models');
 module.exports ={
+      /**
+     * Получение одной записи по id
+     * @param {*} param0 
+     * @param {*} res 
+     * @returns 
+     */
+      async get({params: {id}}, res) {
+        try {
+            const item = await News.findById(id)
+            return res.status(200).send(item)
+
+        } catch (err) {
+            return res.status(400).send({status: false, err: boom.boomify(err)});
+        }
+    },
+    /**
+     * Получение всех записей
+     * @param {*} _ 
+     * @param {*} res 
+     * @returns 
+     */
+    async getAll(_, res) {
+        try {
+            const items = await News.find()
+            return res.status(200).send(items)
+
+        } catch (err) {
+            return res.status(400).send({status: false, err: boom.boomify(err)});
+        }
+    },
      /**
      * Получение одной записи по id
      * @param {*} param0 
      * @param {*} res 
      * @returns 
      */
-     async get({ params: { id } }, res) {
+     async getD({ params: { id } }, res) {
         try {
             let item = await News.findById(id);
            
@@ -38,7 +68,7 @@ module.exports ={
      * @param {*} res 
      * @returns 
      */
-    async getAll(req, res) {
+    async getAllD(req, res) {
         try {
             let items = await News.find();
 
