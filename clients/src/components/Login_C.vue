@@ -80,7 +80,7 @@ export default {
           type: "positive",
           message: "Пользователь успешно авторизован.",
         });
-        this.$router.replace({name:"schoolmap"});
+        this.$router.replace({name:"map_inside"});
       } catch (error) {
         this.onError(error);
       }
