@@ -367,7 +367,7 @@ export default {
   methods: {
     async getTags() {
       try {
-        const res = await api.get("api/direction/dir/s/", {
+        const res = await api.get("api/childDir", {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
