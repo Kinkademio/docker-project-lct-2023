@@ -29,12 +29,11 @@ module.exports ={
     async getAll(_, res) {
         try {
             let items = await ChildDirection.find();
-            for(let iterator = 0; iterator < items.lenght; iterator ++){
-                let color = await Direction.findById(items[iterator].parent);
-                items[iterator].color = color.color;
-                items[iterator].name = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-            }  
-            return res.status(200).send({items:items, color:items[0].color})
+            for(const item of items){
+                let color = await Direction.findById(item.parent);
+                item.color = color.color;
+            }
+            return res.status(200).send(items)
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
         }
@@ -51,7 +50,6 @@ module.exports ={
             const item = new ChildDirection(req.body)
             const newItem = await item.save()
             return res.status(200).send(newItem)
-
 
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
