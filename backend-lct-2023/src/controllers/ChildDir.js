@@ -33,7 +33,7 @@ module.exports ={
                 let color = await Direction.findById(item.parent);
                 item.color = color.color;
             }
-            return res.status(200).send({items:items, color:items[0].color})
+            return res.status(200).send(items)
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
         }
@@ -50,7 +50,6 @@ module.exports ={
             const item = new ChildDirection(req.body)
             const newItem = await item.save()
             return res.status(200).send(newItem)
-
 
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
