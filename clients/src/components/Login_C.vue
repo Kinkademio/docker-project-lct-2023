@@ -73,7 +73,10 @@ export default {
         const token = response.data.token;
         const username = this.username;
         const name = response.data.name;
-        VueCookies.set("token", token, "10h");
+        const roles = response.data.roles;
+
+        if(roles.includes('MODERATOR') || roles.includes('ADMIN')){
+          VueCookies.set("token", token, "10h");
         VueCookies.set("uname", name, "10h");
         VueCookies.set("login", username, "10h");
         this.$q.notify({
@@ -81,6 +84,11 @@ export default {
           message: "Пользователь успешно авторизован.",
         });
         this.$router.replace({name:"map_inside"});
+        }
+        this.$q.notify({
+          type: "negative",
+          message: "Доступ запрещен!",
+        });
       } catch (error) {
         this.onError(error);
       }
