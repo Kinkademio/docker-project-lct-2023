@@ -106,10 +106,20 @@ export default {
       try {
         const res = await api.post("auth/user", {
           username: VueCookies.get("login"),
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
         });
 
         const response = await api.put("auth/updateUser/" + res.data._id, {
           name: this.name,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
         });
         this.$q.notify({
           type: "positive",
@@ -173,10 +183,20 @@ export default {
       try {
         const res = await api.post("auth/user", {
           username: VueCookies.get("login"),
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
         });
 
         await api.put("auth/updateUser/" + res.data._id, {
           password: this.password,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
         });
         this.loaded = true;
         this.$q.notify({

@@ -282,6 +282,11 @@ export default {
         await api.put("auth/updateRole", {
           id: id,
           newRole: role,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
         });
         this.$q.notify({
           type: "positive",
@@ -312,6 +317,11 @@ export default {
       try {
         const response = await api.put("auth/updateUser/" + id, {
           name: name,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
         });
         this.$q.notify({
           type: "positive",
