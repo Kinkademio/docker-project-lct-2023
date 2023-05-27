@@ -1,6 +1,8 @@
 const router = require('express-promise-router')()
 
-const {event} =require('../controllers')
+const {
+    event
+} = require('../controllers')
 
 router.route('/organizator/:id').get(event.getAllForOrganization)
 router.route('/actual/organizator/:id').get(event.getAllactualForOrganization)

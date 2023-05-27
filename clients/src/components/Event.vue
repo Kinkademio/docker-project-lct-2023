@@ -625,6 +625,9 @@ export default {
       newIsFree: false,
       newOrganizName: "",
       newUrl: "",
+      model: "",
+      tags: [],
+      tegid: "",
     };
   },
   mounted() {
@@ -660,7 +663,7 @@ export default {
             "x-requested-with": "*",
           },
         });
-
+        await this.getTags();
         res.data.forEach((el) => {
           el.date_end = this.formDateToUserView(el.date_end);
           el.date_start = this.formDateToUserView(el.date_start);
@@ -674,6 +677,55 @@ export default {
       }
     },
 
+    async addNewTags(id, tegid) {
+      try {
+        const response = await api.post(
+          "api/event/dir/s/",
+          {
+            id: id,
+            dir: tegid,
+          },
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.$q.notify({
+          type: "positive",
+          message: "Новый тэг успешно добавлен.",
+        });
+        this.getEvents();
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+
+    async delTag(id, tegId) {
+      try {
+        const response = await api.post(
+          "api/event/dir/s/del",
+          {
+            id: id,
+            dir: tegId,
+          },
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.$q.notify({
+          type: "positive",
+          message: "Тег успешно удален.",
+        });
+        this.getEvents();
+      } catch (error) {
+        this.onError(error);
+      }
+    },
     /**
      * Обработка ошибок при связи с сервером
      * @param {*} error
@@ -992,6 +1044,13 @@ export default {
         }
       });
       return result;
+    },
+    getTagSelectOptions() {
+      let options = [];
+      this.tags.forEach((tag) => {
+        options.push({ label: tag.name, value: tag._id, color: tag.color });
+      });
+      return options;
     },
     /**
      * Поиск по фильтрам
