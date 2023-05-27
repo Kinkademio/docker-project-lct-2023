@@ -217,8 +217,8 @@ const customCrud = () => ({
             let index = item.dir.indexOf(removeDir);
             if(index != -1) 
             {
-                let dir = item.dir.splice(index, 1);
-                await Fact.findByIdAndUpdate(id, {dir: dir});
+                item.dir.splice(index, 1);
+                await Fact.findByIdAndUpdate(id, {dir: item.dir});
             }
             return res.status(200).send({ status: 'ok', massage: 'Тег удален' });
         } catch (err) {
