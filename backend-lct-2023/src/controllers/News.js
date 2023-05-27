@@ -1,4 +1,4 @@
-const genericCrud = require('./GenericController')
+const boom = require('boom');
 const {Direction} = require('../models');
 const {ChildDirection} = require('../models');
 const {News} = require('../models');

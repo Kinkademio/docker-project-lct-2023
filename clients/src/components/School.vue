@@ -593,10 +593,10 @@ export default {
     async addNewTags(id, tegid) {
       try {
         const response = await api.post(
-          "api/fact/dir/s/",
+          "api/school/dir/s/",
           {
             id: id,
-            dir: tegid,
+            dir: tegid
           },
           {
             headers: {
@@ -618,10 +618,10 @@ export default {
     async delTag(id, tegId) {
       try {
         const response = await api.post(
-          "api/fact/dir/s/del",
+          "api/school/dir/s/del",
           {
             id: id,
-            dir: tegId,
+            dir: tegId
           },
           {
             headers: {

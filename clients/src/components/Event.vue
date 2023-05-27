@@ -683,7 +683,7 @@ export default {
           "api/event/dir/s/",
           {
             id: id,
-            dir: tegid,
+            dir: tegid
           },
           {
             headers: {
@@ -708,7 +708,7 @@ export default {
           "api/event/dir/s/del",
           {
             id: id,
-            dir: tegId,
+            dir: tegId
           },
           {
             headers: {

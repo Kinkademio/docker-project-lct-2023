@@ -15,6 +15,9 @@
           </div>
         </q-card-section>
         <q-card-section class="q-pt-none">
+          <div v-if="dirs" v-for="dir in dirs">
+            <q-chip v-for="subdir in dir" :style="{'background-color': `${subdir.color}`}"  style="font-size: 16px;" text-color="white">{{ subdir.name }}</q-chip>
+          </div>
           <div v-if="addressStr" >
             {{ addressStr }}
           </div>
@@ -60,6 +63,7 @@ export default {
       img: "",
       description: "",
       markers: [],
+      dirs: null,
     };
   },
   mounted() {
@@ -84,7 +88,7 @@ export default {
            },
       });
       try {
-        const res = await api.get("api/school", {
+        const res = await api.get("api/school/dir/s/", {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
@@ -117,6 +121,7 @@ export default {
           this.email = this.rows[i].contacts.mail;
           this.img = this.rows[i].image_url;
           this.description = this.rows[i].description;
+          this.dirs = this.row[i].dir;
         }else{
           map.setCenter(event.lngLat);
           map.setZoom(map.getZoom() + 2);
