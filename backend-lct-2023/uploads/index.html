@@ -173,7 +173,7 @@ Online HTML, CSS and JavaScript editor to run code online.
 	}
 	function placeEventsToServer() {
 		let api = 'https://opendata.mkrf.ru/v2/';
-		let proxy = 'http://graduate-map.ru/proxy/';
+		let proxy = 'https://graduate-map.ru/proxy/';
 		let limit = 1000;
 		let headder = {
 			'X-API-KEY':
@@ -340,7 +340,7 @@ Online HTML, CSS and JavaScript editor to run code online.
 			.then((response) => response.json())
 			.then((json) => {
 				json.forEach((element) => {
-					fetch('http://graduate-map.ru/api/school/' + element._id, {
+					fetch('https://graduate-map.ru/api/school/' + element._id, {
 						method: 'POST',
 						headers: {
 							Authorization: 'Basic ' + btoa(auth),
