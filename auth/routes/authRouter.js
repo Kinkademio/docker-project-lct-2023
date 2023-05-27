@@ -15,14 +15,14 @@ router.post('/register', [check('username', "Username dont can is empty").notEmp
 router.post('/login', controller.login)
 router.get('/users', roleMiddleware(["ADMIN"]), controller.getUsers)
 router.get('/roles', roleMiddleware(["ADMIN"]), controller.getRoles)
-router.post('/user', controller.getUser)
-router.post('/addRole', controller.addNewRole)
+router.post('/user', roleMiddleware(["ADMIN", "MODERATOR"]), controller.getUser)
+router.post('/addRole', roleMiddleware(["ADMIN"]), controller.addNewRole)
 router.post('/delete',roleMiddleware(["ADMIN"]), controller.delete)
-router.put('/updateUser/:id', controller.updateUser)
-router.post('/deleteRole', controller.removeRole)
-router.get('/getAgeParams', controller.getAgeParams)
-router.post('/getCreated', controller.getByDateCreate)
-router.put('/updateRole', controller.upadateRole)
+router.put('/updateUser/:id', roleMiddleware(["ADMIN", "MODERATOR"]), controller.updateUser)
+router.post('/deleteRole', roleMiddleware(["ADMIN"]), controller.removeRole)
+router.get('/getAgeParams', roleMiddleware(["ADMIN", "MODERATOR"]), controller.getAgeParams)
+router.post('/getCreated', roleMiddleware(["ADMIN", "MODERATOR"]), controller.getByDateCreate)
+router.put('/updateRole', roleMiddleware(["ADMIN"]), controller.upadateRole)
 
 
 module.exports = router
