@@ -12,5 +12,5 @@ router.route('/:id').get(test.get)
 router.route('/').get(test.getAll)
 
 router.route('/dir/s/:id').get(test.getD)
-router.route('/dir').get(test.getAllD)
+router.route('/dir/s/').get(test.getAllD)
 module.exports = router
