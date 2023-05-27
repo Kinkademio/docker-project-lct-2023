@@ -165,9 +165,10 @@ module.exports ={
             return res.status(400).send({ status: false, err: boom.boomify(err) });
         }
     },
-    async removeDir({ params: { id }, body }, res){
+    async removeDir(req, res){
         try {
-            let removeDir = body.dir;
+            let id= req.body.id;
+            let removeDir = req.body.dir;
             let item = await Test.findById(id);
             let index = item.dir.indexOf(removeDir);
             if(index != -1) 
