@@ -158,32 +158,34 @@ module.exports ={
     async deleteChourceVideo(req, res){
 
     },
+    
     async addDir(req, res){
         try {
             let id = req.body.id;
             let newDir = req.body.dir;
-            let item = Chource.findById(id);
-            let index = item.dir.indexOf(newDir);
-            if(index != -1) 
+
+            let item = await Chource.findById(id);
+
+            if(item.dir.indexOf(newDir) == -1) 
             {
-                let dir = item.dir.splice(index, 1);
+                let dir = item.dir;
+                dir.push(newDir);
                 Chource.findByIdAndUpdate(id, {dir: dir});
             }
+           
             return res.status(200).send({ status: 'ok', massage: 'Добавлен тег' });
         } catch (err) {
             return res.status(400).send({ status: false, err: boom.boomify(err) });
         }
     },
-    async removeDir(req, res){
+    async removeDir({ params: { id }, body }, res){
         try {
-            let id = req.body.id;
-            let delDir = req.body.dir;
-            let item = Chource.findById(id);
-
-            if(item.dir.indexOf(delDir) == -1) 
+            let removeDir = body.dir;
+            let item = await Chource.findById(id);
+            let index = item.dir.indexOf(removeDir);
+            if(index != -1) 
             {
-                let dir = item.dir;
-                dir.push(delDir);
+                let dir = item.dir.splice(index, 1);
                 Chource.findByIdAndUpdate(id, {dir: dir});
             }
             return res.status(200).send({ status: 'ok', massage: 'Тег удален' });

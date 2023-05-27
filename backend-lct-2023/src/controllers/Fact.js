@@ -194,14 +194,14 @@ const customCrud = () => ({
     async addDir(req, res){
         try {
             let id = req.body.id;
-            let delDir = req.body.dir;
+            let newDir = req.body.dir;
 
             let item = await Fact.findById(id);
 
-            if(item.dir.indexOf(delDir) == -1) 
+            if(item.dir.indexOf(newDir) == -1) 
             {
                 let dir = item.dir;
-                dir.push(delDir);
+                dir.push(newDir);
                 Fact.findByIdAndUpdate(id, {dir: dir});
             }
            
@@ -210,11 +210,11 @@ const customCrud = () => ({
             return res.status(400).send({ status: false, err: boom.boomify(err) });
         }
     },
-    async removeDir({ params: { id } }, res){
+    async removeDir({ params: { id }, body }, res){
         try {
-            let newDir = req.body.dir;
+            let removeDir = body.dir;
             let item = await Fact.findById(id);
-            let index = item.dir.indexOf(newDir);
+            let index = item.dir.indexOf(removeDir);
             if(index != -1) 
             {
                 let dir = item.dir.splice(index, 1);
