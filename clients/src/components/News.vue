@@ -397,7 +397,7 @@ export default {
       this.loaded = false;
       this.error = 0;
       try {
-        const res = await api.get("api/news", {
+        const res = await api.get("api/news/dir/s", {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
