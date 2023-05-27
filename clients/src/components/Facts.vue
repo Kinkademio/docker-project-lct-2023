@@ -213,6 +213,15 @@
                   {{ dir.name }}
                 </q-chip>
               </div>
+              <q-btn icon="add" flat dense />
+              <q-popup-edit auto-save @hide="factTegId = props.row._id">
+                <q-select
+                  v-model="model"
+                  multiple
+                  :options="tag_arr"
+                  style="width: 250px"
+                />
+              </q-popup-edit>
             </q-td>
 
             <q-td key="views" :props="props">
@@ -358,6 +367,9 @@ export default {
       newFactText: "",
       newImgUrl: "",
       tags: [],
+      model: "",
+      factTegId: "",
+      tegid: "",
     };
   },
   async beforeMount() {
@@ -378,6 +390,8 @@ export default {
           tag_arr[el._id] = { name: el.name, color: el.color };
         });
         this.tags = tag_arr;
+        console.log(this.tags );
+        console.log(this.tags[0]);
       } catch (error) {
         this.onError(error);
       }
@@ -698,6 +712,30 @@ export default {
         this.newFactName = "";
         this.newFactText = "";
         this.newImgUrl = "";
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+
+    async addNewTags() {
+      try {
+        const response = await api.post(
+          "api/dir/s/",
+          {
+            id: this.factTegId,
+            delDir: this.tegid,
+          },
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.$q.notify({
+          type: "positive",
+          message: "Новый тэг успешно добавлен.",
+        });
       } catch (error) {
         this.onError(error);
       }

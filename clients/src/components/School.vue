@@ -252,6 +252,33 @@
               </q-popup-edit>
             </q-td>
 
+            <q-td key="dir" :props="props">
+              <q-chip
+                removable
+                v-model="icecream"
+                @remove="log('Icecream')"
+                color="red"
+                text-color="white"
+              >
+                {{ model }}
+              </q-chip>
+
+              <div>
+                <q-btn flat dense icon="add" />
+                <q-popup-edit auto-save @hide="setTegs()">
+                  <q-select
+                    filled
+                    v-model="model"
+                    use-chips
+                    multiple
+                    :options="tegs"
+                    @filter="filterFn"
+                    style="width: 250px"
+                  />
+                </q-popup-edit>
+              </div>
+            </q-td>
+
             <q-td key="views" :props="props">
               <div>
                 {{ props.row.viewCount }}
@@ -295,25 +322,25 @@
       <div class="text-h4" style="opacity: 0.5">У вас нет прав</div>
       <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
     </div>
-  </div>
-  <q-dialog v-model="confirm" persistent>
-    <q-card>
-      <q-card-section class="row items-center">
-        <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
-      </q-card-section>
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+        </q-card-section>
 
-      <q-card-actions align="between">
-        <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-        <q-btn
-          flat
-          label="Удалить"
-          @click="removeSchool(deleteRowId)"
-          color="primary"
-          v-close-popup
-        ></q-btn>
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+        <q-card-actions align="between">
+          <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
+          <q-btn
+            flat
+            label="Удалить"
+            @click="removeSchool(deleteRowId)"
+            color="primary"
+            v-close-popup
+          ></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+  </div>
 </template>
 
 <script>
@@ -326,6 +353,8 @@ export default {
   setup() {
     return {
       newShoolAddressName: ref(""),
+      model: ref(null),
+      alert: ref(false),
     };
   },
   data() {
@@ -335,6 +364,7 @@ export default {
       confirm: ref(false),
       iconn: ref(false),
       icon: ref(false),
+      iconTegs: ref(false),
       newPass: "",
       text: "",
       roles: [],
@@ -397,6 +427,13 @@ export default {
           sortable: true,
         },
         {
+          name: "dir",
+          align: "left",
+          label: "Теги школы",
+          field: "dir",
+          canEdit: true,
+        },
+        {
           name: "views",
           align: "left",
           label: "Просмотры",
@@ -411,6 +448,8 @@ export default {
         },
       ],
       rows: [],
+      tegs: [],
+      colorTeg: [],
       error: 0,
       loaded: false,
       password: ref(""),
@@ -433,6 +472,7 @@ export default {
   },
   mounted() {
     this.getSchool();
+    this.getTegs();
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
@@ -516,6 +556,33 @@ export default {
       } catch (error) {
         this.onError(error);
       }
+    },
+    /**
+     * Получение списка всех тегов
+     */
+    async getTegs() {
+      this.loaded = false;
+      this.error = 0;
+      try {
+        const res = await api.get("api/childDir", {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+        console.log(res.data);
+        for (let i = 0; i < 22; i++) {
+          this.tegs[i] = res.data[i].name;
+        }
+        console.log(this.tegs);
+
+        this.loaded = true;
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    setTegs() {
+      console.log(this.model);
     },
 
     /**
