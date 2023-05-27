@@ -59,7 +59,7 @@ const customCrud = () => ({
                 })
             }
             item.dir = newDirFormat; 
-            return res.status(200).send(item);
+            return res.status(200).send({item: item, dir:newDirFormat});
         } catch (err) {
             return res.status(400).send({ status: false, err: boom.boomify(err)});
         }
@@ -74,10 +74,11 @@ const customCrud = () => ({
         try {
             let items = await Fact.find();
 
+            let newItems = {};
             for(const item of items){
 
-                let dirs = item.dir;
-                if(dirs == null){
+                let dirs = item.dir; 
+                if(dirs == null || dirs.length <0){
                     continue;
                 }
                 let newDirFormat = {};

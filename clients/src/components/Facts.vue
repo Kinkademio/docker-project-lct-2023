@@ -467,9 +467,9 @@ export default {
             el.dir.forEach((di) => {
               console.log(di);
               newDir.push({
-                id: di,
-                name: this.tags[di].name,
-                color: this.tags[di].color,
+                id: di.id,
+                name: di.name,
+                color: di.color,
                 tagStatus: true,
               });
             });

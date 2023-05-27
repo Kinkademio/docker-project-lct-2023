@@ -12,9 +12,10 @@ var schema = new Schema({
     type: String,
     default:""
   },
-  dir:[{
-    type: String,
-    ref: 'Direction'
-  }]
+  dir:{
+    type: Schema.Types.Mixed,
+    of: String,
+    default: []
+  }
 });
 module.exports = model('Test', schema)

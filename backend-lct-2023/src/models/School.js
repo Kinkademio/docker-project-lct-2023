@@ -52,9 +52,10 @@ var schema = new Schema({
     of: String,
     default: null
   },
-  dir:[{
-    type: String,
-    ref: 'Direction'
-  }],
+  dir:{
+    type: Schema.Types.Mixed,
+    of: String,
+    default: []
+  },
   });
 module.exports = model('School', schema)
