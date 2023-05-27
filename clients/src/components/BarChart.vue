@@ -739,7 +739,12 @@ export default {
      */
     async getAgeParams() {
       try {
-        const res = await api.get("auth/getAgeParams");
+        const res = await api.get("auth/getAgeParams",
+         {
+          headers: {
+            Authorization: "Bearer " + VueCookies.get("token"),
+          },
+        });
         this.rows = res.data;
         this.ageParams = res.data.ageParams;
       } catch (error) {
