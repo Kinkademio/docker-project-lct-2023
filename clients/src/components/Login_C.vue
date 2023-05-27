@@ -3,18 +3,9 @@
     <q-card-section>
       <q-input filled v-model="username" label="Адрес эл.почты" />
       <q-separator></q-separator>
-      <q-input
-        filled
-        v-model="password"
-        :type="isPwd ? 'password' : 'text'"
-        label="Пароль"
-      >
+      <q-input filled v-model="password" :type="isPwd ? 'password' : 'text'" label="Пароль">
         <template v-slot:append>
-          <q-icon
-            :name="isPwd ? 'visibility_off' : 'visibility'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          ></q-icon>
+          <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd"></q-icon>
         </template>
       </q-input>
     </q-card-section>
@@ -75,20 +66,22 @@ export default {
         const name = response.data.name;
         const roles = response.data.roles;
 
-        if(roles.includes('MODERATOR') || roles.includes('ADMIN')){
+        if (roles.includes('MODERATOR') || roles.includes('ADMIN')) {
           VueCookies.set("token", token, "10h");
-        VueCookies.set("uname", name, "10h");
-        VueCookies.set("login", username, "10h");
-        this.$q.notify({
-          type: "positive",
-          message: "Пользователь успешно авторизован.",
-        });
-        this.$router.replace({name:"map_inside"});
+          VueCookies.set("uname", name, "10h");
+          VueCookies.set("login", username, "10h");
+          VueCookies.set("roles", roles, "10h");
+          this.$q.notify({
+            type: "positive",
+            message: "Пользователь успешно авторизован.",
+          });
+          this.$router.replace({ name: "map_inside" });
+        } else {
+          this.$q.notify({
+            type: "negative",
+            message: "Доступ запрещен!",
+          });
         }
-        this.$q.notify({
-          type: "negative",
-          message: "Доступ запрещен!",
-        });
       } catch (error) {
         this.onError(error);
       }

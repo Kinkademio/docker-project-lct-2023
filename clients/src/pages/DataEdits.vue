@@ -1,7 +1,7 @@
 <template>
   <q-card>
     <q-card-section>
-      <q-select v-model="selectedTable" :options="tableOptions"
+      <q-select v-model="selectedTable" :options="getOptions"
         label="Выберите таблицу, которую хотите отредактировать" />
     </q-card-section>
     <q-card-section>
@@ -24,6 +24,7 @@ import Event from "../components/Event.vue";
 import School from "../components/School.vue";
 import News from "../components/News.vue";
 import Direction from "../components/Direction.vue";
+import VueCookies from "vue-cookies";
 export default {
   components: {
     Roles,
@@ -37,10 +38,20 @@ export default {
   data() {
     return {
       selectedTable: "",
-      tableOptions: ["Роли", "Пользователи", "Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"],
-      maderTableOptions: ["Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"]
     };
   },
+  computed:{
+    getOptions(){
+      let roles = VueCookies.get('roles');
+      if(roles.includes("ADMIN")){
+        return ["Пользователи", "Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"];
+      }
+      if(roles.includes("MODERATOR")){
+        return ["Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"];
+      }
+      return [];
+    }
+  }
 };
 </script>
 <style scoped>

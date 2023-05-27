@@ -21,8 +21,6 @@
 
 
 
-
-
       <q-table flat borderless separator="cell" :rows="getRows" :columns="columns" row-key="name"
         no-data-label="Ничего не найдено">
         <template v-slot:header-cell="props">
@@ -35,9 +33,6 @@
 
         <template v-slot:body="props">
           <q-tr :props="props">
-            <q-td key="_id" :props="props">
-              <div>{{ props.row._id }}</div>
-            </q-td>
             <q-td key="value" :props="props">
               <div>{{ props.row.value }}</div>
             </q-td>
@@ -64,14 +59,6 @@ export default {
       text: "",
       searchSelected: "",
       columns: [
-        {
-          name: "_id",
-          align: "center",
-          label: "Id",
-          field: "_id",
-          canEdit: false,
-          sortable: true
-        },
         {
           name: "value",
           align: "center",
