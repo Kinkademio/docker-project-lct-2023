@@ -393,6 +393,43 @@
               </q-popup-edit>
             </q-td>
 
+            <q-td key="tags" :props="props">
+              <div v-if="props.row.dir" v-for="dir in props.row.dir">
+                <div v-if="dir" v-for="subdir in dir">
+                  <q-chip
+                    removable
+                    clickabl
+                    @remove="delTag(props.row._id, subdir.id)"
+                    :style="{ 'background-color': `${subdir.color}` }"
+                    text-color="white"
+                  >
+                    {{ subdir.name }}
+                  </q-chip>
+                </div>
+              </div>
+              <q-btn icon="add" size="sm" round dense />
+              <q-popup-edit @hide="addNewTags(props.row._id, model)">
+                <q-select
+                  v-model="model"
+                  emit-value
+                  map-options
+                  :options="getTagSelectOptions"
+                  style="width: 250px"
+                >
+                  <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                      <q-chip
+                        :style="{ 'background-color': `${scope.opt.color}` }"
+                        text-color="white"
+                      >
+                        {{ scope.opt.label }}
+                      </q-chip>
+                    </q-item>
+                  </template>
+                </q-select>
+              </q-popup-edit>
+            </q-td>
+
             <q-td key="views" :props="props">
               <div>
                 {{ props.row.viewCount }}
@@ -558,6 +595,14 @@ export default {
           sortable: true,
         },
         {
+          name: "tags",
+          align: "left",
+          label: "Теги",
+          field: "dir",
+          canEdit: true,
+          sortable: false,
+        },
+        {
           name: "views",
           align: "left",
           label: "Просмотры",
@@ -587,6 +632,21 @@ export default {
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
+    async getTags() {
+      try {
+        const res = await api.get("api/childDir", {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+        this.tags = res.data;
+        console.log(this.tags);
+        console.log(this.tags[0]);
+      } catch (error) {
+        this.onError(error);
+      }
+    },
     /**
      * Получение всех мероприятий с базы данных
      */
@@ -594,7 +654,7 @@ export default {
       this.loaded = false;
       this.error = 0;
       try {
-        const res = await api.get("api/event", {
+        const res = await api.get("api/event/dir/s", {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
