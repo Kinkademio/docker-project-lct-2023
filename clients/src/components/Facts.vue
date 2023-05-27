@@ -398,8 +398,6 @@ export default {
           },
         });
         this.tags = res.data;
-        console.log(this.tags);
-        console.log(this.tags[0]);
       } catch (error) {
         this.onError(error);
       }
@@ -428,7 +426,6 @@ export default {
         });
 
         this.rows.forEach((el) => {
-          console.log(el);
           if (el._id == prop) {
             el.image_url = res.data;
           }
@@ -498,7 +495,6 @@ export default {
      * @param {*} error
      */
     onError(error) {
-      console.log(error);
       this.loaded = true;
       if (!error.response || !error.response.status) {
         this.$q.notify({
@@ -714,10 +710,6 @@ export default {
 
     async addNewTags(id, tegid) {
       if (this.model == "") {
-        this.$q.notify({
-          type: "negativ",
-          message: "Выберите тег для добавления",
-        });
         return;
       }
       try {

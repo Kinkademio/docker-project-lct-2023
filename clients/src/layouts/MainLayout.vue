@@ -120,7 +120,6 @@ export default defineComponent({
     },
   },
   beforeMount() {
-    console.log(this.$route.name)
     this.reroute();
     if(!this.$route.name){
       this.currentRoute = this.navigation[0].route;

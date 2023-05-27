@@ -644,8 +644,6 @@ export default {
           },
         });
         this.tags = res.data;
-        console.log(this.tags);
-        console.log(this.tags[0]);
       } catch (error) {
         this.onError(error);
       }
@@ -672,17 +670,12 @@ export default {
         this.rows = res.data;
         this.loaded = true;
       } catch (error) {
-        console.log(error);
         this.onError(error);
       }
     },
 
     async addNewTags(id, tegid) {
       if (this.model == "") {
-        this.$q.notify({
-          type: "negativ",
-          message: "Выберите тег для добавления",
-        });
         return;
       }
       try {

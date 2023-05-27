@@ -443,7 +443,6 @@ export default {
 
     async addTag(){
       try {
-        console.log(this.newColor);
         const res = await api.post("api/direction", {
           name: this.newName,
           color: this.newColor

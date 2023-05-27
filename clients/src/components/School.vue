@@ -501,7 +501,6 @@ export default {
         });
 
         this.rows.forEach((el) => {
-          console.log(el);
           if (el._id == prop) {
             el.image_url = res.data;
           }
@@ -559,8 +558,6 @@ export default {
           },
         });
         this.tags = res.data;
-        console.log(this.tags);
-        console.log(this.tags[0]);
       } catch (error) {
         this.onError(error);
       }
@@ -591,14 +588,7 @@ export default {
 
     async addNewTags(id, tegid) {
       if (this.model == "") {
-        console.log(this.model);
-        this.$q.notify({
-          type: "negativ",
-          message: "Выберите тег для добавления",
-        });
         return;
-      } else {
-        console.log(this.model);
       }
       try {
         const response = await api.post(

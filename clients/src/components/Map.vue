@@ -87,7 +87,6 @@ export default {
            labelFontSize: 16,
            },
       });
-      try {
         const res = await api.get("api/school/dir/s/", {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
@@ -95,9 +94,7 @@ export default {
           },
         });
         this.rows = res.data;
-      } catch (error) {
-        console.log(error);
-      }
+
       for (let i = 0; i < this.rows.length; i++) {
         this.markers[i] = {
           coordinates: [
@@ -110,9 +107,8 @@ export default {
       clusterer.load(this.markers);
       clusterer.on('click', (event) => {
 
-        console.log(event)
+
         if(event.target.type=="marker"){
-          console.log(event)
           let i = event.target.data.id;
           this.toolbar = true;
           this.nameSchool = this.rows[i].name ?? null;

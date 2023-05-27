@@ -82,7 +82,6 @@ export default {
         VueCookies.remove('token');
         this.$router.replace("/auth");
       }
-      console.log(roles)
       if (roles.includes("ADMIN")) {
         return ["Пользователи", "Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"];
       }
