@@ -363,7 +363,6 @@ export default {
   setup() {
     return {
       newShoolAddressName: ref(""),
-      model: ref(null),
       alert: ref(false),
     };
   },
@@ -591,12 +590,22 @@ export default {
     },
 
     async addNewTags(id, tegid) {
+      if (this.model == "") {
+        console.log(this.model);
+        this.$q.notify({
+          type: "negativ",
+          message: "Выберите тег для добавления",
+        });
+        return;
+      } else {
+        console.log(this.model);
+      }
       try {
         const response = await api.post(
           "api/school/dir/s/",
           {
             id: id,
-            dir: tegid
+            dir: tegid,
           },
           {
             headers: {
@@ -609,6 +618,7 @@ export default {
           type: "positive",
           message: "Новый тэг успешно добавлен.",
         });
+        this.model = "";
         this.getSchool();
       } catch (error) {
         this.onError(error);
@@ -621,7 +631,7 @@ export default {
           "api/school/dir/s/del",
           {
             id: id,
-            dir: tegId
+            dir: tegId,
           },
           {
             headers: {

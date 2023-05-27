@@ -579,6 +579,13 @@ export default {
       }
     },
     async addNewTags(id, tegid) {
+      if (this.model == "") {
+        this.$q.notify({
+          type: "negativ",
+          message: "Выберите тег для добавления",
+        });
+        return;
+      }
       try {
         const response = await api.post(
           "api/news/dir/s/",
@@ -597,6 +604,7 @@ export default {
           type: "positive",
           message: "Новый тэг успешно добавлен.",
         });
+        this.model = "";
         this.getNews();
       } catch (error) {
         this.onError(error);
