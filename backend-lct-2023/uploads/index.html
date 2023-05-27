@@ -342,7 +342,7 @@ Online HTML, CSS and JavaScript editor to run code online.
 			.then((json) => {
 				json.forEach((element) => {
 					fetch(proxy+'https://graduate-map.ru/api/school/' + element._id, {
-						method: 'POST',
+						method: 'PUT',
 						headers: {
 							Authorization: 'Basic ' + btoa(auth),
 							'Content-Type': 'application/json',
