@@ -158,7 +158,7 @@ module.exports ={
             {
                 let dir = item.dir;
                 dir.push(newDir);
-                await cNews.findByIdAndUpdate(id, {dir: dir});
+                await News.findByIdAndUpdate(id, {dir: dir});
             }
            
             return res.status(200).send({ status: 'ok', massage: 'Добавлен тег' });
