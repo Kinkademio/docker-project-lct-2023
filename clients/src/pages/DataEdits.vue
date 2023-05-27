@@ -24,6 +24,7 @@ import School from "../components/School.vue";
 import News from "../components/News.vue";
 import Direction from "../components/Direction.vue";
 import VueCookies from "vue-cookies";
+import { api } from "../boot/axios";
 export default {
   components: {
     Roles,
@@ -71,16 +72,17 @@ export default {
       }
   }
   },
-  beforeCreate(){
+  beforeMount(){
     this.getUserRoles();
   },
   computed: {
     getOptions() {
       let roles = this.userRoles;
-      if(userRoles == []){
+      if(roles == []){
         VueCookies.remove('token');
         this.$router.replace("/auth");
       }
+      console.log(roles)
       if (roles.includes("ADMIN")) {
         return ["Пользователи", "Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"];
       }
