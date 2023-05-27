@@ -12,9 +12,8 @@ module.exports ={
      async get({params: {id}}, res) {
         try {
             let item = await ChildDirection.findById(id);
-            let color = await Direction.findById(item.parent);
-            item.color = color.color;
-            return res.status(200).send(item)
+            let parent = await Direction.findById(item.parent);
+            return res.status(200).send({_id: item._id, color: parent.color, parent:item.parent, parentname: parent.name})
 
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
@@ -29,11 +28,12 @@ module.exports ={
     async getAll(_, res) {
         try {
             let items = await ChildDirection.find();
+            let itemsReformed = [];
             for(const item of items){
-                let color = await Direction.findById(item.parent);
-                item.color = color.color;
+                let parent = await Direction.findById(item.parent);
+                itemsReformed.push({_id: item._id, parent: item.parent, color: parent.color, name: item.name, parentname: parent.name});
             }
-            return res.status(200).send(items)
+            return res.status(200).send(itemsReformed)
         } catch (err) {
             return res.status(400).send({status: false, err: boom.boomify(err)});
         }

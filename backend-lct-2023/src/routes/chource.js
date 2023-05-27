@@ -12,6 +12,6 @@ router.route('/dir/s').get(chource.getAllD)
 router.route('/').post(chource.create)
 router.route('/:id').put(chource.update)
 router.route('/:id').delete(chource.delete)
-router.route('/dir/s/:id').delete(chource.removeDir)
+router.route('/dir/s/del/').post(chource.removeDir)
 router.route('/dir/s/').post(chource.addDir)
 module.exports = router

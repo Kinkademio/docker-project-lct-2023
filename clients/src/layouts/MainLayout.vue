@@ -120,8 +120,14 @@ export default defineComponent({
     },
   },
   beforeMount() {
+    console.log(this.$route.name)
     this.reroute();
-    this.currentRoute = this.$route.name;
+    if(!this.$route.name){
+      this.currentRoute = this.navigation[0].route;
+    }else{
+      this.currentRoute = this.$route.name;
+    }
+
     if (this.$router.currentRoute.value.fullPath == "/") {
       this.$router.push({ name: this.currentRoute });
     }

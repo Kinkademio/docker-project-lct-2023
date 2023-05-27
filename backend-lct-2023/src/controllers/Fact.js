@@ -54,8 +54,9 @@ const customCrud = () => ({
            
                 if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                 newDirFormat[parentItem.name].push({
+                    id: childDir._id,
                     name: childDir.name,
-                    color: childDir.color
+                    color: parentItem.color
                 })
             }
             item.dir = newDirFormat; 
@@ -74,10 +75,11 @@ const customCrud = () => ({
         try {
             let items = await Fact.find();
 
+            let newItems = {};
             for(const item of items){
 
-                let dirs = item.dir;
-                if(dirs == null){
+                let dirs = item.dir; 
+                if(dirs == null || dirs.length <0){
                     continue;
                 }
                 let newDirFormat = {};
@@ -86,8 +88,9 @@ const customCrud = () => ({
                     let parentItem =  await Direction.findById(childDir.parent);
                     if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                     newDirFormat[parentItem.name].push({
+                        id: childDir._id,
                         name: childDir.name,
-                        color: childDir.color
+                        color: parentItem.color
                     })
                 }
                 item.dir = newDirFormat;
@@ -191,15 +194,15 @@ const customCrud = () => ({
     async addDir(req, res){
         try {
             let id = req.body.id;
-            let delDir = req.body.dir;
+            let newDir = req.body.dir;
 
             let item = await Fact.findById(id);
 
-            if(item.dir.indexOf(delDir) == -1) 
+            if(item.dir.indexOf(newDir) == -1) 
             {
                 let dir = item.dir;
-                dir.push(delDir);
-                Fact.findByIdAndUpdate(id, {dir: dir});
+                dir.push(newDir);
+                await Fact.findByIdAndUpdate(id, {dir: dir});
             }
            
             return res.status(200).send({ status: 'ok', massage: 'Добавлен тег' });
@@ -207,15 +210,16 @@ const customCrud = () => ({
             return res.status(400).send({ status: false, err: boom.boomify(err) });
         }
     },
-    async removeDir({ params: { id } }, res){
+    async removeDir(req, res){
         try {
-            let newDir = req.body.dir;
+            let id= req.body.id;
+            let removeDir = req.body.dir;
             let item = await Fact.findById(id);
-            let index = item.dir.indexOf(newDir);
+            let index = item.dir.indexOf(removeDir);
             if(index != -1) 
             {
-                let dir = item.dir.splice(index, 1);
-                Fact.findByIdAndUpdate(id, {dir: dir});
+                item.dir.splice(index, 1);
+                await Fact.findByIdAndUpdate(id, {dir: item.dir});
             }
             return res.status(200).send({ status: 'ok', massage: 'Тег удален' });
         } catch (err) {

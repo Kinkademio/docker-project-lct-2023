@@ -46,7 +46,8 @@
 
 
 
-      <q-table flat borderless separator="cell" :rows="getRows" :columns="columns" row-key="name"
+      <q-table  v-model:pagination="pagination"
+      :rows-per-page-options="[0]" flat borderless separator="cell" :rows="getRows" :columns="columns" row-key="name"
         no-data-label="Ничего не найдено">
         <template v-slot:header-cell="props">
           <q-th :props="props">
@@ -152,7 +153,8 @@
 
 
 
-      <q-table flat borderless separator="cell" :rows="getRowsCh" :columns="columnsCh" row-key="name"
+      <q-table v-model:pagination="pagination"
+      :rows-per-page-options="[0]" flat borderless separator="cell" :rows="getRowsCh" :columns="columnsCh" row-key="name"
         no-data-label="Ничего не найдено">
         <template v-slot:header-cell="props">
           <q-th :props="props">

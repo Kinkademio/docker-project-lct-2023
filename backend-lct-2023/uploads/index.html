@@ -2,32 +2,35 @@
 Online HTML, CSS and JavaScript editor to run code online.
 -->
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="style.css" />
-		<title>Browser</title>
-	</head>
+<html lang="ru">
 
-	<body>
-		<h1>Для автоматизации загрузки файлов на сервер</h1>
-		<div>
-			<button onclick="checkJsonFile(1)">Посмотреть JSON Фактов</button>
-			<button onclick="placeFactsToServer()">Загрузить Факты</button>
-		</div>
-		<div>
-			<button onclick="checkJsonFile(2)">Посмотреть JSON Школ</button>
-			<button onclick="placeSchoolsToServer()">Загрузить Школы</button>
-		</div>    
-		<div>
-			<button onclick="placeNewSchoolToServer()">Загрузить Школы</button>
-		</div>
-		<div>
-			<button onclick="checkJsonFile(3)">Посмотреть JSON Событий</button>
-			<button onclick="placeEventsToServerSync()">Загрузить Событий</button>
-		</div>
-	</body>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="style.css" />
+	<title>Browser</title>
+</head>
+
+<body>
+	<h1>Для автоматизации загрузки файлов на сервер</h1>
+	<div>
+		<button onclick="checkJsonFile(1)">Посмотреть JSON Фактов</button>
+		<button onclick="placeFactsToServer()">Загрузить Факты</button>
+	</div>
+	<div>
+		<button onclick="checkJsonFile(2)">Посмотреть JSON Школ</button>
+		<button onclick="placeSchoolsToServer()">Загрузить Школы</button>
+	</div>
+	<div>
+		<button onclick="checkJsonFile(4)">Посмотреть JSON Школ</button>
+		<button onclick="placeNewSchoolToServer()">Загрузить Школы</button>
+	</div>
+	<div>
+		<button onclick="checkJsonFile(3)">Посмотреть JSON Событий</button>
+		<button onclick="placeEventsToServerSync()">Загрузить Событий</button>
+	</div>
+</body>
+
 </html>
 
 <script>
@@ -43,6 +46,9 @@ Online HTML, CSS and JavaScript editor to run code online.
 				break;
 			case 3:
 				file = 'Events.json';
+				break;
+				case 4: 
+				file = 'sch.json';
 				break;
 		}
 		fetch(file)
@@ -330,51 +336,20 @@ Online HTML, CSS and JavaScript editor to run code online.
 	}
 
 	function placeNewSchoolToServer() {
-		fetch('school.json')
+		fetch('sch.json')
 			.then((response) => response.json())
 			.then((json) => {
 				json.forEach((element) => {
-					if (
-						element.data.general.locale.id == 2579 ||
-						element.data.general.locale.id == 7
-					) {
-						let address = {
-							address_str: element.data.general.address.street,
-							comment: element.data.general.address.comment,
-							mapPos: {
-								x: element.data.general.address.mapPosition.coordinates[0],
-								y: element.data.general.address.mapPosition.coordinates[1],
-							},
-						};
-						let contacts = null;
-						if (element.data.general.contacts !== undefined) {
-							contacts = {
-								web_site: element.data.general.contacts.website ?? '',
-								mail: element.data.general.contacts.email ?? '',
-								phone: element.data.general.contacts.phones ?? [],
-							};
-						}
-						let school = {
-							organization_id: element.data.general.id,
-							image_url: element.data.general.image.url,
-							name: element.data.general.name,
-							description: element.data.general.description ?? '',
-							address: address,
-							contacts: contacts,
-						};
-						console.log(school);
-
-						fetch('http://graduate-map.ru/api/school', {
-							method: 'POST',
-							headers: {
-								Authorization: 'Basic ' + btoa(auth),
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify(school),
-						}).then((res) => {
-							console.log(res);
-						});
-					}
+					fetch('http://graduate-map.ru/api/school/' + element._id, {
+						method: 'POST',
+						headers: {
+							Authorization: 'Basic ' + btoa(auth),
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify(element),
+					}).then((res) => {
+						console.log(res);
+					});
 				});
 			});
 	}

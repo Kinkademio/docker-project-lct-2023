@@ -202,25 +202,38 @@
 
             <q-td key="tags" :props="props">
               <div v-if="props.row.dir" v-for="dir in props.row.dir">
-                <q-chip
-                  removable
-                  clickabl
-                  v-model="props.row.tagStatus"
-                  @remove="log('Icecream')"
-                  :style="{ 'background-color': `${dir.color}` }"
-                  text-color="white"
-                >
-                  {{ dir.name }}
-                </q-chip>
+                <div v-if="dir" v-for="subdir in dir">
+                  <q-chip
+                    removable
+                    clickabl
+                    @remove="delTag(props.row._id, subdir.id)"
+                    :style="{ 'background-color': `${subdir.color}` }"
+                    text-color="white"
+                  >
+                    {{ subdir.name }}
+                  </q-chip>
+                </div>
               </div>
-              <q-btn icon="add" flat dense />
-              <q-popup-edit auto-save @hide="factTegId = props.row._id">
+              <q-btn icon="add" size="sm" round dense />
+              <q-popup-edit @hide="addNewTags(props.row._id, model)">
                 <q-select
                   v-model="model"
-                  multiple
-                  :options="tag_arr"
+                  emit-value
+                  map-options
+                  :options="getTagSelectOptions"
                   style="width: 250px"
-                />
+                >
+                  <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                      <q-chip
+                        :style="{ 'background-color': `${scope.opt.color}` }"
+                        text-color="white"
+                      >
+                        {{ scope.opt.label }}
+                      </q-chip>
+                    </q-item>
+                  </template>
+                </q-select>
               </q-popup-edit>
             </q-td>
 
@@ -369,7 +382,6 @@ export default {
       tags: [],
       model: "",
       factTegId: "",
-      tegid: "",
     };
   },
   async beforeMount() {
@@ -385,12 +397,8 @@ export default {
             "x-requested-with": "*",
           },
         });
-        let tag_arr = [];
-        res.data.forEach((el) => {
-          tag_arr[el._id] = { name: el.name, color: el.color };
-        });
-        this.tags = tag_arr;
-        console.log(this.tags );
+        this.tags = res.data;
+        console.log(this.tags);
         console.log(this.tags[0]);
       } catch (error) {
         this.onError(error);
@@ -462,7 +470,7 @@ export default {
       this.loaded = false;
       this.error = 0;
       try {
-        const res = await api.get("api/fact", {
+        const res = await api.get("api/fact/dir/s", {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
@@ -475,19 +483,6 @@ export default {
             Object.values(el.views).forEach((v) => {
               if (v.like) likeCount++;
             });
-          }
-          if (el.dir.length > 0) {
-            let newDir = [];
-            el.dir.forEach((di) => {
-              console.log(di);
-              newDir.push({
-                id: di,
-                name: this.tags[di].name,
-                color: this.tags[di].color,
-                tagStatus: true,
-              });
-            });
-            el.dir = newDir;
           }
           el["likeCount"] = likeCount;
           el["viewCount"] = el.views ? Object.values(el.views).length : 0;
@@ -717,13 +712,13 @@ export default {
       }
     },
 
-    async addNewTags() {
+    async addNewTags(id, tegid) {
       try {
         const response = await api.post(
-          "api/dir/s/",
+          "api/fact/dir/s/",
           {
-            id: this.factTegId,
-            delDir: this.tegid,
+            id: id,
+            dir: tegid,
           },
           {
             headers: {
@@ -736,6 +731,32 @@ export default {
           type: "positive",
           message: "Новый тэг успешно добавлен.",
         });
+        this.getFacts();
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+
+    async delTag(id, tegId) {
+      try {
+        const response = await api.post(
+          "api/fact/dir/s/del",
+          {
+            id: id,
+            dir: tegId,
+          },
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.$q.notify({
+          type: "positive",
+          message: "Тег успешно удален.",
+        });
+        this.getFacts();
       } catch (error) {
         this.onError(error);
       }
@@ -753,6 +774,13 @@ export default {
         }
       });
       return result;
+    },
+    getTagSelectOptions() {
+      let options = [];
+      this.tags.forEach((tag) => {
+        options.push({ label: tag.name, value: tag._id, color: tag.color });
+      });
+      return options;
     },
     /**
      * Поиск по выбранному критерию

@@ -54,8 +54,9 @@ const customCrud = () => ({
                
                     if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                     newDirFormat[parentItem.name].push({
+                        id: childDir._id,
                         name: childDir.name,
-                        color: childDir.color
+                        color: parentItem.color
                     })
                 }
                 item.dir = newDirFormat; 
@@ -86,8 +87,9 @@ const customCrud = () => ({
                         let parentItem =  await Direction.findById(childDir.parent);
                         if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                         newDirFormat[parentItem.name].push({
+                            id: childDir._id,
                             name: childDir.name,
-                            color: childDir.color
+                            color: parentItem.color
                         })
                     }
                     item.dir = newDirFormat;
@@ -217,13 +219,16 @@ const customCrud = () => ({
         try {
             let id = req.body.id;
             let newDir = req.body.dir;
-            let item = Event.findById(id);
-            let index = item.dir.indexOf(newDir);
-            if(index != -1) 
+
+            let item = await Event.findById(id);
+
+            if(item.dir.indexOf(newDir) == -1) 
             {
-                let dir = item.dir.splice(index, 1);
-                Event.findByIdAndUpdate(id, {dir: dir});
+                let dir = item.dir;
+                dir.push(newDir);
+                await Event.findByIdAndUpdate(id, {dir: dir});
             }
+           
             return res.status(200).send({ status: 'ok', massage: 'Добавлен тег' });
         } catch (err) {
             return res.status(400).send({ status: false, err: boom.boomify(err) });
@@ -231,15 +236,14 @@ const customCrud = () => ({
     },
     async removeDir(req, res){
         try {
-            let id = req.body.id;
-            let delDir = req.body.dir;
-            let item = Event.findById(id);
-
-            if(item.dir.indexOf(delDir) == -1) 
+            let id= req.body.id;
+            let removeDir = req.body.dir;
+            let item = await Event.findById(id);
+            let index = item.dir.indexOf(removeDir);
+            if(index != -1) 
             {
-                let dir = item.dir;
-                dir.push(delDir);
-                Event.findByIdAndUpdate(id, {dir: dir});
+                item.dir.splice(index, 1);
+                await Event.findByIdAndUpdate(id, {dir: item.dir});
             }
             return res.status(200).send({ status: 'ok', massage: 'Тег удален' });
         } catch (err) {
