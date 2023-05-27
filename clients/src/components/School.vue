@@ -549,6 +549,24 @@ export default {
       return descr;
     },
     /**
+     * Получение списка всех тегов
+     */
+    async getTags() {
+      try {
+        const res = await api.get("api/childDir", {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+        this.tags = res.data;
+        console.log(this.tags);
+        console.log(this.tags[0]);
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    /**
      * Получение списка все школ
      */
     async getSchool() {
@@ -571,30 +589,7 @@ export default {
         this.onError(error);
       }
     },
-    /**
-     * Получение списка всех тегов
-     */
-    async getTegs() {
-      this.loaded = false;
-      this.error = 0;
-      try {
-        const res = await api.get("api/childDir", {
-          headers: {
-            Authorization: "Basic " + btoa(this.auth),
-            "x-requested-with": "*",
-          },
-        });
-        console.log(res.data);
-        for (let i = 0; i < 22; i++) {
-          this.tegs[i] = res.data[i].name;
-        }
-        console.log(this.tegs);
 
-        this.loaded = true;
-      } catch (error) {
-        this.onError(error);
-      }
-    },
     async addNewTags(id, tegid) {
       try {
         const response = await api.post(
@@ -614,7 +609,7 @@ export default {
           type: "positive",
           message: "Новый тэг успешно добавлен.",
         });
-        this.getFacts();
+        this.getSchool();
       } catch (error) {
         this.onError(error);
       }
@@ -639,7 +634,7 @@ export default {
           type: "positive",
           message: "Тег успешно удален.",
         });
-        this.getFacts();
+        this.getSchool();
       } catch (error) {
         this.onError(error);
       }
