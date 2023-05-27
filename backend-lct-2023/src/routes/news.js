@@ -12,5 +12,5 @@ router.route('/:id').get(news.get)
 router.route('/').get(news.getAll)
 
 router.route('/dir/s/:id').get(news.getD)
-router.route('/dir').get(news.getAllD)
+router.route('/dir/s/').get(news.getAllD)
 module.exports = router

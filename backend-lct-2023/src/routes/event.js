@@ -15,6 +15,6 @@ router.route('/:id').get(event.get)
 router.route('/').get(event.getAll)
 
 router.route('/dir/s/:id').get(event.getD)
-router.route('/dir').get(event.getAllD)
+router.route('/dir/s/').get(event.getAllD)
 
 module.exports = router

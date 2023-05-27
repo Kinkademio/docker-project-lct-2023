@@ -12,5 +12,5 @@ router.route('/:id').get(school.get)
 router.route('/').get(school.getAll)
 
 router.route('/dir/s/:id').get(school.getD)
-router.route('/dir').get(school.getAllD)
+router.route('/dir/s/').get(school.getAllD)
 module.exports = router
