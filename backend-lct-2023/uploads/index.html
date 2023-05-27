@@ -22,6 +22,7 @@ Online HTML, CSS and JavaScript editor to run code online.
 		<button onclick="placeSchoolsToServer()">Загрузить Школы</button>
 	</div>
 	<div>
+		<button onclick="checkJsonFile(4)">Посмотреть JSON Школ</button>
 		<button onclick="placeNewSchoolToServer()">Загрузить Школы</button>
 	</div>
 	<div>
@@ -45,6 +46,9 @@ Online HTML, CSS and JavaScript editor to run code online.
 				break;
 			case 3:
 				file = 'Events.json';
+				break;
+				case 4: 
+				file = 'sch.json';
 				break;
 		}
 		fetch(file)
@@ -332,7 +336,7 @@ Online HTML, CSS and JavaScript editor to run code online.
 	}
 
 	function placeNewSchoolToServer() {
-		fetch('school.json')
+		fetch('sch.json')
 			.then((response) => response.json())
 			.then((json) => {
 				json.forEach((element) => {
