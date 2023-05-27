@@ -54,12 +54,13 @@ const customCrud = () => ({
            
                 if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                 newDirFormat[parentItem.name].push({
+                    id: childDir._id,
                     name: childDir.name,
-                    color: childDir.color
+                    color: parentItem.color
                 })
             }
             item.dir = newDirFormat; 
-            return res.status(200).send({item: item, dir:newDirFormat});
+            return res.status(200).send(item);
         } catch (err) {
             return res.status(400).send({ status: false, err: boom.boomify(err)});
         }
@@ -87,8 +88,9 @@ const customCrud = () => ({
                     let parentItem =  await Direction.findById(childDir.parent);
                     if(!newDirFormat[parentItem.name]) newDirFormat[parentItem.name] = [];
                     newDirFormat[parentItem.name].push({
+                        id: childDir._id,
                         name: childDir.name,
-                        color: childDir.color
+                        color: parentItem.color
                     })
                 }
                 item.dir = newDirFormat;
