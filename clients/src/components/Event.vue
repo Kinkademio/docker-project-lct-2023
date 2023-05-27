@@ -627,6 +627,7 @@ export default {
       newUrl: "",
       model: "",
       tags: [],
+      tegid: "",
     };
   },
   mounted() {
@@ -662,7 +663,7 @@ export default {
             "x-requested-with": "*",
           },
         });
-
+        await this.getTags();
         res.data.forEach((el) => {
           el.date_end = this.formDateToUserView(el.date_end);
           el.date_start = this.formDateToUserView(el.date_start);
@@ -695,7 +696,7 @@ export default {
           type: "positive",
           message: "Новый тэг успешно добавлен.",
         });
-        this.getFacts();
+        this.getEvents();
       } catch (error) {
         this.onError(error);
       }
@@ -720,7 +721,7 @@ export default {
           type: "positive",
           message: "Тег успешно удален.",
         });
-        this.getFacts();
+        this.getEvents();
       } catch (error) {
         this.onError(error);
       }

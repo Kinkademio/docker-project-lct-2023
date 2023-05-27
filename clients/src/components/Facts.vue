@@ -382,7 +382,6 @@ export default {
       tags: [],
       model: "",
       factTegId: "",
-      tegid: "",
     };
   },
   async beforeMount() {
