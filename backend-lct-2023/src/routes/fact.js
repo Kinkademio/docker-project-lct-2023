@@ -15,7 +15,7 @@ router.route('/actual/:id').get(fact.getAllActualForUser)
 
 router.route('/:id').put(fact.update)
 router.route('/:id').delete(fact.delete)
-router.route('/dir/s/:id').delete(fact.removeDir)
+router.route('/dir/s/del/').post(fact.removeDir)
 router.route('/dir/s/').post(fact.addDir)
 
 module.exports = router

@@ -5,7 +5,7 @@ const {news} = require('../controllers')
 router.route('/').post(news.create)
 router.route('/:id').put(news.update)
 router.route('/:id').delete(news.delete)
-router.route('/dir/s/:id').delete(news.removeDir)
+router.route('/dir/s/del/').post(news.removeDir)
 router.route('/dir/s/').post(news.addDir)
 
 router.route('/:id').get(news.get)

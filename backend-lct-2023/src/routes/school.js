@@ -5,7 +5,7 @@ const {school} = require('../controllers')
 router.route('/').post(school.create)
 router.route('/:id').put(school.update)
 router.route('/:id').delete(school.delete)
-router.route('/dir/s/:id').delete(school.removeDir)
+router.route('/dir/s/del/').post(school.removeDir)
 router.route('/dir/s/').post(school.addDir)
 
 router.route('/:id').get(school.get)

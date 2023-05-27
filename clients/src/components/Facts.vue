@@ -734,9 +734,10 @@ export default {
 
     async delTag(id, tegId){
       try {
-        const response = await api.delete(
-          "api/fact/dir/s/"+id,
+        const response = await api.post(
+          "api/fact/dir/s/del",
           {
+            id: id,
             dir: tegId,
           },
           {

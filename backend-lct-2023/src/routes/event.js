@@ -8,7 +8,7 @@ router.route('/actual/all').get(event.getAllActualEvents)
 router.route('/').post(event.create)
 router.route('/:id').put(event.update)
 router.route('/:id').delete(event.delete)
-router.route('/dir/s/:id').delete(event.removeDir)
+router.route('/dir/s/del/').post(event.removeDir)
 router.route('/dir/s/').post(event.addDir)
 
 router.route('/:id').get(event.get)

@@ -5,7 +5,7 @@ const {test} = require('../controllers')
 router.route('/').post(test.create)
 router.route('/:id').put(test.update)
 router.route('/:id').delete(test.delete)
-router.route('/dir/s/:id').delete(test.removeDir)
+router.route('/dir/s/del/').post(test.removeDir)
 router.route('/dir/s/').post(test.addDir)
 
 router.route('/:id').get(test.get)
