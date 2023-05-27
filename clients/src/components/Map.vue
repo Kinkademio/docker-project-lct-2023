@@ -13,11 +13,11 @@
               {{ nameSchool }}
             </div>
           </div>
+          <div v-if="dirs" v-for="dir in dirs"  style="display: inline-block;" class="q-mr-sm">
+            <q-chip size="xm" style="margin: 0;" v-for="subdir in dir" :style="{'background-color': `${subdir.color}`}"   text-color="white">{{ subdir.name }}</q-chip>
+          </div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <div v-if="dirs" v-for="dir in dirs">
-            <q-chip v-for="subdir in dir" :style="{'background-color': `${subdir.color}`}"  style="font-size: 16px;" text-color="white">{{ subdir.name }}</q-chip>
-          </div>
           <div v-if="addressStr" >
             {{ addressStr }}
           </div>
@@ -115,13 +115,13 @@ export default {
           console.log(event)
           let i = event.target.data.id;
           this.toolbar = true;
-          this.nameSchool = this.rows[i].name;
-          this.addressStr = this.rows[i].address.address_str;
-          this.phone = this.rows[i].contacts.phone.value;
-          this.email = this.rows[i].contacts.mail;
-          this.img = this.rows[i].image_url;
-          this.description = this.rows[i].description;
-          this.dirs = this.row[i].dir;
+          this.nameSchool = this.rows[i].name ?? null;
+          this.addressStr = this.rows[i].address ? this.rows[i].address.address_str : null;
+          this.phone = this.rows[i].contacts ? this.rows[i].contacts.phone : null;
+          this.email = this.rows[i].contacts ? this.rows[i].contacts.mail : null;
+          this.img = this.rows[i].image_url ?? null;
+          this.description = this.rows[i].description ?? null;
+          this.dirs = this.rows[i].dir ?? null;
         }else{
           map.setCenter(event.lngLat);
           map.setZoom(map.getZoom() + 2);
