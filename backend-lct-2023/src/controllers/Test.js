@@ -157,7 +157,7 @@ module.exports ={
             {
                 let dir = item.dir;
                 dir.push(newDir);
-                Test.findByIdAndUpdate(id, {dir: dir});
+                await Test.findByIdAndUpdate(id, {dir: dir});
             }
            
             return res.status(200).send({ status: 'ok', massage: 'Добавлен тег' });
@@ -173,7 +173,7 @@ module.exports ={
             if(index != -1) 
             {
                 let dir = item.dir.splice(index, 1);
-                Test.findByIdAndUpdate(id, {dir: dir});
+                await Test.findByIdAndUpdate(id, {dir: dir});
             }
             return res.status(200).send({ status: 'ok', massage: 'Тег удален' });
         } catch (err) {

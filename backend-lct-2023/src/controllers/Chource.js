@@ -170,7 +170,7 @@ module.exports ={
             {
                 let dir = item.dir;
                 dir.push(newDir);
-                Chource.findByIdAndUpdate(id, {dir: dir});
+                await Chource.findByIdAndUpdate(id, {dir: dir});
             }
            
             return res.status(200).send({ status: 'ok', massage: 'Добавлен тег' });
@@ -186,7 +186,7 @@ module.exports ={
             if(index != -1) 
             {
                 let dir = item.dir.splice(index, 1);
-                Chource.findByIdAndUpdate(id, {dir: dir});
+                await Chource.findByIdAndUpdate(id, {dir: dir});
             }
             return res.status(200).send({ status: 'ok', massage: 'Тег удален' });
         } catch (err) {

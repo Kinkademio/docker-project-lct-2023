@@ -202,7 +202,7 @@ const customCrud = () => ({
             {
                 let dir = item.dir;
                 dir.push(newDir);
-                Fact.findByIdAndUpdate(id, {dir: dir});
+                await Fact.findByIdAndUpdate(id, {dir: dir});
             }
            
             return res.status(200).send({ status: 'ok', massage: 'Добавлен тег' });
@@ -218,7 +218,7 @@ const customCrud = () => ({
             if(index != -1) 
             {
                 let dir = item.dir.splice(index, 1);
-                Fact.findByIdAndUpdate(id, {dir: dir});
+                await Fact.findByIdAndUpdate(id, {dir: dir});
             }
             return res.status(200).send({ status: 'ok', massage: 'Тег удален' });
         } catch (err) {
