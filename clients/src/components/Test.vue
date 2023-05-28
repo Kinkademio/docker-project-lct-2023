@@ -289,7 +289,7 @@
                 <q-btn
                   @click="
                     (edit = true),
-                      (currentVideos = props.row.videos),
+                      (currentTasks = props.row.tasks),
                       (currentChourceId = props.row._id)
                   "
                   flat
@@ -358,7 +358,7 @@
             dense
             flat
             icon="close"
-            @click="currentVideos = []"
+            @click="currentTasks = []"
             v-close-popup
           >
             <q-tooltip class="bg-white text-primary">Закрыть</q-tooltip>
@@ -370,12 +370,12 @@
             :color="'grey-8'"
             flat
             icon="save"
-            @click="saveVideos(currentChourceId, currentVideos)"
+            @click="saveTasks(currentChourceId, currentTasks)"
             ><q-tooltip class="bg-white text-primary"
               >Сохранить</q-tooltip
             ></q-btn
           >
-          <q-btn :color="'grey-8'" @click="addVideo()" flat icon="add"
+          <q-btn :color="'grey-8'" @click="addTasks()" flat icon="add"
             ><q-tooltip class="bg-white text-primary"
               >Добавить</q-tooltip
             ></q-btn
@@ -386,7 +386,7 @@
             <q-card
               style="min-width: 450px"
               class="col-2 q-ma-lg q-pa-lg"
-              v-for="(video, key) in currentVideos"
+              v-for="(tasks, key) in currentTasks"
             >
               <div class="row justify-between">
                 <div class="col-8 text-h6" style="color: gray">
@@ -396,7 +396,7 @@
                   <q-btn
                     :color="'grey-8'"
                     flat
-                    @click="deleteTest(video)"
+                    @click="deleteTasks(tasks)"
                     icon="delete"
                     ><q-tooltip class="bg-white text-primary"
                       >Удалить</q-tooltip
@@ -404,11 +404,11 @@
                   >
                 </div>
               </div>
-              <q-input v-model="video.title" label="Заголовок"></q-input>
-              <q-input v-model="video.text" label="Описание"></q-input>
-              <q-input v-model="video.video" label="Ссылка на видео"> </q-input>
+              <q-input v-model="tasks.title" label="Заголовок"></q-input>
+              <q-input v-model="tasks.text" label="Описание"></q-input>
+              <q-input v-model="tasks.video" label="Ссылка на видео"> </q-input>
               <iframe
-                :src="video.video"
+                :src="tasks.video"
                 style="width: 100%; height: 250px"
               ></iframe>
             </q-card>
@@ -459,7 +459,7 @@ export default {
         {
           name: "tasks",
           align: "left",
-          label: "Видео",
+          label: "Задачи",
           field: "tasks",
           canEdit: true,
           sortable: true,
@@ -510,7 +510,7 @@ export default {
       newTags: [],
       newDiffLevel: "",
       file: ref(null),
-      currentVideos: [],
+      currentTasks: [],
       currentChourceId: "",
     };
   },
@@ -524,19 +524,24 @@ export default {
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
-    deleteTest(video) {
-      let index = this.currentVideos.indexOf(video);
-      this.currentVideos.splice(index, 1);
+    deleteTasks(tasks) {
+      let index = this.currentTasks.indexOf(tasks);
+      this.currentTasks.splice(index, 1);
     },
-    addVideo() {
-      this.currentVideos.push({ title: "", text: "", video: "" });
+    addTasks() {
+      console.log("Добавление задачи");
+      this.currentTasks.push({
+        title: "",
+        text: "",
+        video: "",
+      });
     },
-    async saveVideos(id, videos) {
+    async saveTasks(id, tasks) {
       try {
         const res = await api.put(
           "api/test/" + id,
           {
-            videos: videos,
+            tasks: tasks,
           },
           {
             headers: {
@@ -636,7 +641,6 @@ export default {
         this.onError(error);
       }
     },
-
     async changeTestTitle(id, newName) {
       try {
         const res = await api.put(
