@@ -11,6 +11,7 @@
       <school v-if="selectedTable === 'Школы'" />
       <news v-if="selectedTable === 'Новости'" />
       <direction v-if="selectedTable === 'Направления(теги)'"></direction>
+      <level v-if="selectedTable === 'Уровни сложности'"></level>
       <chource v-if="selectedTable === 'Курсы'"></chource>
     </q-card-section>
   </q-card>
@@ -27,6 +28,7 @@ import Direction from "../components/Direction.vue";
 import VueCookies from "vue-cookies";
 import { api } from "../boot/axios";
 import Chource from "../components/Chource.vue";
+import Level from "../components/Level.vue"
 export default {
   components: {
     Roles,
@@ -37,6 +39,7 @@ export default {
     News,
     Direction,
     Chource,
+    Level
   },
   data() {
     return {
@@ -86,10 +89,10 @@ export default {
         this.$router.replace("/auth");
       }
       if (roles.includes("ADMIN")) {
-        return ["Пользователи","Направления(теги)", "Факты", "Мероприятия", "Школы", "Новости", "Курсы", "Тесты"];
+        return ["Пользователи","Направления(теги)", "Факты", "Мероприятия", "Школы", "Новости", "Уровни сложности", "Курсы", "Тесты"];
       }
       if (roles.includes("MODERATOR")) {
-        return ["Направления(теги)", "Факты", "Мероприятия", "Школы", "Новости", "Курсы", "Тесты"];
+        return ["Направления(теги)", "Факты", "Мероприятия", "Школы", "Новости","Уровни сложности", "Курсы", "Тесты"];
       }
       return [];
     }

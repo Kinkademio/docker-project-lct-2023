@@ -1,6 +1,6 @@
 const {model, Schema} = require('mongoose');
 var schema = new Schema({
-  start_video: {
+  image_url: {
     type: String,
     default: ""
   },
@@ -17,7 +17,12 @@ var schema = new Schema({
     default:""
   },
   level:{
-
+    type: String,
+    ref: 'Level'
+  },
+  isFree:{
+    type: Boolean,
+    default: true,
   },
   dir:{
     type: Schema.Types.Mixed,
