@@ -875,7 +875,7 @@ export default {
     },
 
     getNewSchoolName() {
-      const key = "rupzho5301";
+      const key = "rujnfh1727";
       const url = `https://catalog.api.2gis.com/3.0/items/geocode?lon=${this.x}&lat=${this.y}&type=building&key=${key}`;
 
       const xhr = new XMLHttpRequest();
