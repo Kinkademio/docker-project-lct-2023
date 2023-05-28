@@ -29,7 +29,7 @@
                   <q-input v-model="newImage_url" label="Ссылка на титульное изображение">
                     <q-btn flat dense :color="'grey-8'">
                       <q-icon name="upload" />
-                      <q-popup-edit>
+                      <q-popup-edit v-model="file">
                         <q-file v-model="file" label="Выберите изображение" outlined accept=".jpg, .jpeg, .png" use-chips
                           style="max-width: 300px" @update:model-value="uploadFileA()"></q-file>
                       </q-popup-edit>
@@ -76,41 +76,20 @@
             </q-td>
 
             <q-td key="image_url" :props="props">
-              <q-btn
-                v-if="props.row.image_url"
-                :href="props.row.image_url"
-                target="_blank"
-                flat
-                dense
-                :color="'grey-8'"
-                ><q-icon name="link" />
-                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn
-              >
+              <q-btn v-if="props.row.image_url" :href="props.row.image_url" target="_blank" flat dense
+                :color="'grey-8'"><q-icon name="link" />
+                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn>
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit @hide="changeChourceImage(props.row._id, props.row.image_url)">
-                  <q-file
-                    v-model="file"
-                    v-on:update:model-value="uploadFileB(props.row._id)"
-                    label="Выберете изображение"
-                    outlined
-                    accept=".jpg, .jpeg, .png"
-                    use-chips
-                    style="max-width: 300px"
-                  ></q-file>
+                <q-popup-edit v-model="file" @hide="changeChourceImage(props.row._id, props.row.image_url)">
+                  <q-file v-model="file" v-on:update:model-value="uploadFileB(props.row._id)" label="Выберете изображение"
+                    outlined accept=".jpg, .jpeg, .png" use-chips style="max-width: 300px"></q-file>
                 </q-popup-edit>
                 <q-tooltip>Загрузить новове изображение</q-tooltip>
               </q-btn>
-              <q-popup-edit
-                v-model="props.row.image_url"
-                @hide="changeChourceImage(props.row._id, props.row.image_url)"
-              >
-                <q-input
-                  type="textarea"
-                  v-model="props.row.image_url"
-                  label="Ссылка титульное изображение"
-                ></q-input>
+              <q-popup-edit v-model="props.row.image_url" @hide="changeChourceImage(props.row._id, props.row.image_url)">
+                <q-input type="textarea" v-model="props.row.image_url" label="Ссылка титульное изображение"></q-input>
               </q-popup-edit>
             </q-td>
 
@@ -130,29 +109,26 @@
 
 
             <q-td key="isFree" :props="props">
-              <q-checkbox
-                v-model="props.row.isFree"
-                :color="'grey-8'"
-                @click="changeIsFree(props.row._id, props.row.isFree)"
-              ></q-checkbox>
+              <q-checkbox v-model="props.row.isFree" :color="'grey-8'"
+                @click="changeIsFree(props.row._id, props.row.isFree)"></q-checkbox>
             </q-td>
 
             <q-td key="level" :props="props">
-              <q-chip v-if="props.row.level"
-                        :style="{ 'background-color': `${levelsref[props.row.level].level.color }` }"
-                        text-color="white">
-                        {{ levelsref[props.row.level].level.name }}
+              <q-chip v-if="props.row.level" :style="{ 'background-color': `${levelsref[props.row.level].level.color}` }"
+                text-color="white">
+                {{ levelsref[props.row.level].level.name }}
+              </q-chip>
+              <q-popup-edit v-model="props.row.level" @hide="updateLevel(props.row._id, props.row.level)">
+                <q-select emit-value map-options v-model="props.row.level" label="Уровень сложности"
+                  :options="getLevelOptions">
+                  <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                      <q-chip :style="{ 'background-color': `${scope.opt.color}` }" text-color="white">
+                        {{ scope.opt.label }}
                       </q-chip>
-              <q-popup-edit  @hide="updateLevel(props.row._id, props.row.level)">
-                <q-select  emit-value map-options  v-model="props.row.level" label="Уровень сложности" :options="getLevelOptions">
-                    <template v-slot:option="scope">
-                      <q-item v-bind="scope.itemProps">
-                        <q-chip :style="{ 'background-color': `${scope.opt.color}` }" text-color="white">
-                          {{ scope.opt.label }}
-                        </q-chip>
-                      </q-item>
-                    </template>
-                  </q-select>
+                    </q-item>
+                  </template>
+                </q-select>
               </q-popup-edit>
 
             </q-td>
@@ -161,32 +137,18 @@
             <q-td key="dir" :props="props">
               <div v-if="props.row.dir" v-for="dir in props.row.dir">
                 <div v-if="dir" v-for="subdir in dir">
-                  <q-chip
-                    removable
-                    clickabl
-                    @remove="delTag(props.row._id, subdir.id)"
-                    :style="{ 'background-color': `${subdir.color}` }"
-                    text-color="white"
-                  >
+                  <q-chip removable clickabl @remove="delTag(props.row._id, subdir.id)"
+                    :style="{ 'background-color': `${subdir.color}` }" text-color="white">
                     {{ subdir.name }}
                   </q-chip>
                 </div>
               </div>
               <q-btn icon="add" size="sm" round dense />
-              <q-popup-edit @hide="addNewTags(props.row._id, model)">
-                <q-select
-                  v-model="model"
-                  emit-value
-                  map-options
-                  :options="getTagSelectOptions"
-                  style="width: 250px"
-                >
+              <q-popup-edit v-model="model" @hide="addNewTags(props.row._id, model)">
+                <q-select v-model="model" emit-value map-options :options="getTagSelectOptions" style="width: 250px">
                   <template v-slot:option="scope">
                     <q-item v-bind="scope.itemProps">
-                      <q-chip
-                        :style="{ 'background-color': `${scope.opt.color}` }"
-                        text-color="white"
-                      >
+                      <q-chip :style="{ 'background-color': `${scope.opt.color}` }" text-color="white">
                         {{ scope.opt.label }}
                       </q-chip>
                     </q-item>
@@ -197,7 +159,8 @@
 
 
             <q-td key="control">
-              <q-btn @click="(edit=true), (currentVideos = props.row.videos), (currentChourceId = props.row._id)" flat dense :color="'grey-8'"><q-icon name="edit" />
+              <q-btn @click="(edit = true), (currentVideos = props.row.videos), (currentChourceId = props.row._id)" flat
+                dense :color="'grey-8'"><q-icon name="edit" />
                 <q-tooltip>Редактировать содержимое</q-tooltip>
               </q-btn>
 
@@ -227,55 +190,51 @@
 
       <q-card-actions align="between">
         <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-        <q-btn flat label="Удалить" @click="removeChource(deleteRowId, deletUserName)" color="primary" v-close-popup></q-btn>
+        <q-btn flat label="Удалить" @click="removeChource(deleteRowId, deletUserName)" color="primary"
+          v-close-popup></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
 
 
 
-  <q-dialog
-      v-model="edit"
-      persistent
-      :maximized="true"
-      transition-show="slide-up"
-      transition-hide="slide-down"
-    >
-      <q-card>
-        <q-bar>
-          <q-space></q-space>
-          <q-btn dense flat icon="close" @click="currentVideos = []" v-close-popup>
-            <q-tooltip class="bg-white text-primary">Закрыть</q-tooltip>
-          </q-btn>
-        </q-bar>
+  <q-dialog v-model="edit" persistent :maximized="true" transition-show="slide-up" transition-hide="slide-down">
+    <q-card style="background-color: #738664;">
+      <q-card-section style="background-color:white ;" class="row items-center q-pb-none">
+        <div class="text-h5">Редактор курса</div>
+        <q-space></q-space>
+        <q-btn dense flat icon="close" @click="currentVideos = []" v-close-popup>
+          <q-tooltip class="bg-white text-primary">Закрыть</q-tooltip>
+        </q-btn>
+      </q-card-section>
 
-        <q-card-section class="text-h6">
-          Редактор курса
-          <q-btn flat icon="save" @click="saveVideos(currentChourceId, currentVideos)"><q-tooltip class="bg-white text-primary">Сохранить</q-tooltip></q-btn>
-          <q-btn @click="addVideo()" flat icon="add"><q-tooltip class="bg-white text-primary">Добавить</q-tooltip></q-btn>
-        </q-card-section>
-
-        <q-card-section>
-          <div class="row">
-          <div class="col-1 q-ma-lg"  v-for="video, key in currentVideos">
+      <q-card-section style="background-color:white;">
+        <q-btn :color="'grey-8'" flat icon="save" @click="saveVideos(currentChourceId, currentVideos)"><q-tooltip
+            class="bg-white text-primary">Сохранить</q-tooltip></q-btn>
+        <q-btn :color="'grey-8'" @click="addVideo()" flat icon="add"><q-tooltip class="bg-white text-primary">Добавить</q-tooltip></q-btn>
+      </q-card-section>
+      <q-card-section>
+        <div class="row">
+          <q-card style="min-width: 450px" class="col-2 q-ma-lg q-pa-lg" v-for="video, key in currentVideos">
             <div class="row justify-between">
-      <div class="col-4">
-        Видео курса №{{ key+1 }}
-      </div>
-      <div class="col-4">
-        <q-btn flat @click="deleteVideo(video)" icon="delete"><q-tooltip class="bg-white text-primary">Удалить</q-tooltip></q-btn>
-      </div>
-    </div>
-
-          <q-input v-model="video.title" label="Заголовок"></q-input>
-          <q-input v-model="video.text" label="Описание"></q-input>
-          <q-input v-model="video.video" label="Ссылка на видео"></q-input>
-          </div>
-          </div>
-
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+              <div class="col-8 text-h6" style="color: gray;">
+                {{ key + 1 }}
+              </div>
+              <div class="col-1">
+                <q-btn :color="'grey-8'" flat @click="deleteVideo(video)" icon="delete"><q-tooltip
+                    class="bg-white text-primary">Удалить</q-tooltip></q-btn>
+              </div>
+            </div>
+            <q-input v-model="video.title" label="Заголовок"></q-input>
+            <q-input v-model="video.text" label="Описание"></q-input>
+            <q-input v-model="video.video" label="Ссылка на видео">
+            </q-input>
+            <iframe :src="video.video" style="width: 100%; height: 250px;"></iframe>
+          </q-card>
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>
@@ -361,9 +320,10 @@ export default {
       levelsref: {},
       rows: [],
       text: "",
+      model: "",
       auth: "12GradMapAdmin345SRscx:23pdmtF334slkRDcS5EREc2",
       confirm: ref(false),
-      edit:ref(false),
+      edit: ref(false),
       error: 0,
       loaded: false,
       searchSelected: "",
@@ -377,11 +337,11 @@ export default {
       newTags: [],
       newDiffLevel: "",
       file: ref(null),
-      currentVideos:[],
-      currentChourceId:"",
+      currentVideos: [],
+      currentChourceId: "",
     };
   },
-    async beforeMount() {
+  async beforeMount() {
 
     //Получаем теги
     await this.getChildTag();
@@ -392,15 +352,15 @@ export default {
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
-    deleteVideo(video){
+    deleteVideo(video) {
       let index = this.currentVideos.indexOf(video);
       console.log(index)
       this.currentVideos.splice(index, 1);
     },
-    addVideo(){
-      this.currentVideos.push({title:"", text: "", video: ""});
+    addVideo() {
+      this.currentVideos.push({ title: "", text: "", video: "" });
     },
-    async saveVideos(id, videos){
+    async saveVideos(id, videos) {
       try {
         const res = await api.put("api/chource/" + id,
           {
@@ -420,15 +380,15 @@ export default {
         this.onError(error);
       }
     },
-    async removeChource(id){
+    async removeChource(id) {
       try {
         const res = await api.delete("api/chource/" + id,
-         {
-          headers: {
-            Authorization: "Basic " + btoa(this.auth),
-            "x-requested-with": "*",
-          }
-        });
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            }
+          });
         this.$q.notify({
           type: "positive",
           message: "Курс удален",
@@ -438,7 +398,7 @@ export default {
         this.onError(error);
       }
     },
-    async changeIsFree(id, status){
+    async changeIsFree(id, status) {
       try {
         const res = await api.put("api/chource/" + id,
           {
@@ -540,7 +500,7 @@ export default {
         this.onError(error);
       }
     },
-async uploadFileB(prop) {
+    async uploadFileB(prop) {
       if (this.file == null) return;
       let formData = new FormData();
       formData.append("file", this.file);
@@ -597,8 +557,8 @@ async uploadFileB(prop) {
           }
         });
         this.levels = res.data;
-        res.data.forEach(level=>{
-          this.levelsref[level._id] = {level}
+        res.data.forEach(level => {
+          this.levelsref[level._id] = { level }
         })
       } catch (error) {
         this.onError(error);
@@ -618,7 +578,7 @@ async uploadFileB(prop) {
       }
     },
 
-    async updateLevel(id, levelid){
+    async updateLevel(id, levelid) {
       try {
         const res = await api.put("api/chource/" + id,
           {
@@ -739,7 +699,7 @@ async uploadFileB(prop) {
         this.onError(error);
       }
     },
-    async addNewChource(){
+    async addNewChource() {
       try {
         const response = await api.post(
           "api/chource/",
@@ -762,7 +722,7 @@ async uploadFileB(prop) {
           type: "positive",
           message: "Курс успешно добавлен.",
         });
-       this.getChource();
+        this.getChource();
       } catch (error) {
         this.onError(error);
       }

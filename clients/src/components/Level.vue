@@ -171,6 +171,7 @@ export default {
   data() {
     return {
       deleteRowId: -1,
+      pagination: ref(null),
       confirm: ref(false),
       icon: ref(false),
       newColor: "#000000",

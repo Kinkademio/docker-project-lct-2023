@@ -339,6 +339,7 @@ export default {
   data() {
     return {
       deleteRowId: -1,
+      pagination: ref(null),
       deleteRowIdCh: -1,
       confirm: ref(false),
       icon: ref(false),
