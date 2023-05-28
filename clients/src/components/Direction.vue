@@ -61,14 +61,14 @@
           <q-tr :props="props">
             <q-td key="name" :props="props">
               <div>{{ props.row.name }}</div>
-              <q-popup-edit v-model="props.row.fact_text" @hide="changeTagName(props.row._id, props.row.name)">
+              <q-popup-edit v-model="props.row.name" @hide="changeTagName(props.row._id, props.row.name)">
                 <q-input type="textarea" v-model="props.row.name" label="Название тега"></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="color" :props="props">
               <q-chip :style="{'background-color': `${props.row.color}`}" style="font-size: 16px;" text-color="white">{{ props.row.name }}
-                <q-popup-edit v-model="props.row.fact_text" @hide="changeTagColor(props.row._id, props.row.color)">
+                <q-popup-edit v-model="props.row.color" @hide="changeTagColor(props.row._id, props.row.color)">
                   <q-color v-model="props.row.color" no-header-tabs no-footer></q-color>
               </q-popup-edit>
               </q-chip>

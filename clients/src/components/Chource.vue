@@ -1,150 +1,135 @@
 <template>
   <div>
-    <q-spinner-ball
-      v-if="!loaded"
-      class="fixed-center"
-      size="5rem"
-      color="white"
-      :thickness="3"
-    />
+    <q-spinner-ball v-if="!loaded" class="fixed-center" size="5rem" color="white" :thickness="3" />
     <div v-if="loaded && !error">
       <div class="row">
         <div class="col-3">
-          <q-input
-            style="padding-bottom: 0px"
-            bottom-slots
-            borderless
-            v-model="text"
-            label="Поиск"
-          >
+          <q-input style="padding-bottom: 0px" bottom-slots borderless v-model="text" label="Поиск">
             <template v-slot:prepend>
               <q-icon name="search"></q-icon>
             </template>
           </q-input>
         </div>
         <div class="col-2">
-          <q-select
-            borderless
-            v-model="this.searchSelected"
-            :options="getSearchParamsArray"
-          />
+          <q-select borderless v-model="this.searchSelected" :options="getSearchParamsArray" />
+        </div>
+        <div class="col-1 q-mt-sm">
+          <q-btn flat icon="add" @click="icon = true">
+            <q-dialog v-model="icon">
+              <q-card class="bg-white text-black add-fact">
+                <q-card-section class="row items-center q-pb-none">
+                  <div class="text-h6">Добавление курса</div>
+                  <q-space />
+                  <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                  <q-input v-model="newTitle" label="Название" />
+                  <q-input v-model="newText" label="Описание" />
+                  <q-input v-model="newImage_url" label="Ссылка на титульное изображение">
+                    <q-btn flat dense :color="'grey-8'">
+                      <q-icon name="upload" />
+                      <q-popup-edit>
+                        <q-file v-model="file" label="Выберите изображение" outlined accept=".jpg, .jpeg, .png" use-chips
+                          style="max-width: 300px" @update:model-value="uploadFileA()"></q-file>
+                      </q-popup-edit>
+                      <q-tooltip>Загрузить новове изображение</q-tooltip>
+                    </q-btn>
+                  </q-input>
+                  <q-input v-model="newAuthor" label="Автор"></q-input>
+                  <q-checkbox v-model="newisFree" label="Бесплатное" style="opacity: 60%" />
+                  <q-select v-model="newDiffLevel" label="Уровень сложности" :options="getLevelOptions">
+                    <template v-slot:option="scope">
+                      <q-item v-bind="scope.itemProps">
+                        <q-chip :style="{ 'background-color': `${scope.opt.color}` }" text-color="white">
+                          {{ scope.opt.label }}
+                        </q-chip>
+                      </q-item>
+                    </template>
+                  </q-select>
+                  <q-btn class="q-mt-md" flat style="width: 100%; background-color: rgba(7, 7, 7, 0.05)"
+                    @click="addNewNews()">Добавить</q-btn>
+                </q-card-section>
+              </q-card>
+            </q-dialog></q-btn>
         </div>
       </div>
       <q-separator></q-separator>
 
-      <q-table
-        flat
-        borderless
-        separator="cell"
-        :rows="getRows"
-        :columns="columns"
-        row-key="name"
-        no-data-label="Ничего не найдено"
-      >
+      <q-table flat borderless separator="cell" :rows="getRows" :columns="columns" row-key="name"
+        no-data-label="Ничего не найдено">
         <template v-slot:header-cell="props">
           <q-th :props="props">
-            <q-icon
-              v-if="props.col.canEdit"
-              name="lock_open"
-              size="1.5em"
-            ></q-icon>
-            <q-icon
-              v-else-if="props.col.canEdit != null"
-              name="lock"
-              size="1.5em"
-            ></q-icon>
+            <q-icon v-if="props.col.canEdit" name="lock_open" size="1.5em"></q-icon>
+            <q-icon v-else-if="props.col.canEdit != null" name="lock" size="1.5em"></q-icon>
             {{ props.col.label }}
           </q-th>
         </template>
 
         <template v-slot:body="props">
           <q-tr :props="props">
-            <q-td key="name" :props="props">
-              <div>{{ props.row.name }}</div>
+            <q-td key="title" :props="props">
+              <div>{{ props.row.title }}</div>
+              <q-popup-edit v-model="props.row.title" @hide="changeChourceTitle(props.row._id, props.row.title)">
+                <q-input type="textarea" v-model="props.row.title" label="Заголовок"></q-input>
+              </q-popup-edit>
+            </q-td>
+
+            <q-td key="image_url" :props="props">
+              <q-btn
+                v-if="props.row.image_url"
+                :href="props.row.image_url"
+                target="_blank"
+                flat
+                dense
+                :color="'grey-8'"
+                ><q-icon name="link" />
+                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn
+              >
+              {{ getShortText(props.row.image_url) }}
+              <q-btn flat dense :color="'grey-8'">
+                <q-icon name="upload" />
+                <q-popup-edit @hide="changeChourceImage(props.row._id, props.row.image_url)">
+                  <q-file
+                    v-model="file"
+                    v-on:update:model-value="uploadFileB(props.row._id)"
+                    label="Выберете изображение"
+                    outlined
+                    accept=".jpg, .jpeg, .png"
+                    use-chips
+                    style="max-width: 300px"
+                  ></q-file>
+                </q-popup-edit>
+                <q-tooltip>Загрузить новове изображение</q-tooltip>
+              </q-btn>
               <q-popup-edit
-                v-model="props.row.name"
-                @hide="
-                  changeName(props.row._id, props.row.name, props.row.username)
-                "
+                v-model="props.row.image_url"
+                @hide="changeChourceImage(props.row._id, props.row.image_url)"
               >
                 <q-input
                   type="textarea"
-                  v-model="props.row.name"
-                  label="Новое имя пользователя"
+                  v-model="props.row.image_url"
+                  label="Ссылка титульное изображение"
                 ></q-input>
               </q-popup-edit>
             </q-td>
 
-            <q-td key="username" :props="props">
-              <div>{{ props.row.username }}</div>
-            </q-td>
 
-            <q-td key="registrDate" :props="props">
-              <div>
-                {{
-                  new Date(props.row.registrDate).toLocaleString("ru-RU", {
-                    timeZone: "Europe/Moscow",
-                  })
-                }}
-              </div>
-            </q-td>
 
-            <q-td key="roles" :props="props">
-              <div>{{ props.row.roles }}</div>
-              <q-popup-edit
-                v-model="props.row.roles"
-                @hide="
-                  changeRole(props.row._id, props.row.roles, props.row.username)
-                "
-              >
-                <q-select
-                  v-model="props.row.roles"
-                  :options="roles"
-                  label="Роль"
-                ></q-select>
-              </q-popup-edit>
-            </q-td>
 
-            <q-td key="password">
-              <q-btn flat dense :color="'grey-8'"
-                ><q-icon name="edit"></q-icon>
-                <q-popup-edit
-                  v-model="props.row.roles"
-                  v-slot="scope"
-                  @hide="changeUserPass(props.row._id, newPass)"
-                >
-                  <q-input
-                    @update:model-value="inputRef.value.resetValidation()"
-                    v-model="newPass"
-                    :type="isPwd ? 'password' : 'text'"
-                    hint="Новый пароль"
-                  >
-                    <template v-slot:append>
-                      <q-icon
-                        :name="isPwd ? 'visibility_off' : 'visibility'"
-                        class="cursor-pointer"
-                        @click="isPwd = !isPwd"
-                      ></q-icon>
-                    </template>
-                  </q-input>
-                </q-popup-edit>
-                <q-tooltip>Изменить пароль</q-tooltip>
-              </q-btn>
-            </q-td>
 
             <q-td key="control">
-              <q-btn
-                @click="
-                  (confirm = true),
-                    (deleteRowId = props.row._id),
-                    (deletUserName = props.row.username)
-                "
-                flat
-                dense
-                :color="'grey-8'"
-                ><q-icon name="delete_forever" />
-                <q-tooltip>Удалить</q-tooltip></q-btn
-              >
+              <q-btn @click="" flat dense :color="'grey-8'"><q-icon name="edit" />
+                <q-tooltip>Редактировать содержимое</q-tooltip>
+              </q-btn>
+
+              <q-btn @click="
+                (confirm = true),
+                (deleteRowId = props.row._id),
+                (deletUserName = props.row.username)
+              " flat dense :color="'grey-8'"><q-icon name="delete_forever" />
+                <q-tooltip>Удалить</q-tooltip>
+              </q-btn>
             </q-td>
           </q-tr>
         </template>
@@ -163,13 +148,7 @@
 
       <q-card-actions align="between">
         <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-        <q-btn
-          flat
-          label="Удалить"
-          @click="removeUser(deleteRowId, deletUserName)"
-          color="primary"
-          v-close-popup
-        ></q-btn>
+        <q-btn flat label="Удалить" @click="removeUser(deleteRowId, deletUserName)" color="primary" v-close-popup></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -182,53 +161,62 @@ import VueCookies from "vue-cookies";
 export default {
   data() {
     return {
-      inputRef: ref(null),
-      deletUserName: "",
-      deleteRowId: -1,
-      confirm: ref(false),
-      searchSelected: "",
-      newPass: "",
-      text: "",
-      isPwd: ref(true),
-      roles: [],
       columns: [
         {
-          name: "name",
-          label: "Имя пользователя",
+          name: "title",
+          label: "Название",
           align: "left",
-          field: "name",
+          field: "title",
           canEdit: true,
           sortable: true,
         },
         {
-          name: "username",
-          label: "Логин",
+          name: "image_url",
+          label: "Титульное изображение",
           align: "left",
-          field: "username",
-          canEdit: false,
-          sortable: true,
-        },
-        {
-          name: "registrDate",
-          align: "left",
-          label: "Дата регистрации",
-          field: "registrDate",
-          canEdit: false,
-          sortable: true,
-        },
-        {
-          name: "roles",
-          align: "left",
-          label: "Роль",
-          field: "roles",
+          field: "image_url",
           canEdit: true,
           sortable: true,
         },
         {
-          name: "password",
+          name: "text",
           align: "left",
-          label: "Пароль",
+          label: "Описание",
+          field: "text",
           canEdit: true,
+          sortable: true,
+        },
+        {
+          name: "author",
+          align: "left",
+          label: "Автор",
+          field: "author",
+          canEdit: true,
+          sortable: true,
+        },
+        {
+          name: "isFree",
+          align: "left",
+          label: "Бесплатный",
+          field: "isFree",
+          canEdit: true,
+          sortable: true,
+        },
+        {
+          name: "level",
+          align: "left",
+          label: "Уровень сложности",
+          field: "level",
+          canEdit: true,
+          sortable: true,
+        },
+        {
+          name: "dir",
+          align: "left",
+          label: "Теги",
+          field: "dir",
+          canEdit: true,
+          sortable: true,
         },
         {
           name: "control",
@@ -236,120 +224,175 @@ export default {
           label: "Управление",
         },
       ],
+      tags: [],
+      levels: [],
       rows: [],
+      text: "",
+      auth: "12GradMapAdmin345SRscx:23pdmtF334slkRDcS5EREc2",
+      confirm: ref(false),
       error: 0,
       loaded: false,
-      password: ref(""),
-      isPwd: ref(true),
+      searchSelected: "",
+      icon: ref(false),
+
+      newTitle: "",
+      newText: "",
+      newImage_url: "",
+      newAuthor: "",
+      newisFree: false,
+      newTags: [],
+      newDiffLevel: "",
+      file: ref(null)
     };
   },
   mounted() {
-    this.getUsers();
-    this.getRolesArray();
     this.searchSelected = this.getSearchParamsArray[0];
+
+    //Получаем теги
+    this.getChildTag();
+    //Получаем уровни сложности
+    this.getLevels();
+
+
+    this.getChource();
+    //this.getRolesArray();
+
   },
   methods: {
+    async changeChourceImage(id, imageUrl) {
+      try {
+        await api.put(
+          "api/chource/" + id,
+          {
+            image_url: imageUrl,
+          },
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.$q.notify({
+          type: "positive",
+          message: "Ссылка на изображение сохранена",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+
+    async changeChourceTitle(id, newName) {
+      try {
+        const res = await api.put("api/chource/" + id,
+          {
+            title: newName
+
+          }, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.$q.notify({
+          type: "positive",
+          message: "Заголовок сохранен",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+async uploadFileB(prop) {
+      if (this.file == null) return;
+      let formData = new FormData();
+      formData.append("file", this.file);
+      try {
+        const res = await api.post("api/uploads/create/", formData, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+
+        this.rows.forEach((el) => {
+          if (el._id == prop) {
+            el.image_url = res.data;
+          }
+        });
+        this.file = null;
+        this.$q.notify({
+          type: "positive",
+          message: "Изображение загружено",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async uploadFileA() {
+      if (this.file == null) return;
+      let formData = new FormData();
+      formData.append("file", this.file);
+      try {
+        const res = await api.post("api/uploads/create/", formData, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          },
+        });
+        this.newImgUrl = res.data;
+        this.file = null;
+        this.$q.notify({
+          type: "positive",
+          message: "Изображение загружено",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+
+    async getLevels() {
+      try {
+        const res = await api.get("api/level", {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.levels = res.data;
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async getChildTag() {
+      try {
+        const res = await api.get("api/childDir/", {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.tags = res.data;
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+
+
+
     /**
      * Получение пользователей с бд
      */
-    async getUsers() {
+    async getChource() {
       this.loaded = false;
       this.error = 0;
       try {
-        const res = await api.get("auth/users", {
+        const res = await api.get("api/chource", {
           headers: {
-            Authorization: "Bearer " + VueCookies.get("token"),
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
           },
         });
         this.rows = res.data;
-        this.rows.forEach((e) => {
-          e.roles = e.roles[0];
-        });
-        this.loaded = true;
-      } catch (error) {
-        this.onError(error);
-      }
-    },
-
-    /**
-     * Изменение роли пользователя
-     * @param {*} id
-     * @param {*} role
-     * @param {*} login
-     */
-    async changeRole(id, role, login) {
-      try {
-        await api.put("auth/updateRole", {
-          id: id,
-          newRole: role,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + VueCookies.get("token"),
-          },
-        });
-        this.$q.notify({
-          type: "positive",
-          message: "Роль пользователя сохранена",
-        });
-        if (VueCookies.get("login") == login) {
-          VueCookies.remove("token");
-          window.location.reload();
-        }
-      } catch (error) {
-        this.onError(error);
-      }
-    },
-    /**
-     * Изменение имени пользователя
-     * @param {*} id
-     * @param {*} name
-     * @param {*} login
-     */
-    async changeName(id, name, login) {
-      if (name == "") {
-        this.$q.notify({
-          type: "negative",
-          message: "Имя пользователя не может быть пустым",
-        });
-        return;
-      }
-      try {
-        const response = await api.put("auth/updateUser/" + id, {
-          name: name,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + VueCookies.get("token"),
-          },
-        });
-        this.$q.notify({
-          type: "positive",
-          message: "Имя пользователя сохранено",
-        });
-
-        //Обновляем куки если пользователь обновил свое имя
-        if (login == VueCookies.get("login")) {
-          VueCookies.set("uname", name, "10h");
-          window.location.reload();
-        }
-      } catch (error) {
-        this.onError(error);
-      }
-    },
-    /**
-     * Получение всех доступных ролей
-     */
-    async getRolesArray() {
-      this.loaded = false;
-      this.error = 0;
-      try {
-        const res = await api.get("auth/roles", {
-          headers: {
-            Authorization: "Bearer " + VueCookies.get("token"),
-          },
-        });
-        this.roles = res.data.map((role) => role.value);
         this.loaded = true;
       } catch (error) {
         this.onError(error);
@@ -360,6 +403,7 @@ export default {
      * @param {*} error
      */
     onError(error) {
+      console.log(error)
       this.loaded = true;
       if (!error.response || !error.response.status) {
         this.$q.notify({
@@ -376,73 +420,24 @@ export default {
         });
       }
     },
-    /**
-     * Удаление пользователя
-     * @param {*} user_id
-     * @param {*} login
-     */
-    async removeUser(user_id, login) {
-      try {
-        const res = await api.post(
-          "auth/delete",
-          {
-            id: user_id,
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + VueCookies.get("token"),
-            },
-          }
-        );
-        this.loaded = true;
-
-        //Если пользователь удалил себя
-        if (login == VueCookies.get("login")) {
-          VueCookies.remove("token");
-          VueCookies.remove("uname");
-          window.location.reload();
-        }
-
-        this.$q.notify({
-          type: "positive",
-          message: "Пользователь удален",
-        });
-        this.getUsers();
-      } catch (error) {
-        this.onError(error);
+    getShortText(descr, maxLength = 50) {
+      if (descr && descr.length > maxLength) {
+        return descr.substring(0, maxLength) + "...";
       }
-    },
-    /**
-     * Изменение пароля пользователя
-     * @param {*} user_id
-     * @param {*} newPass
-     */
-    async changeUserPass(user_id, newPass) {
-      const passwordRegex = /^[a-zA-Z._0-9]+$/;
-      if (!passwordRegex.test(newPass)) {
-        this.$q.notify({
-          type: "negative",
-          message:
-            "Проль должен содержать только разрешенные символы (_, ., a-z, A-Z, 0-9)",
-        });
-        return;
-      }
-      try {
-        const res = await api.put("auth/updateUser/" + user_id, {
-          password: newPass,
-        });
-        this.loaded = true;
-        this.$q.notify({
-          type: "positive",
-          message: "Пароль изменен",
-        });
-      } catch (error) {
-        this.onError(error);
-      }
+      return descr;
     },
   },
   //Поиск по талице
   computed: {
+
+    getLevelOptions() {
+      let options = [];
+      this.levels.forEach(level => {
+        options.push({ label: level.name, color: level.color, value: level._id })
+
+      })
+      return options;
+    },
     /**
      * Примениение поискового фильтра к таблице
      */
