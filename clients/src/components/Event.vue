@@ -398,12 +398,8 @@
               </q-td>
 
               <q-td key="tags" :props="props">
-                <div
-                  v-if="props.row.dir"
-                  v-for="dir in props.row.dir"
-                  :key="dir.id"
-                >
-                  <div v-if="dir" v-for="subdir in dir" :key="subdir.id">
+                <div v-if="props.row.dir" v-for="dir in props.row.dir">
+                  <div v-if="dir" v-for="subdir in dir">
                     <q-chip
                       removable
                       clickabl
@@ -416,7 +412,10 @@
                   </div>
                 </div>
                 <q-btn icon="add" size="sm" round dense />
-                <q-popup-edit @hide="addNewTags(props.row._id, model)">
+                <q-popup-edit
+                  v-model="model"
+                  @hide="addNewTags(props.row._id, model)"
+                >
                   <q-select
                     v-model="model"
                     emit-value

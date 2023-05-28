@@ -49,7 +49,7 @@
                   >
                     <q-btn flat dense :color="'grey-8'">
                       <q-icon name="upload" />
-                      <q-popup-edit>
+                      <q-popup-edit  v-model="file">
                         <q-file
                           v-model="file"
                           label="Выберете изображение"
@@ -160,7 +160,7 @@
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit @hide="changeSchoolImage(props.row._id, props.row.image_url)">
+                <q-popup-edit  v-model="file" @hide="changeSchoolImage(props.row._id, props.row.image_url)">
                   <q-file
                     v-on:update:model-value="uploadFileB(props.row._id)"
                     v-model="file"
@@ -196,13 +196,12 @@
                     (curMapAdressAdress = props.row.address)
                 "
                 ><q-icon name="map" /> <q-tooltip> Координаты </q-tooltip>
-                <q-modal> </q-modal>
               </q-btn>
               {{ props.row.address.address_str }}
             </q-td>
 
             <q-td key="address_comment" :props="props">
-              <div>{{ props.row.address.comment }}</div>
+              <div>{{ getShortText(props.row.address.comment) }}</div>
               <q-popup-edit
                 v-model="props.row.address.comment"
                 @hide="changeAddress(props.row._id, props.row.address)"
@@ -268,7 +267,7 @@
                 </div>
               </div>
               <q-btn icon="add" size="sm" round dense />
-              <q-popup-edit @hide="addNewTags(props.row._id, model)">
+              <q-popup-edit    v-model="model" @hide="addNewTags(props.row._id, model)">
                 <q-select
                   v-model="model"
                   emit-value
