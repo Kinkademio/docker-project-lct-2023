@@ -1,7 +1,11 @@
 <template>
   <q-card>
     <q-card-section>
-      <q-select v-model="selectedTable" :options="getOptions" label="Выберите таблицу, которую хотите отредактировать" />
+      <q-select
+        v-model="selectedTable"
+        :options="getOptions"
+        label="Выберите таблицу, которую хотите отредактировать"
+      />
     </q-card-section>
     <q-card-section>
       <roles v-if="selectedTable === 'Роли'" />
@@ -13,6 +17,7 @@
       <direction v-if="selectedTable === 'Направления(теги)'"></direction>
       <level v-if="selectedTable === 'Уровни сложности'"></level>
       <chource v-if="selectedTable === 'Курсы'"></chource>
+      <test v-if="selectedTable === 'Тесты'"></test>
     </q-card-section>
   </q-card>
 </template>
@@ -28,7 +33,8 @@ import Direction from "../components/Direction.vue";
 import VueCookies from "vue-cookies";
 import { api } from "../boot/axios";
 import Chource from "../components/Chource.vue";
-import Level from "../components/Level.vue"
+import Level from "../components/Level.vue";
+import Test from "../components/Test.vue";
 export default {
   components: {
     Roles,
@@ -39,7 +45,8 @@ export default {
     News,
     Direction,
     Chource,
-    Level
+    Level,
+    Test,
   },
   data() {
     return {
@@ -64,39 +71,61 @@ export default {
 
     async getUserRoles() {
       try {
-        const res = await api.post("auth/user", {
-          username: VueCookies.get("login"),
-        },
+        const res = await api.post(
+          "auth/user",
+          {
+            username: VueCookies.get("login"),
+          },
           {
             headers: {
               Authorization: "Bearer " + VueCookies.get("token"),
             },
-          });
+          }
+        );
         this.userRoles = res.data.roles;
-      }catch (error) {
+      } catch (error) {
         this.onError(error);
       }
-  }
+    },
   },
-  beforeMount(){
+  beforeMount() {
     this.getUserRoles();
   },
   computed: {
     getOptions() {
       let roles = this.userRoles;
-      if(roles == []){
-        VueCookies.remove('token');
+      if (roles == []) {
+        VueCookies.remove("token");
         this.$router.replace("/auth");
       }
       if (roles.includes("ADMIN")) {
-        return ["Пользователи","Направления(теги)", "Факты", "Мероприятия", "Школы", "Новости", "Уровни сложности", "Курсы", "Тесты"];
+        return [
+          "Пользователи",
+          "Направления(теги)",
+          "Факты",
+          "Мероприятия",
+          "Школы",
+          "Новости",
+          "Уровни сложности",
+          "Курсы",
+          "Тесты",
+        ];
       }
       if (roles.includes("MODERATOR")) {
-        return ["Направления(теги)", "Факты", "Мероприятия", "Школы", "Новости","Уровни сложности", "Курсы", "Тесты"];
+        return [
+          "Направления(теги)",
+          "Факты",
+          "Мероприятия",
+          "Школы",
+          "Новости",
+          "Уровни сложности",
+          "Курсы",
+          "Тесты",
+        ];
       }
       return [];
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
