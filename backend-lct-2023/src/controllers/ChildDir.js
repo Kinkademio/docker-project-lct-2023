@@ -9,6 +9,36 @@ module.exports ={
      * @param {*} res 
      * @returns 
      */
+     async getC({params: {id}}, res) {
+        try {
+            let item = await ChildDirection.findById(id);
+            return res.status(200).send(item)
+
+        } catch (err) {
+            return res.status(400).send({status: false, err: boom.boomify(err)});
+        }
+    },
+    /**
+     * Получение всех записей
+     * @param {*} _ 
+     * @param {*} res 
+     * @returns 
+     */
+    async getAllC(_, res) {
+        try {
+            let items = await ChildDirection.find();
+        
+            return res.status(200).send(items)
+        } catch (err) {
+            return res.status(400).send({status: false, err: boom.boomify(err)});
+        }
+    },
+     /**
+     * Получение одной записи по id
+     * @param {*} param0 
+     * @param {*} res 
+     * @returns 
+     */
      async get({params: {id}}, res) {
         try {
             let item = await ChildDirection.findById(id);
