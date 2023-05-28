@@ -10,6 +10,7 @@ const chource = require('./Chource')
 const direction = require('./Direction')
 const test = require('./Test')
 const childDir = require('./ChildDir')
+const level = require('./Level')
 module.exports = {
     fact,
     uploads,
@@ -22,5 +23,6 @@ module.exports = {
     chource,
     direction,
     test,
-    childDir
+    childDir,
+    level
 };

@@ -12,6 +12,13 @@ var schema = new Schema({
     type: String,
     default:""
   },
+  author:{
+    type: String,
+    default:""
+  },
+  level:{
+
+  },
   dir:{
     type: Schema.Types.Mixed,
     of: String,

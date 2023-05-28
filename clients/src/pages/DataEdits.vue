@@ -11,6 +11,7 @@
       <school v-if="selectedTable === 'Школы'" />
       <news v-if="selectedTable === 'Новости'" />
       <direction v-if="selectedTable === 'Направления(теги)'"></direction>
+      <chource v-if="selectedTable === 'Курсы'"></chource>
     </q-card-section>
   </q-card>
 </template>
@@ -25,6 +26,7 @@ import News from "../components/News.vue";
 import Direction from "../components/Direction.vue";
 import VueCookies from "vue-cookies";
 import { api } from "../boot/axios";
+import Chource from "../components/Chource.vue";
 export default {
   components: {
     Roles,
@@ -33,7 +35,8 @@ export default {
     Event,
     School,
     News,
-    Direction
+    Direction,
+    Chource,
   },
   data() {
     return {
@@ -83,10 +86,10 @@ export default {
         this.$router.replace("/auth");
       }
       if (roles.includes("ADMIN")) {
-        return ["Пользователи", "Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"];
+        return ["Пользователи","Направления(теги)", "Факты", "Мероприятия", "Школы", "Новости", "Курсы", "Тесты"];
       }
       if (roles.includes("MODERATOR")) {
-        return ["Факты", "Мероприятия", "Школы", "Новости", "Направления(теги)"];
+        return ["Направления(теги)", "Факты", "Мероприятия", "Школы", "Новости", "Курсы", "Тесты"];
       }
       return [];
     }
