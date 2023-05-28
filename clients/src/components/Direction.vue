@@ -612,6 +612,7 @@ export default {
     },
 
     async deleteTag(id) {
+      console.log(id)
       try {
         const res = await api.delete("api/direction/" + id, {
           headers: {
