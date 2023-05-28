@@ -45,7 +45,7 @@
                   <q-input v-model="newImgUrl" label="Ссылка на изображение">
                     <q-btn flat dense :color="'grey-8'">
                       <q-icon name="upload" />
-                      <q-popup-edit>
+                      <q-popup-edit  v-model="file">
                         <q-file
                           v-model="file"
                           label="Выберите изображение"
@@ -143,7 +143,7 @@
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit
+                <q-popup-edit  v-model="file"
                   @hide="changeUrl(props.row._id, props.row.image_url)"
                 >
                   <q-file
@@ -185,7 +185,7 @@
                 </div>
               </div>
               <q-btn icon="add" size="sm" round dense />
-              <q-popup-edit @hide="addNewTags(props.row._id, model)">
+              <q-popup-edit  v-model="model" @hide="addNewTags(props.row._id, model)">
                 <q-select
                   v-model="model"
                   emit-value

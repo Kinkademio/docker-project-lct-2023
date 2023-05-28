@@ -408,7 +408,7 @@
                 </div>
               </div>
               <q-btn icon="add" size="sm" round dense />
-              <q-popup-edit @hide="addNewTags(props.row._id, model)">
+              <q-popup-edit  v-model="model" @hide="addNewTags(props.row._id, model)">
                 <q-select
                   v-model="model"
                   emit-value
