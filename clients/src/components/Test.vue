@@ -49,7 +49,7 @@
                     >
                       <q-btn flat dense :color="'grey-8'">
                         <q-icon name="upload" />
-                        <q-popup-edit v-model="file">
+                        <q-popup-edit v-model="file_1" >
                           <q-file
                             v-model="file"
                             label="Выберите изображение"
@@ -152,13 +152,12 @@
                 {{ getShortText(props.row.image_url) }}
                 <q-btn flat dense :color="'grey-8'">
                   <q-icon name="upload" />
-                  <q-popup-edit
-                    v-model="file"
+                  <q-popup-edit v-model="file_2"
                     @hide="changeTestImage(props.row._id, props.row.image_url)"
                   >
                     <q-file
                       v-model="file"
-                      v-on:update:model-value="uploadFileB(props.row._id)"
+                      @update:model-value="uploadFileB(props.row._id)"
                       label="Выберете изображение"
                       outlined
                       accept=".jpg, .jpeg, .png"
@@ -426,6 +425,8 @@ import VueCookies from "vue-cookies";
 export default {
   data() {
     return {
+      file_1: null,
+      file_2: null,
       modaladdvideo: ref(false),
       columns: [
         {
@@ -660,6 +661,7 @@ export default {
       }
     },
     async uploadFileB(prop) {
+      console.log(this.file)
       if (this.file == null) return;
       let formData = new FormData();
       formData.append("file", this.file);

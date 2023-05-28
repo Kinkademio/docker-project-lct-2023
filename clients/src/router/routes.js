@@ -15,9 +15,6 @@ import VueCookies from "vue-cookies";
 import Map from '../components/Map.vue'
 import MapInner from '../components/MapInsert.vue'
 
-import TestConstr from '../components/TestConstructor.vue'
-
-
 const routes = [{
     path: '/map',
     component: Map,
@@ -68,11 +65,6 @@ const routes = [{
         component: MapInner,
         name: 'map_inside',
       },
-      {
-        path: '/testconstr',
-        component: TestConstr,
-        name: 'test_constr',
-      }
     ],
     beforeEnter: (to, from) => {
       if (!VueCookies.get('token') && to.name !== 'auth') {

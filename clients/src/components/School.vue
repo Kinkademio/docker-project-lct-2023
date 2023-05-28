@@ -49,7 +49,7 @@
                   >
                     <q-btn flat dense :color="'grey-8'">
                       <q-icon name="upload" />
-                      <q-popup-edit  v-model="file">
+                      <q-popup-edit v-model="file_1" >
                         <q-file
                           v-model="file"
                           label="Выберете изображение"
@@ -160,9 +160,9 @@
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit  v-model="file" @hide="changeSchoolImage(props.row._id, props.row.image_url)">
+                <q-popup-edit v-model="file_2"  @hide="changeSchoolImage(props.row._id, props.row.image_url)">
                   <q-file
-                    v-on:update:model-value="uploadFileB(props.row._id)"
+                    @update:model-value="uploadFileB(props.row._id)"
                     v-model="file"
                     label="Выберете изображение"
                     outlined
@@ -368,6 +368,8 @@ export default {
   },
   data() {
     return {
+      file_1: null,
+      file_2: null,
       file: ref(null),
       deleteRowId: -1,
       confirm: ref(false),

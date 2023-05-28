@@ -29,7 +29,7 @@
                   <q-input v-model="newImage_url" label="Ссылка на титульное изображение">
                     <q-btn flat dense :color="'grey-8'">
                       <q-icon name="upload" />
-                      <q-popup-edit v-model="file">
+                      <q-popup-edit v-model="file_1">
                         <q-file v-model="file" label="Выберите изображение" outlined accept=".jpg, .jpeg, .png" use-chips
                           style="max-width: 300px" @update:model-value="uploadFileA()"></q-file>
                       </q-popup-edit>
@@ -82,8 +82,8 @@
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit v-model="file" @hide="changeChourceImage(props.row._id, props.row.image_url)">
-                  <q-file v-model="file" v-on:update:model-value="uploadFileB(props.row._id)" label="Выберете изображение"
+                <q-popup-edit v-model="file_2"  @hide="changeChourceImage(props.row._id, props.row.image_url)">
+                  <q-file v-model="file" @update:model-value="uploadFileB(props.row._id)" label="Выберете изображение"
                     outlined accept=".jpg, .jpeg, .png" use-chips style="max-width: 300px"></q-file>
                 </q-popup-edit>
                 <q-tooltip>Загрузить новове изображение</q-tooltip>
@@ -244,6 +244,8 @@ import VueCookies from "vue-cookies";
 export default {
   data() {
     return {
+      file_1: null,
+      file_2: null,
       modaladdvideo: ref(false),
       columns: [
         {

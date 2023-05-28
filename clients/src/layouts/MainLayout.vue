@@ -79,11 +79,6 @@ export default defineComponent({
           route: "techsupport",
           iconName: "help_outline",
         },
-        {
-          label: "Конструктор тестов",
-          route: "test_constr",
-          iconName: "test",
-        },
       ],
       name: VueCookies.get("uname"),
       token: VueCookies.get("token"),

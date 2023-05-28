@@ -50,7 +50,7 @@
                   <q-input v-model="newImgUrl" label="Ссылка на изображение">
                     <q-btn flat dense :color="'grey-8'">
                       <q-icon name="upload" />
-                      <q-popup-edit  v-model="file">
+                      <q-popup-edit v-model="file_2" >
                         <q-file
                           v-model="file"
                           label="Выберите изображение"
@@ -176,10 +176,10 @@
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit v-model="file" @hide="changeUrl(props.row._id, props.row.image_url)">
+                <q-popup-edit  v-model="file_1"  @hide="changeUrl(props.row._id, props.row.image_url)">
                   <q-file
-                    v-on:update:model-value="uploadFileB(props.row._id)"
                     v-model="file"
+                    @update:model-value ="uploadFileB(props.row._id)"
                     label="Выберите изображение"
                     outlined
                     accept=".jpg, .jpeg, .png"
@@ -292,6 +292,8 @@ import VueCookies from "vue-cookies";
 export default {
   data() {
     return {
+      file_1: null,
+      file_2: null,
       file: ref(null),
       deleteRowId: -1,
       icon: ref(false),
@@ -496,6 +498,7 @@ export default {
      * @param {*} error
      */
     onError(error) {
+      console.log(error)
       this.loaded = true;
       if (!error.response || !error.response.status) {
         this.$q.notify({
