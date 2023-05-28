@@ -244,8 +244,8 @@
       <q-card>
         <q-bar>
           <q-space></q-space>
-          <q-btn dense flat icon="close" v-close-popup>
-            <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+          <q-btn dense flat icon="close" @click="currentVideos = []" v-close-popup>
+            <q-tooltip class="bg-white text-primary">Закрыть</q-tooltip>
           </q-btn>
         </q-bar>
 
@@ -255,11 +255,24 @@
           <q-btn @click="addVideo()" flat icon="add"><q-tooltip class="bg-white text-primary">Добавить</q-tooltip></q-btn>
         </q-card-section>
 
-        <q-card-section v-for="video in currentVideos">
-          <q-btn flat @click="deleteVideo(video)" icon="delete"><q-tooltip class="bg-white text-primary">Удалить</q-tooltip></q-btn>
+        <q-card-section>
+          <div class="row">
+          <div class="col-1 q-ma-lg"  v-for="video, key in currentVideos">
+            <div class="row justify-between">
+      <div class="col-4">
+        Видео курса №{{ key+1 }}
+      </div>
+      <div class="col-4">
+        <q-btn flat @click="deleteVideo(video)" icon="delete"><q-tooltip class="bg-white text-primary">Удалить</q-tooltip></q-btn>
+      </div>
+    </div>
+
           <q-input v-model="video.title" label="Заголовок"></q-input>
           <q-input v-model="video.text" label="Описание"></q-input>
           <q-input v-model="video.video" label="Ссылка на видео"></q-input>
+          </div>
+          </div>
+
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -368,18 +381,15 @@ export default {
       currentChourceId:"",
     };
   },
-  beforeMount() {
-    this.searchSelected = this.getSearchParamsArray[0];
+    async beforeMount() {
 
     //Получаем теги
-    this.getChildTag();
+    await this.getChildTag();
     //Получаем уровни сложности
-    this.getLevels();
-
-
-    this.getChource();
+    await this.getLevels();
+    await this.getChource();
     //this.getRolesArray();
-
+    this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
     deleteVideo(video){
