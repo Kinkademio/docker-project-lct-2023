@@ -954,8 +954,7 @@ export default {
       xhr.onload = () => {
         if (xhr.status === 200) {
           const data = JSON.parse(xhr.responseText);
-          this.curMapAdressAdress.address_str =
-            data.result.items[0].address_name;
+          this.curMapAdressAdress.address_str = data.result.items[0].address_name;
         }
       };
       xhr.send();

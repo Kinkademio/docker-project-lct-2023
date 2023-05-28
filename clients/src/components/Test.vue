@@ -540,7 +540,7 @@ export default {
         );
         this.$q.notify({
           type: "positive",
-          message: "Курс сохранен",
+          message: "Тест сохранен",
         });
       } catch (error) {
         this.onError(error);
@@ -556,7 +556,7 @@ export default {
         });
         this.$q.notify({
           type: "positive",
-          message: "Курс удален",
+          message: "Тест удален",
         });
         this.getTests();
       } catch (error) {
@@ -871,7 +871,7 @@ export default {
         );
         this.$q.notify({
           type: "positive",
-          message: "Курс успешно добавлен.",
+          message: "Тест успешно добавлен.",
         });
         this.getTests();
       } catch (error) {

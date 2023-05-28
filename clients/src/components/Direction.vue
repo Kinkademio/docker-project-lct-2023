@@ -294,7 +294,7 @@
 
               <q-td key="control">
                 <q-btn
-                  @click="(confirm = true), (deleteRowIdCh = props.row._id)"
+                  @click="(confirmCh = true), (deleteRowIdCh = props.row._id)"
                   flat
                   dense
                   :color="'grey-8'"
@@ -311,7 +311,7 @@
         <div class="text-h4" style="opacity: 0.5">У вас нет прав</div>
         <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
       </div>
-      <q-dialog v-model="confirm" persistent>
+      <q-dialog v-model="confirmCh" persistent>
         <q-card>
           <q-card-section class="row items-center">
             <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
@@ -344,6 +344,7 @@ export default {
       pagination: ref(null),
       deleteRowIdCh: -1,
       confirm: ref(false),
+      confirmCh: ref(false),
       icon: ref(false),
       iconCh: ref(false),
       newColor: "#000000",
@@ -427,6 +428,13 @@ export default {
       }
     },
     async addChildTag() {
+      if(this.newChildParentId == "" &&  this.newChildName == ""){
+        this.$q.notify({
+          type: "negative",
+          message: "Не все поля заполнены",
+        });
+        return;
+      }
       try {
         const res = await api.post(
           "api/childDir/",
@@ -494,6 +502,9 @@ export default {
       }
     },
     async changeChildDirParent(id, parent_id) {
+      if(parent_id == ""){
+        return;
+      }
       try {
         const res = await api.put(
           "api/childDir/" + id,

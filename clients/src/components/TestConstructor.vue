@@ -7,7 +7,7 @@
             <q-input v-model="text" label="Название" />
             <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" />
             <q-input v-model="text" label="Ссылка на изображение" />
-            <q-input v-model="text" label="Описание курса" />
+            <q-input v-model="text" label="Описание теста" />
           </div>
         </q-card-section>
 
@@ -35,7 +35,7 @@
                 <q-input
                   readonly
                   v-model="card.descripthion"
-                  label="Описание курса"
+                  label="Описание теста"
                 />
               </div>
             </q-card-section>
