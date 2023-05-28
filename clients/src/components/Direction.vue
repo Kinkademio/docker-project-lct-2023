@@ -457,6 +457,7 @@ export default {
         this.newChildParent = "";
         this.newChildParentId = "";
         this.getChildTag();
+        this.iconCh = false;
       } catch (error) {
         this.onError(error);
       }

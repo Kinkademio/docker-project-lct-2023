@@ -137,12 +137,11 @@
                 v-model="props.row.description"
                 @hide="changeDescription(props.row._id, props.row.description)"
               >
-                <q-editor
+              <q-input
+                  type="textarea"
                   v-model="props.row.description"
-                  min-height="5rem"
-                  autofocus
-                  @keyup.enter.stop
-                ></q-editor>
+                  label="Название школы"
+                ></q-input>
               </q-popup-edit>
             </q-td>
 
@@ -934,6 +933,14 @@ export default {
           type: "positive",
           message: "Новое соьбытие успешно добавлен.",
         });
+        this.newName  = "";
+        this.newDescription = "";
+        this.newSchoolImg = "";
+        this.newShoolAddressName = "";
+        this.newAddressComment = "";
+        this.newWebSite = "";
+        this.newMail = "";
+
         this.icon = false;
         this.getSchool();
       } catch (error) {

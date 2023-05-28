@@ -706,6 +706,7 @@ export default {
         this.newFactName = "";
         this.newFactText = "";
         this.newImgUrl = "";
+        this.newFactFooter ="";
       } catch (error) {
         this.onError(error);
       }

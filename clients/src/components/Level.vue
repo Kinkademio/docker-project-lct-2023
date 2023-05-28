@@ -247,7 +247,6 @@ export default {
           message: "Название сохранено",
         });
         this.getLevels();
-        this.getChildTag();
       } catch (error) {
         this.onError(error);
       }
@@ -271,7 +270,6 @@ export default {
           message: "Цвет сохранен",
         });
         this.getLevels();
-        this.getChildTag();
       } catch (error) {
         this.onError(error);
       }
@@ -324,6 +322,7 @@ export default {
     },
 
     onError(error) {
+      console.log(error)
       this.loaded = true;
       if (!error.response || !error.response.status) {
         this.$q.notify({

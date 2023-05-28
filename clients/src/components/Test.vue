@@ -874,6 +874,11 @@ export default {
           message: "Тест успешно добавлен.",
         });
         this.getTests();
+        this.newTitle = "";
+        this.newText = "";
+        this.newDiffLevel = "";
+        this.newImage_url = "";
+        this.icon = false;
       } catch (error) {
         this.onError(error);
       }

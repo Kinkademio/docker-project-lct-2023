@@ -723,6 +723,13 @@ export default {
           message: "Курс успешно добавлен.",
         });
         this.getChource();
+        this.newTitle = "";
+        this.newText = "";
+        this.newAuthor = "";
+        this.newDiffLevel = "";
+        this.newImage_url = "";
+        this.newisFree = false;
+        this.icon = false;
       } catch (error) {
         this.onError(error);
       }

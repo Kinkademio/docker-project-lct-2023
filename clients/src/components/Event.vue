@@ -1,230 +1,48 @@
 <template>
   <div>
-    <div>
-      <q-spinner-ball
-        v-if="!loaded"
-        class="fixed-center"
-        size="5rem"
-        color="white"
-        :thickness="3"
-      />
-      <div v-if="loaded && !error">
-        <div class="row">
-          <div class="col-3">
-            <q-input
-              style="padding-bottom: 0px"
-              bottom-slots
-              borderless
-              v-model="text"
-              label="Поиск"
-            >
-              <template v-slot:prepend>
-                <q-icon name="search"></q-icon>
-              </template>
-            </q-input>
-          </div>
-          <div class="col-2">
-            <q-select
-              borderless
-              v-model="this.searchSelected"
-              :options="getSearchParamsArray"
-            />
-          </div>
-          <div class="col-1 q-mt-sm">
-            <q-btn flat icon="add" @click="icon = true">
-              <q-dialog v-model="icon">
-                <q-card class="bg-white text-black add-fact">
-                  <q-card-section class="row items-center q-pb-none">
-                    <div class="text-h6">Добавления нового мероприятия</div>
-                    <q-space />
-                    <q-btn icon="close" flat round dense v-close-popup />
-                  </q-card-section>
-
-                  <q-card-section class="q-pt-none">
-                    <q-input v-model="newName" label="Название" />
-
-                    <q-input v-model="newDateStart" label="Дата начала">
-                      <template v-slot:prepend>
-                        <q-icon name="event" class="cursor-pointer">
-                          <q-popup-proxy
-                            cover
-                            transition-show="scale"
-                            transition-hide="scale"
-                          >
-                            <q-date
-                              v-model="newDateStart"
-                              mask="DD.MM.YYYY, HH:mm:ss"
-                              minimal
-                              first-day-of-week="1"
-                              :locale="localeCalend"
-                            >
-                              <div class="row items-center justify-end">
-                                <q-btn
-                                  v-close-popup
-                                  label="Закрыть"
-                                  color="primary"
-                                  flat
-                                ></q-btn>
-                              </div>
-                            </q-date>
-                          </q-popup-proxy>
-                        </q-icon>
-                      </template>
-
-                      <template v-slot:append>
-                        <q-icon name="access_time" class="cursor-pointer">
-                          <q-popup-proxy
-                            cover
-                            transition-show="scale"
-                            transition-hide="scale"
-                          >
-                            <q-time
-                              v-model="newDateStart"
-                              mask="DD.MM.YYYY, HH:mm:ss"
-                              format24h
-                              first-day-of-week="1"
-                              :locale="localeCalend"
-                            >
-                              <div class="row items-center justify-end">
-                                <q-btn
-                                  v-close-popup
-                                  label="Закрыть"
-                                  color="primary"
-                                  flat
-                                ></q-btn>
-                              </div>
-                            </q-time>
-                          </q-popup-proxy>
-                        </q-icon>
-                      </template>
-                    </q-input>
-
-                    <q-input v-model="newDateEnd" label="Дата окончания">
-                      <template v-slot:prepend>
-                        <q-icon name="event" class="cursor-pointer">
-                          <q-popup-proxy
-                            cover
-                            transition-show="scale"
-                            transition-hide="scale"
-                          >
-                            <q-date
-                              v-model="newDateEnd"
-                              mask="DD.MM.YYYY, HH:mm:ss"
-                              minimal
-                              first-day-of-week="1"
-                              :locale="localeCalend"
-                            >
-                              <div class="row items-center justify-end">
-                                <q-btn
-                                  v-close-popup
-                                  label="Закрыть"
-                                  color="primary"
-                                  flat
-                                ></q-btn>
-                              </div>
-                            </q-date>
-                          </q-popup-proxy>
-                        </q-icon>
-                      </template>
-
-                      <template v-slot:append>
-                        <q-icon name="access_time" class="cursor-pointer">
-                          <q-popup-proxy
-                            cover
-                            transition-show="scale"
-                            transition-hide="scale"
-                          >
-                            <q-time
-                              v-model="newDateEnd"
-                              mask="DD.MM.YYYY, HH:mm:ss"
-                              format24h
-                              first-day-of-week="1"
-                              :locale="localeCalend"
-                            >
-                              <div class="row items-center justify-end">
-                                <q-btn
-                                  v-close-popup
-                                  label="Закрыть"
-                                  color="primary"
-                                  flat
-                                ></q-btn>
-                              </div>
-                            </q-time>
-                          </q-popup-proxy>
-                        </q-icon>
-                      </template>
-                    </q-input>
-
-                    <q-checkbox
-                      v-model="newIsFree"
-                      label="Бесплатное"
-                      style="opacity: 60%"
-                    />
-                    <q-input v-model="newOrganizName" label="Организатор" />
-                    <q-input v-model="newUrl" label="Адрес сайта" />
-                    <q-btn
-                      class="q-mt-md"
-                      flat
-                      style="width: 100%; background-color: rgba(7, 7, 7, 0.05)"
-                      @click="addNewEvent()"
-                      >Добавить</q-btn
-                    >
-                  </q-card-section>
-                </q-card>
-              </q-dialog>
-            </q-btn>
-          </div>
+    <q-spinner-ball
+      v-if="!loaded"
+      class="fixed-center"
+      size="5rem"
+      color="white"
+      :thickness="3"
+    />
+    <div v-if="loaded && !error">
+      <div class="row">
+        <div class="col-3">
+          <q-input
+            style="padding-bottom: 0px"
+            bottom-slots
+            borderless
+            v-model="text"
+            label="Поиск"
+          >
+            <template v-slot:prepend>
+              <q-icon name="search"></q-icon>
+            </template>
+          </q-input>
         </div>
-        <q-separator></q-separator>
+        <div class="col-2">
+          <q-select
+            borderless
+            v-model="this.searchSelected"
+            :options="getSearchParamsArray"
+          />
+        </div>
+        <div class="col-1 q-mt-sm">
+          <q-btn flat icon="add" @click="icon = true">
+            <q-dialog v-model="icon">
+              <q-card class="bg-white text-black add-fact">
+                <q-card-section class="row items-center q-pb-none">
+                  <div class="text-h6">Добавления нового мероприятия</div>
+                  <q-space />
+                  <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
 
-        <q-table
-          flat
-          borderless
-          separator="cell"
-          :rows="getRows"
-          :columns="columns"
-          row-key="name"
-          no-data-label="Ничего не найдено"
-        >
-          <template v-slot:header-cell="props">
-            <q-th :props="props">
-              <q-icon
-                v-if="props.col.canEdit"
-                name="lock_open"
-                size="1.5em"
-              ></q-icon>
-              <q-icon
-                v-else-if="props.col.canEdit != null"
-                name="lock"
-                size="1.5em"
-              ></q-icon>
-              {{ props.col.label }}
-            </q-th>
-          </template>
+                <q-card-section class="q-pt-none">
+                  <q-input v-model="newName" label="Название" />
 
-          <template v-slot:body="props">
-            <q-tr :props="props">
-              <q-td key="name" :props="props">
-                <div>{{ getShortText(props.row.name) }}</div>
-                <q-popup-edit
-                  v-model="props.row.name"
-                  @hide="changeName(props.row._id, props.row.name)"
-                >
-                  <q-input
-                    type="textarea"
-                    v-model="props.row.name"
-                    label="Название мероприятия"
-                  ></q-input>
-                </q-popup-edit>
-              </q-td>
-
-              <q-td key="date_start" :props="props">
-                <div>{{ props.row.date_start }}</div>
-                <q-popup-edit
-                  v-model="props.row.date_start"
-                  @hide="changeDateStart(props.row._id, props.row.date_start)"
-                >
-                  <q-input v-model="props.row.date_start">
+                  <q-input v-model="newDateStart" label="Дата начала">
                     <template v-slot:prepend>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy
@@ -233,7 +51,7 @@
                           transition-hide="scale"
                         >
                           <q-date
-                            v-model="props.row.date_start"
+                            v-model="newDateStart"
                             mask="DD.MM.YYYY, HH:mm:ss"
                             minimal
                             first-day-of-week="1"
@@ -260,7 +78,7 @@
                           transition-hide="scale"
                         >
                           <q-time
-                            v-model="props.row.date_start"
+                            v-model="newDateStart"
                             mask="DD.MM.YYYY, HH:mm:ss"
                             format24h
                             first-day-of-week="1"
@@ -279,16 +97,8 @@
                       </q-icon>
                     </template>
                   </q-input>
-                </q-popup-edit>
-              </q-td>
 
-              <q-td key="date_end" :props="props">
-                <div>{{ props.row.date_end }}</div>
-                <q-popup-edit
-                  v-model="props.row.date_end"
-                  @hide="changeDateEnd(props.row._id, props.row.date_end)"
-                >
-                  <q-input v-model="props.row.date_end">
+                  <q-input v-model="newDateEnd" label="Дата окончания">
                     <template v-slot:prepend>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy
@@ -297,7 +107,7 @@
                           transition-hide="scale"
                         >
                           <q-date
-                            v-model="props.row.date_end"
+                            v-model="newDateEnd"
                             mask="DD.MM.YYYY, HH:mm:ss"
                             minimal
                             first-day-of-week="1"
@@ -324,7 +134,7 @@
                           transition-hide="scale"
                         >
                           <q-time
-                            v-model="props.row.date_end"
+                            v-model="newDateEnd"
                             mask="DD.MM.YYYY, HH:mm:ss"
                             format24h
                             first-day-of-week="1"
@@ -343,144 +153,326 @@
                       </q-icon>
                     </template>
                   </q-input>
-                </q-popup-edit>
-              </q-td>
 
-              <q-td key="isFree" :props="props">
-                <q-checkbox
-                  v-model="props.row.isFree"
-                  :color="'grey-8'"
-                  @click="changeIsFree(props.row._id, props.row.isFree)"
-                ></q-checkbox>
-              </q-td>
-
-              <q-td key="organization_name" :props="props">
-                <div>{{ getShortText(props.row.organization_name) }}</div>
-                <q-popup-edit
-                  v-model="props.row.organization_name"
-                  @hide="
-                    changeOrganizName(
-                      props.row._id,
-                      props.row.organization_name
-                    )
-                  "
-                >
-                  <q-input
-                    type="textarea"
-                    v-model="props.row.organization_name"
-                    label="Организация"
-                  ></q-input>
-                </q-popup-edit>
-              </q-td>
-
-              <q-td key="url" :props="props">
-                <q-btn
-                  v-if="props.row.url"
-                  :href="props.row.url"
-                  target="_blank"
-                  flat
-                  dense
-                  :color="'grey-8'"
-                  ><q-icon name="link" />
-                  <q-tooltip>Перейти по ссылке</q-tooltip></q-btn
-                >
-                {{ getShortText(props.row.url) }}
-                <q-popup-edit
-                  v-model="props.row.url"
-                  @hide="changeUrl(props.row._id, props.row.url)"
-                >
-                  <q-input
-                    type="textarea"
-                    v-model="props.row.url"
-                    label="Ссылка на мероприятие"
-                  ></q-input>
-                </q-popup-edit>
-              </q-td>
-
-              <q-td key="tags" :props="props">
-                <div v-if="props.row.dir" v-for="dir in props.row.dir">
-                  <div v-if="dir" v-for="subdir in dir">
-                    <q-chip
-                      removable
-                      clickabl
-                      @remove="delTag(props.row._id, subdir.id)"
-                      :style="{ 'background-color': `${subdir.color}` }"
-                      text-color="white"
-                    >
-                      {{ subdir.name }}
-                    </q-chip>
-                  </div>
-                </div>
-                <q-btn icon="add" size="sm" round dense />
-                <q-popup-edit
-                  v-model="model"
-                  @hide="addNewTags(props.row._id, model)"
-                >
-                  <q-select
-                    v-model="model"
-                    emit-value
-                    map-options
-                    :options="getTagSelectOptions"
-                    style="width: 250px"
+                  <q-checkbox
+                    v-model="newIsFree"
+                    label="Бесплатное"
+                    style="opacity: 60%"
+                  />
+                  <q-input v-model="newOrganizName" label="Организатор" />
+                  <q-input v-model="newUrl" label="Адрес сайта" />
+                  <q-btn
+                    class="q-mt-md"
+                    flat
+                    style="width: 100%; background-color: rgba(7, 7, 7, 0.05)"
+                    @click="addNewEvent()"
+                    >Добавить</q-btn
                   >
-                    <template v-slot:option="scope">
-                      <q-item v-bind="scope.itemProps">
-                        <q-chip
-                          :style="{ 'background-color': `${scope.opt.color}` }"
-                          text-color="white"
+                </q-card-section>
+              </q-card>
+            </q-dialog>
+          </q-btn>
+        </div>
+      </div>
+      <q-separator></q-separator>
+
+      <q-table
+        flat
+        borderless
+        separator="cell"
+        :rows="getRows"
+        :columns="columns"
+        row-key="name"
+        no-data-label="Ничего не найдено"
+      >
+        <template v-slot:header-cell="props">
+          <q-th :props="props">
+            <q-icon
+              v-if="props.col.canEdit"
+              name="lock_open"
+              size="1.5em"
+            ></q-icon>
+            <q-icon
+              v-else-if="props.col.canEdit != null"
+              name="lock"
+              size="1.5em"
+            ></q-icon>
+            {{ props.col.label }}
+          </q-th>
+        </template>
+
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="name" :props="props">
+              <div>{{ getShortText(props.row.name) }}</div>
+              <q-popup-edit
+                v-model="props.row.name"
+                @hide="changeName(props.row._id, props.row.name)"
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.name"
+                  label="Название мероприятия"
+                ></q-input>
+              </q-popup-edit>
+            </q-td>
+
+            <q-td key="date_start" :props="props">
+              <div>{{ props.row.date_start }}</div>
+              <q-popup-edit
+                v-model="props.row.date_start"
+                @hide="changeDateStart(props.row._id, props.row.date_start)"
+              >
+                <q-input v-model="props.row.date_start">
+                  <template v-slot:prepend>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-date
+                          v-model="props.row.date_start"
+                          mask="DD.MM.YYYY, HH:mm:ss"
+                          minimal
+                          first-day-of-week="1"
+                          :locale="localeCalend"
                         >
-                          {{ scope.opt.label }}
-                        </q-chip>
-                      </q-item>
-                    </template>
-                  </q-select>
-                </q-popup-edit>
-              </q-td>
+                          <div class="row items-center justify-end">
+                            <q-btn
+                              v-close-popup
+                              label="Закрыть"
+                              color="primary"
+                              flat
+                            ></q-btn>
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
 
-              <q-td key="views" :props="props">
-                <div>
-                  {{ props.row.viewCount }}
+                  <template v-slot:append>
+                    <q-icon name="access_time" class="cursor-pointer">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-time
+                          v-model="props.row.date_start"
+                          mask="DD.MM.YYYY, HH:mm:ss"
+                          format24h
+                          first-day-of-week="1"
+                          :locale="localeCalend"
+                        >
+                          <div class="row items-center justify-end">
+                            <q-btn
+                              v-close-popup
+                              label="Закрыть"
+                              color="primary"
+                              flat
+                            ></q-btn>
+                          </div>
+                        </q-time>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </q-popup-edit>
+            </q-td>
+
+            <q-td key="date_end" :props="props">
+              <div>{{ props.row.date_end }}</div>
+              <q-popup-edit
+                v-model="props.row.date_end"
+                @hide="changeDateEnd(props.row._id, props.row.date_end)"
+              >
+                <q-input v-model="props.row.date_end">
+                  <template v-slot:prepend>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-date
+                          v-model="props.row.date_end"
+                          mask="DD.MM.YYYY, HH:mm:ss"
+                          minimal
+                          first-day-of-week="1"
+                          :locale="localeCalend"
+                        >
+                          <div class="row items-center justify-end">
+                            <q-btn
+                              v-close-popup
+                              label="Закрыть"
+                              color="primary"
+                              flat
+                            ></q-btn>
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+
+                  <template v-slot:append>
+                    <q-icon name="access_time" class="cursor-pointer">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-time
+                          v-model="props.row.date_end"
+                          mask="DD.MM.YYYY, HH:mm:ss"
+                          format24h
+                          first-day-of-week="1"
+                          :locale="localeCalend"
+                        >
+                          <div class="row items-center justify-end">
+                            <q-btn
+                              v-close-popup
+                              label="Закрыть"
+                              color="primary"
+                              flat
+                            ></q-btn>
+                          </div>
+                        </q-time>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </q-popup-edit>
+            </q-td>
+
+            <q-td key="isFree" :props="props">
+              <q-checkbox
+                v-model="props.row.isFree"
+                :color="'grey-8'"
+                @click="changeIsFree(props.row._id, props.row.isFree)"
+              ></q-checkbox>
+            </q-td>
+
+            <q-td key="organization_name" :props="props">
+              <div>{{ getShortText(props.row.organization_name) }}</div>
+              <q-popup-edit
+                v-model="props.row.organization_name"
+                @hide="
+                  changeOrganizName(props.row._id, props.row.organization_name)
+                "
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.organization_name"
+                  label="Организация"
+                ></q-input>
+              </q-popup-edit>
+            </q-td>
+
+            <q-td key="url" :props="props">
+              <q-btn
+                v-if="props.row.url"
+                :href="props.row.url"
+                target="_blank"
+                flat
+                dense
+                :color="'grey-8'"
+                ><q-icon name="link" />
+                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn
+              >
+              {{ getShortText(props.row.url) }}
+              <q-popup-edit
+                v-model="props.row.url"
+                @hide="changeUrl(props.row._id, props.row.url)"
+              >
+                <q-input
+                  type="textarea"
+                  v-model="props.row.url"
+                  label="Ссылка на мероприятие"
+                ></q-input>
+              </q-popup-edit>
+            </q-td>
+
+            <q-td key="tags" :props="props">
+              <div v-if="props.row.dir" v-for="dir in props.row.dir">
+                <div v-if="dir" v-for="subdir in dir">
+                  <q-chip
+                    removable
+                    clickabl
+                    @remove="delTag(props.row._id, subdir.id)"
+                    :style="{ 'background-color': `${subdir.color}` }"
+                    text-color="white"
+                  >
+                    {{ subdir.name }}
+                  </q-chip>
                 </div>
-              </q-td>
-
-              <q-td key="control">
-                <q-btn
-                  @click="(confirm = true), (deleteRowId = props.row._id)"
-                  flat
-                  dense
-                  :color="'grey-8'"
-                  ><q-icon name="delete_forever" />
-                  <q-tooltip>Удалить</q-tooltip></q-btn
+              </div>
+              <q-btn icon="add" size="sm" round dense />
+              <q-popup-edit  v-model="model" @hide="addNewTags(props.row._id, model)">
+                <q-select
+                  v-model="model"
+                  emit-value
+                  map-options
+                  :options="getTagSelectOptions"
+                  style="width: 250px"
                 >
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
-      </div>
-      <div class="text-center" v-if="error == 403">
-        <div class="text-h4" style="opacity: 0.5">У вас нет прав</div>
-        <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
-      </div>
-    </div>
-    <q-dialog v-model="confirm" persistent>
-      <q-card>
-        <q-card-section class="row items-center">
-          <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
-        </q-card-section>
+                  <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                      <q-chip
+                        :style="{ 'background-color': `${scope.opt.color}` }"
+                        text-color="white"
+                      >
+                        {{ scope.opt.label }}
+                      </q-chip>
+                    </q-item>
+                  </template>
+                </q-select>
+              </q-popup-edit>
+            </q-td>
 
-        <q-card-actions align="between">
-          <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-          <q-btn
-            flat
-            label="Удалить"
-            @click="removeEvent(deleteRowId)"
-            color="primary"
-            v-close-popup
-          ></q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+            <q-td key="views" :props="props">
+              <div>
+                {{ props.row.viewCount }}
+              </div>
+            </q-td>
+
+            <q-td key="control">
+              <q-btn
+                @click="(confirm = true), (deleteRowId = props.row._id)"
+                flat
+                dense
+                :color="'grey-8'"
+                ><q-icon name="delete_forever" />
+                <q-tooltip>Удалить</q-tooltip></q-btn
+              >
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
+    </div>
+    <div class="text-center" v-if="error == 403">
+      <div class="text-h4" style="opacity: 0.5">У вас нет прав</div>
+      <img class="image" src="../resources/Уваснедостаточноправv2.svg" />
+    </div>
   </div>
+  <q-dialog v-model="confirm" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <span class="q-ml-sm">Вы точно хотите удалить запись?</span>
+      </q-card-section>
+
+      <q-card-actions align="between">
+        <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
+        <q-btn
+          flat
+          label="Удалить"
+          @click="removeEvent(deleteRowId)"
+          color="primary"
+          v-close-popup
+        ></q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>
@@ -1035,6 +1027,12 @@ export default {
           message: "Новое событие успешно добавлено.",
         });
         this.icon = false;
+        this.newName = "";
+        this.newDateEnd  = "";
+        this.newDateStart = "";
+        this.newIsFree = false;
+        this.newOrganizName = "";
+        this.newUrl = "";
         this.getEvents();
       } catch (error) {
         this.onError(error);
