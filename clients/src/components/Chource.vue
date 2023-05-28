@@ -48,7 +48,7 @@
                     </template>
                   </q-select>
                   <q-btn class="q-mt-md" flat style="width: 100%; background-color: rgba(7, 7, 7, 0.05)"
-                    @click="addNewNews()">Добавить</q-btn>
+                    @click="addNewChource()">Добавить</q-btn>
                 </q-card-section>
               </q-card>
             </q-dialog></q-btn>
@@ -114,12 +114,90 @@
               </q-popup-edit>
             </q-td>
 
+            <q-td key="text" :props="props">
+              <div>{{ props.row.text }}</div>
+              <q-popup-edit v-model="props.row.text" @hide="changeChourceText(props.row._id, props.row.text)">
+                <q-input type="textarea" v-model="props.row.text" label="Описание"></q-input>
+              </q-popup-edit>
+            </q-td>
+
+            <q-td key="author" :props="props">
+              <div>{{ props.row.author }}</div>
+              <q-popup-edit v-model="props.row.author" @hide="changeChourceAuthor(props.row._id, props.row.author)">
+                <q-input type="textarea" v-model="props.row.author" label="Описание"></q-input>
+              </q-popup-edit>
+            </q-td>
 
 
+            <q-td key="isFree" :props="props">
+              <q-checkbox
+                v-model="props.row.isFree"
+                :color="'grey-8'"
+                @click="changeIsFree(props.row._id, props.row.isFree)"
+              ></q-checkbox>
+            </q-td>
+
+            <q-td key="level" :props="props">
+              <q-chip v-if="props.row.level"
+                        :style="{ 'background-color': `${levelsref[props.row.level].level.color }` }"
+                        text-color="white">
+                        {{ levelsref[props.row.level].level.name }}
+                      </q-chip>
+              <q-popup-edit  @hide="updateLevel(props.row._id, props.row.level)">
+                <q-select  emit-value map-options  v-model="props.row.level" label="Уровень сложности" :options="getLevelOptions">
+                    <template v-slot:option="scope">
+                      <q-item v-bind="scope.itemProps">
+                        <q-chip :style="{ 'background-color': `${scope.opt.color}` }" text-color="white">
+                          {{ scope.opt.label }}
+                        </q-chip>
+                      </q-item>
+                    </template>
+                  </q-select>
+              </q-popup-edit>
+
+            </q-td>
+
+
+            <q-td key="dir" :props="props">
+              <div v-if="props.row.dir" v-for="dir in props.row.dir">
+                <div v-if="dir" v-for="subdir in dir">
+                  <q-chip
+                    removable
+                    clickabl
+                    @remove="delTag(props.row._id, subdir.id)"
+                    :style="{ 'background-color': `${subdir.color}` }"
+                    text-color="white"
+                  >
+                    {{ subdir.name }}
+                  </q-chip>
+                </div>
+              </div>
+              <q-btn icon="add" size="sm" round dense />
+              <q-popup-edit @hide="addNewTags(props.row._id, model)">
+                <q-select
+                  v-model="model"
+                  emit-value
+                  map-options
+                  :options="getTagSelectOptions"
+                  style="width: 250px"
+                >
+                  <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                      <q-chip
+                        :style="{ 'background-color': `${scope.opt.color}` }"
+                        text-color="white"
+                      >
+                        {{ scope.opt.label }}
+                      </q-chip>
+                    </q-item>
+                  </template>
+                </q-select>
+              </q-popup-edit>
+            </q-td>
 
 
             <q-td key="control">
-              <q-btn @click="" flat dense :color="'grey-8'"><q-icon name="edit" />
+              <q-btn @click="(edit=true), (currentVideos = props.row.videos), (currentChourceId = props.row._id)" flat dense :color="'grey-8'"><q-icon name="edit" />
                 <q-tooltip>Редактировать содержимое</q-tooltip>
               </q-btn>
 
@@ -131,6 +209,7 @@
                 <q-tooltip>Удалить</q-tooltip>
               </q-btn>
             </q-td>
+
           </q-tr>
         </template>
       </q-table>
@@ -148,10 +227,42 @@
 
       <q-card-actions align="between">
         <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-        <q-btn flat label="Удалить" @click="removeUser(deleteRowId, deletUserName)" color="primary" v-close-popup></q-btn>
+        <q-btn flat label="Удалить" @click="removeChource(deleteRowId, deletUserName)" color="primary" v-close-popup></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
+
+
+
+  <q-dialog
+      v-model="edit"
+      persistent
+      :maximized="true"
+      transition-show="slide-up"
+      transition-hide="slide-down"
+    >
+      <q-card>
+        <q-bar>
+          <q-space></q-space>
+          <q-btn dense flat icon="close" v-close-popup>
+            <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+          </q-btn>
+        </q-bar>
+
+        <q-card-section class="text-h6">
+          Редактор курса
+          <q-btn flat icon="save" @click="saveVideos(currentChourceId, currentVideos)"><q-tooltip class="bg-white text-primary">Сохранить</q-tooltip></q-btn>
+          <q-btn @click="addVideo()" flat icon="add"><q-tooltip class="bg-white text-primary">Добавить</q-tooltip></q-btn>
+        </q-card-section>
+
+        <q-card-section v-for="video in currentVideos">
+          <q-btn flat @click="deleteVideo(video)" icon="delete"><q-tooltip class="bg-white text-primary">Удалить</q-tooltip></q-btn>
+          <q-input v-model="video.title" label="Заголовок"></q-input>
+          <q-input v-model="video.text" label="Описание"></q-input>
+          <q-input v-model="video.video" label="Ссылка на видео"></q-input>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script>
@@ -161,6 +272,7 @@ import VueCookies from "vue-cookies";
 export default {
   data() {
     return {
+      modaladdvideo: ref(false),
       columns: [
         {
           name: "title",
@@ -169,6 +281,7 @@ export default {
           field: "title",
           canEdit: true,
           sortable: true,
+          forSeacrch: true,
         },
         {
           name: "image_url",
@@ -177,6 +290,7 @@ export default {
           field: "image_url",
           canEdit: true,
           sortable: true,
+          forSeacrch: true,
         },
         {
           name: "text",
@@ -185,6 +299,7 @@ export default {
           field: "text",
           canEdit: true,
           sortable: true,
+          forSeacrch: true,
         },
         {
           name: "author",
@@ -193,6 +308,7 @@ export default {
           field: "author",
           canEdit: true,
           sortable: true,
+          forSeacrch: true,
         },
         {
           name: "isFree",
@@ -201,6 +317,7 @@ export default {
           field: "isFree",
           canEdit: true,
           sortable: true,
+          forSeacrch: false,
         },
         {
           name: "level",
@@ -209,6 +326,7 @@ export default {
           field: "level",
           canEdit: true,
           sortable: true,
+          forSeacrch: false,
         },
         {
           name: "dir",
@@ -216,7 +334,8 @@ export default {
           label: "Теги",
           field: "dir",
           canEdit: true,
-          sortable: true,
+          sortable: false,
+          forSeacrch: false,
         },
         {
           name: "control",
@@ -226,10 +345,12 @@ export default {
       ],
       tags: [],
       levels: [],
+      levelsref: {},
       rows: [],
       text: "",
       auth: "12GradMapAdmin345SRscx:23pdmtF334slkRDcS5EREc2",
       confirm: ref(false),
+      edit:ref(false),
       error: 0,
       loaded: false,
       searchSelected: "",
@@ -242,10 +363,12 @@ export default {
       newisFree: false,
       newTags: [],
       newDiffLevel: "",
-      file: ref(null)
+      file: ref(null),
+      currentVideos:[],
+      currentChourceId:"",
     };
   },
-  mounted() {
+  beforeMount() {
     this.searchSelected = this.getSearchParamsArray[0];
 
     //Получаем теги
@@ -259,6 +382,111 @@ export default {
 
   },
   methods: {
+    deleteVideo(video){
+      let index = this.currentVideos.indexOf(video);
+      console.log(index)
+      this.currentVideos.splice(index, 1);
+    },
+    addVideo(){
+      this.currentVideos.push({title:"", text: "", video: ""});
+    },
+    async saveVideos(id, videos){
+      try {
+        const res = await api.put("api/chource/" + id,
+          {
+            videos: videos
+
+          }, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.$q.notify({
+          type: "positive",
+          message: "Курс сохранен",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async removeChource(id){
+      try {
+        const res = await api.delete("api/chource/" + id,
+         {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.$q.notify({
+          type: "positive",
+          message: "Курс удален",
+        });
+        this.getChource();
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async changeIsFree(id, status){
+      try {
+        const res = await api.put("api/chource/" + id,
+          {
+            isFree: status
+          }, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.$q.notify({
+          type: "positive",
+          message: "Автор сохранено",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async changeChourceAuthor(id, newAuthor) {
+      try {
+        const res = await api.put("api/chource/" + id,
+          {
+            author: newAuthor
+
+          }, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.$q.notify({
+          type: "positive",
+          message: "Автор сохранено",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async changeChourceText(id, newText) {
+      try {
+        const res = await api.put("api/chource/" + id,
+          {
+            text: newText
+
+          }, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.$q.notify({
+          type: "positive",
+          message: "Описание сохранено",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
     async changeChourceImage(id, imageUrl) {
       try {
         await api.put(
@@ -359,6 +587,9 @@ async uploadFileB(prop) {
           }
         });
         this.levels = res.data;
+        res.data.forEach(level=>{
+          this.levelsref[level._id] = {level}
+        })
       } catch (error) {
         this.onError(error);
       }
@@ -377,7 +608,26 @@ async uploadFileB(prop) {
       }
     },
 
+    async updateLevel(id, levelid){
+      try {
+        const res = await api.put("api/chource/" + id,
+          {
+            level: levelid
 
+          }, {
+          headers: {
+            Authorization: "Basic " + btoa(this.auth),
+            "x-requested-with": "*",
+          }
+        });
+        this.$q.notify({
+          type: "positive",
+          message: "Уровень сложности сохранен",
+        });
+      } catch (error) {
+        this.onError(error);
+      }
+    },
 
     /**
      * Получение пользователей с бд
@@ -386,7 +636,7 @@ async uploadFileB(prop) {
       this.loaded = false;
       this.error = 0;
       try {
-        const res = await api.get("api/chource", {
+        const res = await api.get("api/chource/dir/s", {
           headers: {
             Authorization: "Basic " + btoa(this.auth),
             "x-requested-with": "*",
@@ -426,12 +676,101 @@ async uploadFileB(prop) {
       }
       return descr;
     },
+    async addNewTags(id, tegid) {
+      if (this.model == "") {
+        return;
+      }
+      try {
+        const response = await api.post(
+          "api/chource/dir/s/",
+          {
+            id: id,
+            dir: tegid,
+          },
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.$q.notify({
+          type: "positive",
+          message: "Новый тэг успешно добавлен.",
+        });
+        this.model = "";
+        this.getChource();
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+
+    async delTag(id, tegId) {
+      try {
+        const response = await api.post(
+          "api/chource/dir/s/del",
+          {
+            id: id,
+            dir: tegId,
+          },
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.$q.notify({
+          type: "positive",
+          message: "Тег успешно удален.",
+        });
+        this.getChource();
+      } catch (error) {
+        this.onError(error);
+      }
+    },
+    async addNewChource(){
+      try {
+        const response = await api.post(
+          "api/chource/",
+          {
+            title: this.newTitle,
+            text: this.newText,
+            author: this.newAuthor,
+            level: this.newDiffLevel.value,
+            image_url: this.newImage_url,
+            isFree: this.newisFree
+          },
+          {
+            headers: {
+              Authorization: "Basic " + btoa(this.auth),
+              "x-requested-with": "*",
+            },
+          }
+        );
+        this.$q.notify({
+          type: "positive",
+          message: "Курс успешно добавлен.",
+        });
+       this.getChource();
+      } catch (error) {
+        this.onError(error);
+      }
+    }
   },
   //Поиск по талице
   computed: {
+    getTagSelectOptions() {
+      let options = [];
+      this.tags.forEach((tag) => {
+        options.push({ label: tag.name, value: tag._id, color: tag.color });
+      });
+      return options;
+    },
 
     getLevelOptions() {
       let options = [];
+      console.log(this.levels)
       this.levels.forEach(level => {
         options.push({ label: level.name, color: level.color, value: level._id })
 
@@ -493,7 +832,7 @@ async uploadFileB(prop) {
     getSearchParamsArray() {
       let result = [];
       this.columns.forEach((element) => {
-        if (element.field) {
+        if (element.field && element.forSeacrch) {
           result.push(element.label);
         }
       });

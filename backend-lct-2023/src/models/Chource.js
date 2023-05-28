@@ -29,9 +29,10 @@ var schema = new Schema({
     of: String,
     default: []
   },
-  videos:[{
-    type: String,
-    ref: 'ChourcePart'
-  }]
+  videos:{
+    type: Schema.Types.Mixed,
+    of: String,
+    default: []
+  }
 });
 module.exports = model('Chource', schema)
