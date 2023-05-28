@@ -63,7 +63,6 @@
                         <q-tooltip>Загрузить новове изображение</q-tooltip>
                       </q-btn>
                     </q-input>
-                    <q-input v-model="newTasks" label="Видео"></q-input>
                     <q-select
                       v-model="newDiffLevel"
                       label="Уровень сложности"
@@ -169,7 +168,7 @@
                 </q-btn>
                 <q-popup-edit
                   v-model="props.row.image_url"
-                  @hide="changeChourceImage(props.row._id, props.row.image_url)"
+                  @hide="changeTestImage(props.row._id, props.row.image_url)"
                 >
                   <q-input
                     type="textarea"
@@ -497,7 +496,6 @@ export default {
       newTitle: "",
       newText: "",
       newImage_url: "",
-      newTasks: "",
       newTags: [],
       newDiffLevel: "",
       file: ref(null),
@@ -610,6 +608,7 @@ export default {
       }
     },
     async changeTestImage(id, imageUrl) {
+      console.log('do')
       try {
         await api.put(
           "api/test/" + id,
@@ -860,7 +859,6 @@ export default {
           {
             title: this.newTitle,
             text: this.newText,
-            tasks: this.newTasks,
             level: this.newDiffLevel.value,
             image_url: this.newImage_url,
           },
