@@ -354,7 +354,6 @@ export default {
   methods: {
     deleteVideo(video) {
       let index = this.currentVideos.indexOf(video);
-      console.log(index)
       this.currentVideos.splice(index, 1);
     },
     addVideo() {
@@ -623,7 +622,6 @@ export default {
      * @param {*} error
      */
     onError(error) {
-      console.log(error)
       this.loaded = true;
       if (!error.response || !error.response.status) {
         this.$q.notify({
@@ -740,7 +738,6 @@ export default {
 
     getLevelOptions() {
       let options = [];
-      console.log(this.levels)
       this.levels.forEach(level => {
         options.push({ label: level.name, color: level.color, value: level._id })
 
