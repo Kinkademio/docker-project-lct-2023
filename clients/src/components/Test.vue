@@ -456,16 +456,6 @@ export default {
           sortable: true,
           forSeacrch: true,
         },
-
-        {
-          name: "tasks",
-          align: "left",
-          label: "Задачи",
-          field: "tasks",
-          canEdit: true,
-          sortable: true,
-          forSeacrch: false,
-        },
         {
           name: "level",
           align: "left",
@@ -530,7 +520,6 @@ export default {
       this.currentTasks.splice(index, 1);
     },
     addTasks() {
-      console.log("Добавление задачи");
       this.currentTasks.push({
         title: "",
         text: "",
@@ -665,7 +654,6 @@ export default {
       }
     },
     async uploadFileB(prop) {
-      console.log(this.file)
       if (this.file == null) return;
       let formData = new FormData();
       formData.append("file", this.file);

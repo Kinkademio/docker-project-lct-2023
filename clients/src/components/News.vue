@@ -146,13 +146,13 @@
                 <q-popup-edit v-model="file_2"
                   @hide="changeUrl(props.row._id, props.row.image_url)">
                   <q-file
-                    @update:model-value="uploadFileB(props.row._id)"
                     v-model="file"
                     label="Выберите изображение"
                     outlined
                     accept=".jpg, .jpeg, .png"
                     use-chips
                     style="max-width: 300px"
+                    @update:model-value="uploadFileB(props.row._id)"
                   ></q-file>
                 </q-popup-edit>
                 <q-tooltip>Загрузить новове изображение</q-tooltip>

@@ -114,10 +114,10 @@
                   @hide="changeUserPass(props.row._id, newPass)"
                 >
                   <q-input
-                    @update:model-value="inputRef.value.resetValidation()"
                     v-model="newPass"
                     :type="isPwd ? 'password' : 'text'"
                     hint="Новый пароль"
+                    @update:model-value="inputRef.value.resetValidation()"
                   >
                     <template v-slot:append>
                       <q-icon

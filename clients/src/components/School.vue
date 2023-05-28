@@ -162,8 +162,8 @@
                 <q-icon name="upload" />
                 <q-popup-edit v-model="file_2"  @hide="changeSchoolImage(props.row._id, props.row.image_url)">
                   <q-file
-                    @update:model-value="uploadFileB(props.row._id)"
                     v-model="file"
+                    @update:model-value="uploadFileB(props.row._id)"
                     label="Выберете изображение"
                     outlined
                     accept=".jpg, .jpeg, .png"
