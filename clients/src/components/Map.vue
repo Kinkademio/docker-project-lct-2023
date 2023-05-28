@@ -1,10 +1,20 @@
 <template>
+  <div>
     <div id="map"></div>
-    <div style="position: absolute; bottom: 0; left:0; color:black; z-index: 9999;" class="text-h7"  >
-    © DeCode, 2023
-  </div>
+    <div
+      style="
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        color: black;
+        z-index: 9999;
+      "
+      class="text-h7"
+    >
+      © DeCode, 2023
+    </div>
     <q-dialog v-model="toolbar">
-      <q-card style="width: 700px; max-width: 80vw;">
+      <q-card style="width: 700px; max-width: 80vw">
         <q-img :src="img"></q-img>
 
         <q-card-section>
@@ -13,31 +23,44 @@
               {{ nameSchool }}
             </div>
           </div>
-          <div v-if="dirs" v-for="dir in dirs"  style="display: inline-block;" class="q-mr-sm">
-            <q-chip size="xm" style="margin: 0;" v-for="subdir in dir" :style="{'background-color': `${subdir.color}`}"   text-color="white">{{ subdir.name }}</q-chip>
+          <div
+            v-if="dirs"
+            v-for="dir in dirs"
+            :key="dir.id"
+            style="display: inline-block"
+            class="q-mr-sm"
+          >
+            <q-chip
+              size="xm"
+              style="margin: 0"
+              v-for="subdir in dir"
+              :key="subdir.id"
+              :style="{ 'background-color': `${subdir.color}` }"
+              text-color="white"
+              >{{ subdir.name }}</q-chip
+            >
           </div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <div v-if="addressStr" >
+          <div v-if="addressStr">
             {{ addressStr }}
           </div>
-          <div v-if="phone" >
-            Телефон школы :  <div v-for="one in phone">{{ one.value }}</div>
+          <div v-if="phone">
+            Телефон школы :
+            <div v-for="one in phone" :key="one.id">{{ one.value }}</div>
           </div>
-          <div v-if="email" >
-            E-mail: {{ email }}
-          </div>
+          <div v-if="email">E-mail: {{ email }}</div>
         </q-card-section>
-        <q-expansion-item  dence label="Описание">
+        <q-expansion-item dence label="Описание">
           <q-card>
             <q-card-section>
               {{ description }}
             </q-card-section>
           </q-card>
         </q-expansion-item>
-
       </q-card>
     </q-dialog>
+  </div>
 </template>
 
 <script>
@@ -81,19 +104,19 @@ export default {
       });
       const clusterer = new Clusterer(map, {
         clusterStyle: {
-             icon: "https://docs.2gis.com/img/mapgl/cluster.svg",
-            hoverIcon: "https://docs.2gis.com/img/mapgl/clusterHover.svg",
-            labelColor: "#ffffff",
-           labelFontSize: 16,
-           },
+          icon: "https://docs.2gis.com/img/mapgl/cluster.svg",
+          hoverIcon: "https://docs.2gis.com/img/mapgl/clusterHover.svg",
+          labelColor: "#ffffff",
+          labelFontSize: 16,
+        },
       });
-        const res = await api.get("api/school/dir/s/", {
-          headers: {
-            Authorization: "Basic " + btoa(this.auth),
-            "x-requested-with": "*",
-          },
-        });
-        this.rows = res.data;
+      const res = await api.get("api/school/dir/s/", {
+        headers: {
+          Authorization: "Basic " + btoa(this.auth),
+          "x-requested-with": "*",
+        },
+      });
+      this.rows = res.data;
 
       for (let i = 0; i < this.rows.length; i++) {
         this.markers[i] = {
@@ -105,20 +128,24 @@ export default {
         };
       }
       clusterer.load(this.markers);
-      clusterer.on('click', (event) => {
-
-
-        if(event.target.type=="marker"){
+      clusterer.on("click", (event) => {
+        if (event.target.type == "marker") {
           let i = event.target.data.id;
           this.toolbar = true;
           this.nameSchool = this.rows[i].name ?? null;
-          this.addressStr = this.rows[i].address ? this.rows[i].address.address_str : null;
-          this.phone = this.rows[i].contacts ? this.rows[i].contacts.phone : null;
-          this.email = this.rows[i].contacts ? this.rows[i].contacts.mail : null;
+          this.addressStr = this.rows[i].address
+            ? this.rows[i].address.address_str
+            : null;
+          this.phone = this.rows[i].contacts
+            ? this.rows[i].contacts.phone
+            : null;
+          this.email = this.rows[i].contacts
+            ? this.rows[i].contacts.mail
+            : null;
           this.img = this.rows[i].image_url ?? null;
           this.description = this.rows[i].description ?? null;
           this.dirs = this.rows[i].dir ?? null;
-        }else{
+        } else {
           map.setCenter(event.lngLat);
           map.setZoom(map.getZoom() + 2);
         }
@@ -129,17 +156,15 @@ export default {
 </script>
 
 <style scoped>
-
-#q-app{
+#q-app {
   position: relative;
   height: 100%;
   width: 100%;
 }
 #map {
-position: relative;
-height: 100%;
-width: 100%;
-min-height: 100%;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  min-height: 100%;
 }
-
 </style>
