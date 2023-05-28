@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div id="map"></div>
     <div
       style="
@@ -60,7 +59,6 @@
         </q-expansion-item>
       </q-card>
     </q-dialog>
-  </div>
 </template>
 
 <script>

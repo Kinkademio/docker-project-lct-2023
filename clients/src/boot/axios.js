@@ -10,8 +10,8 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-  baseURL: 'https://graduate-map.ru/'
-  // baseURL: 'https://graduate-map.ru/proxy/https://graduate-map.ru/'
+    baseURL: 'https://graduate-map.ru/'
+   //baseURL: 'https://graduate-map.ru/proxy/https://graduate-map.ru/'
 })
 
 export default boot(({
