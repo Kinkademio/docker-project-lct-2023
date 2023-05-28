@@ -143,7 +143,9 @@
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit @hide="changeUrl(props.row._id, props.row.image_url)">
+                <q-popup-edit
+                  @hide="changeUrl(props.row._id, props.row.image_url)"
+                >
                   <q-file
                     v-on:update:model-value="uploadFileB(props.row._id)"
                     v-model="file"
@@ -299,6 +301,11 @@ export default {
           field: "dir",
           canEdit: true,
           sortable: false,
+        },
+        {
+          name: "control",
+          align: "left",
+          label: "Управление",
         },
       ],
       rows: [],
