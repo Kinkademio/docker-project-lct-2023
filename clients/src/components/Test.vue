@@ -10,7 +10,7 @@
       />
       <div v-if="loaded && !error">
         <div class="row">
-          <div class="col-3">
+          <div class="col-auto">
             <q-input
               style="padding-bottom: 0px"
               bottom-slots
@@ -23,14 +23,14 @@
               </template>
             </q-input>
           </div>
-          <div class="col-2">
+          <div class="col-auto">
             <q-select
               borderless
               v-model="this.searchSelected"
               :options="getSearchParamsArray"
             />
           </div>
-          <div class="col-1 q-mt-sm">
+          <div class="col q-mt-sm">
             <q-btn flat icon="add" @click="icon = true">
               <q-dialog v-model="icon">
                 <q-card class="bg-white text-black add-fact">

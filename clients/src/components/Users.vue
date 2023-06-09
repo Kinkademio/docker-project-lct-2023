@@ -9,7 +9,7 @@
     />
     <div v-if="loaded && !error">
       <div class="row">
-        <div class="col-3">
+        <div class="col-auto">
           <q-input
             style="padding-bottom: 0px"
             bottom-slots
@@ -22,7 +22,7 @@
             </template>
           </q-input>
         </div>
-        <div class="col-2">
+        <div class="col-auto">
           <q-select
             borderless
             v-model="this.searchSelected"

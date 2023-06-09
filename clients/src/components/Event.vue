@@ -10,7 +10,7 @@
       />
       <div v-if="loaded && !error">
         <div class="row">
-          <div class="col-3">
+          <div class="col-auto">
             <q-input
               style="padding-bottom: 0px"
               bottom-slots
@@ -23,14 +23,14 @@
               </template>
             </q-input>
           </div>
-          <div class="col-2">
+          <div class="col-auto">
             <q-select
               borderless
               v-model="this.searchSelected"
               :options="getSearchParamsArray"
             />
           </div>
-          <div class="col-1 q-mt-sm">
+          <div class="col q-mt-sm">
             <q-btn flat icon="add" @click="icon = true">
               <q-dialog v-model="icon">
                 <q-card class="bg-white text-black add-fact">
@@ -174,7 +174,38 @@
               </q-dialog>
             </q-btn>
           </div>
+          <div class="col-auto q-mt-sm">
+          <q-btn label="Синхронизация данных" style="color: #616161" flat no-caps icon="download" @click="(sync=true)"> </q-btn>
+          <q-dialog v-model="sync">
+            <q-card>
+
+              <q-card-section v-if="syncprocess" style="text-align: center;">
+                Идет синхронизация данных
+                <div>
+                  <q-spinner-dots
+                     color="primary"
+                     size="2em"
+                  ></q-spinner-dots>
+                </div>
+              </q-card-section>
+              <div v-else>
+              <q-card-section >
+                Вы уверены что хотите запустить синхронизацию?
+                <br>
+                (внесенные изменения могут быть утеряны)
+              </q-card-section>
+              <q-card-actions align="center">
+                <q-btn flat no-caps label="Да" @click="syncprocess=true">
+                </q-btn>
+                <q-btn flat no-caps label="Отмена" @click="sync=false">
+                </q-btn>
+              </q-card-actions>
+            </div>
+            </q-card>
+          </q-dialog>
         </div>
+        </div>
+
         <q-separator></q-separator>
 
         <q-table
@@ -496,6 +527,8 @@ export default {
   data() {
     return {
       deleteRowId: -1,
+      sync: ref(false),
+      syncprocess: ref(false),
       confirm: ref(false),
       localeCalend: {
         monthsShort: [
