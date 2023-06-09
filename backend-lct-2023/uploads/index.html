@@ -434,7 +434,7 @@ Online HTML, CSS and JavaScript editor to run code online.
 			let sub_url =
 				proxy +
 				api +
-				'events/$?f={"data.general.end":{"$gt":"' +
+				'education/$?f={"data.general.end":{"$gt":"' +
 				date +
 				'"},"data.general.organizerPlace.id":{"$eq":"' +
 				id +
@@ -456,7 +456,7 @@ Online HTML, CSS and JavaScript editor to run code online.
 						let body = {
 							name: element.data.general.name,
 							description: element.data.general.description,
-							address_str: element.data.general.address.address_str,
+							address_str: element.data.general.address.fullAddress,
 							comment: element.data.general.address.comment,
 							x: element.data.general.address.mapPos.x,
 							y: element.data.general.address.mapPos.y,

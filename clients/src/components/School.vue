@@ -49,7 +49,7 @@
                   >
                     <q-btn flat dense :color="'grey-8'">
                       <q-icon name="upload" />
-                      <q-popup-edit v-model="file_1" >
+                      <q-popup-edit v-model="file_1">
                         <q-file
                           v-model="file"
                           label="Выберете изображение"
@@ -88,32 +88,36 @@
           </q-btn>
         </div>
         <div class="col-auto q-mt-sm">
-          <q-btn label="Синхронизация данных" style="color: #616161" flat no-caps icon="download" @click="(sync=true)"> </q-btn>
+          <q-btn
+            label="Синхронизация данных"
+            style="color: #616161"
+            flat
+            no-caps
+            icon="download"
+            @click="sync = true"
+          >
+          </q-btn>
           <q-dialog v-model="sync">
             <q-card>
-
-              <q-card-section v-if="syncprocess" style="text-align: center;">
+              <q-card-section v-if="syncprocess" style="text-align: center">
                 Идет синхронизация данных
                 <div>
-                  <q-spinner-dots
-                     color="primary"
-                     size="2em"
-                  ></q-spinner-dots>
+                  <q-spinner-dots color="primary" size="2em"></q-spinner-dots>
                 </div>
               </q-card-section>
               <div v-else>
-              <q-card-section >
-                Вы уверены что хотите запустить синхронизацию?
-                <br>
-                (внесенные изменения могут быть утеряны)
-              </q-card-section>
-              <q-card-actions align="center">
-                <q-btn flat no-caps label="Да" @click="syncprocess=true">
-                </q-btn>
-                <q-btn flat no-caps label="Отмена" @click="sync=false">
-                </q-btn>
-              </q-card-actions>
-            </div>
+                <q-card-section>
+                  Вы уверены что хотите запустить синхронизацию?
+                  <br />
+                  (внесенные изменения могут быть утеряны)
+                </q-card-section>
+                <q-card-actions align="center">
+                  <q-btn flat no-caps label="Да" @click="syncprocess = true">
+                  </q-btn>
+                  <q-btn flat no-caps label="Отмена" @click="sync = false">
+                  </q-btn>
+                </q-card-actions>
+              </div>
             </q-card>
           </q-dialog>
         </div>
@@ -167,7 +171,7 @@
                 v-model="props.row.description"
                 @hide="changeDescription(props.row._id, props.row.description)"
               >
-              <q-input
+                <q-input
                   type="textarea"
                   v-model="props.row.description"
                   label="Название школы"
@@ -189,7 +193,10 @@
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit v-model="file_2"  @hide="changeSchoolImage(props.row._id, props.row.image_url)">
+                <q-popup-edit
+                  v-model="file_2"
+                  @hide="changeSchoolImage(props.row._id, props.row.image_url)"
+                >
                   <q-file
                     v-model="file"
                     @update:model-value="uploadFileB(props.row._id)"
@@ -296,7 +303,10 @@
                 </div>
               </div>
               <q-btn icon="add" size="sm" round dense />
-              <q-popup-edit    v-model="model" @hide="addNewTags(props.row._id, model)">
+              <q-popup-edit
+                v-model="model"
+                @hide="addNewTags(props.row._id, model)"
+              >
                 <q-select
                   v-model="model"
                   emit-value
@@ -387,6 +397,7 @@ import { api } from "../boot/axios";
 import { ref } from "vue";
 import VueCookies from "vue-cookies";
 import { load } from "@2gis/mapgl";
+import axios from "axios";
 
 export default {
   setup() {
@@ -518,6 +529,7 @@ export default {
   },
   mounted() {
     this.getSchool();
+    this.getSchoolOpenData();
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
@@ -619,6 +631,55 @@ export default {
       }
     },
 
+    getSchoolOpenData() {
+      this.sync = false;
+      this.syncprocess = false;
+      console.log("------");
+      let api = "https://opendata.mkrf.ru/v2/education/$?l=10";
+      let proxy = "https://graduate-map.ru/proxy/";
+      let full_url = proxy + api;
+      axios
+        .get(full_url, {
+          headers: {
+            "X-API-KEY":
+              "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757",
+            "x-requested-with": "*",
+          },
+        })
+        .then((response) => {
+          // Обработка успешного ответа
+          const dataArray = [response.data]; // Обернуть response.data в массив
+
+          const transformedData = dataArray.map((item) => {
+            return {
+              image_url: item.image_url,
+              name: item.name,
+              description: item.description,
+              organization_id: item.organization_id,
+              address: {
+                address_str: item.data.general.address.address_str,
+                comment: item.address.comment,
+                mapPos: {
+                  x: item.address.mapPos.x,
+                  y: item.address.mapPos.y,
+                },
+              },
+              contacts: {
+                web_site: item.contacts.web_site,
+                mail: item.contacts.mail,
+                phone: item.contacts.phone,
+              },
+            };
+          });
+
+          console.log(transformedData);
+        })
+        .catch((error) => {
+          // Обработка ошибки
+          console.error(error);
+        });
+    },
+
     async addNewTags(id, tegid) {
       if (this.model == "") {
         return;
@@ -711,7 +772,7 @@ export default {
 
         this.$q.notify({
           type: "positive",
-          message: "Шкоала удалена",
+          message: "Школа удалена",
         });
         this.getSchool();
       } catch (error) {
@@ -965,7 +1026,7 @@ export default {
           type: "positive",
           message: "Новое соьбытие успешно добавлен.",
         });
-        this.newName  = "";
+        this.newName = "";
         this.newDescription = "";
         this.newSchoolImg = "";
         this.newShoolAddressName = "";
@@ -993,7 +1054,8 @@ export default {
       xhr.onload = () => {
         if (xhr.status === 200) {
           const data = JSON.parse(xhr.responseText);
-          this.curMapAdressAdress.address_str = data.result.items[0].address_name;
+          this.curMapAdressAdress.address_str =
+            data.result.items[0].address_name;
         }
       };
       xhr.send();
