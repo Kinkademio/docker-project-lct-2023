@@ -525,6 +525,7 @@ export default {
       tags: [],
       model: "",
       factTegId: "",
+      schoolDataArr: ref([]),
     };
   },
   mounted() {
@@ -634,7 +635,7 @@ export default {
     getSchoolOpenData() {
       this.sync = false;
       this.syncprocess = false;
-      console.log("------");
+      let dataArray;
       let api = "https://opendata.mkrf.ru/v2/education/$?l=10";
       let proxy = "https://graduate-map.ru/proxy/";
       let full_url = proxy + api;
@@ -648,36 +649,48 @@ export default {
         })
         .then((response) => {
           // Обработка успешного ответа
-          const dataArray = [response.data]; // Обернуть response.data в массив
+          this.schoolDataArr = [response.data]; // Обернуть response.data в массив
+          console.log(this.schoolDataArr);
+          // const transformedData = dataArray.map((item) => {
+          //   console.log(item.data.general.image.url);
+          //   return {
+          //     image_url: item.data.general.image.url,
+          //     name: item.data.general.name,
+          //     description: item.data.general.description,
+          //     organization_id: item.data.general.organization_id,
+          //     address: {
+          //       address_str: item.data.general.address.street,
+          //       comment: item.data.general.address.comment,
+          //       mapPos: {
+          //         x: item.data.general.address.mapPos.x,
+          //         y: item.data.general.address.mapPos.y,
+          //       },
+          //     },
+          //     contacts: {
+          //       web_site: item.data.general.contacts.web_site,
+          //       mail: item.data.general.contacts.mail,
+          //       phone: item.data.general.contacts.phone,
+          //     },
+          //   };
+          // });
+          console.log(this.rows);
 
-          const transformedData = dataArray.map((item) => {
-            return {
-              image_url: item.image_url,
-              name: item.name,
-              description: item.description,
-              organization_id: item.organization_id,
-              address: {
-                address_str: item.data.general.address.address_str,
-                comment: item.address.comment,
-                mapPos: {
-                  x: item.address.mapPos.x,
-                  y: item.address.mapPos.y,
-                },
-              },
-              contacts: {
-                web_site: item.contacts.web_site,
-                mail: item.contacts.mail,
-                phone: item.contacts.phone,
-              },
-            };
+          // Проверка наличия объектов из первого массива во втором массиве
+          this.schoolDataArr.forEach((obj1) => {
+            const found = this.rows.some((obj2) => obj2.id === obj1.id);
+
+            if (!found) {
+              //здесь делаем post
+            } else {
+              //здесь делаем put
+            }
           });
-
-          console.log(transformedData);
         })
         .catch((error) => {
           // Обработка ошибки
           console.error(error);
         });
+      console.log(this.schoolDataArr);
     },
 
     async addNewTags(id, tegid) {
