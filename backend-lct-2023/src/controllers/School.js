@@ -107,15 +107,23 @@ module.exports ={
      * @returns 
      */
     async create(req, res) {
-        try {
 
-            const item = new School(req.body)
-            const newItem = await item.save()
+        try {
+            let body = req.body;
+
+            let newItem = await School.findOne({'api_id': body.organization_id})
+            if(newItem){
+                newItem = await School.findOneAndUpdate({'api_id': body.organization_id}, body)
+            }else{
+                const item = new School(body)
+                newItem = await item.save()
+            }
+
             return res.status(200).send(newItem)
 
 
         } catch (err) {
-            return res.status(400).send({status: false, err: boom.boomify(err)});
+            return res.status(400).send({ status: false, err: boom.boomify(err)});
         }
     },
     /**

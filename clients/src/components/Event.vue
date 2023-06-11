@@ -180,7 +180,7 @@
             <q-card>
 
               <q-card-section v-if="syncprocess" style="text-align: center;">
-                Идет синхронизация данных
+               К сожалению данный функционал находится в разработке
                 <div>
                   <q-spinner-dots
                      color="primary"
@@ -195,7 +195,7 @@
                 (внесенные изменения могут быть утеряны)
               </q-card-section>
               <q-card-actions align="center">
-                <q-btn flat no-caps label="Да" @click="syncprocess=true">
+                <q-btn flat no-caps label="Да" @click="(syncprocess=true)">
                 </q-btn>
                 <q-btn flat no-caps label="Отмена" @click="sync=false">
                 </q-btn>
@@ -768,6 +768,119 @@ export default {
         this.onError(error);
       }
     },
+    placeEventsToServer() {
+		let api = 'https://opendata.mkrf.ru/v2/';
+		let proxy = 'https://graduate-map.ru/proxy/';
+		let limit = 1000;
+		let headder = {
+			'X-API-KEY':
+				'9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757',
+			'x-requested-with': '*',
+		};
+		let regions = ['Москва', 'Московская область'];
+		let list_of_APIS = [
+			'cinema',
+			'circuses',
+			'concert_halls',
+			'culture_palaces_clubs',
+			'education',
+			'libraries',
+			'museums',
+			'parks',
+			'philharmonic',
+			'theaters',
+		];
+
+		let date = new Date();
+		let currentDay = String(date.getDate()).padStart(2, '0');
+		let currentMonth = String(date.getMonth() + 1).padStart(2, '0');
+		let currentYear = date.getFullYear();
+		date = `${currentYear}-${currentMonth}-${currentDay}`;
+
+		//Получение всех id-шников организаций
+		let org_ids = [];
+		list_of_APIS.forEach((org) => {
+			regions.forEach((reg) => {
+				let srch_params =
+					'$?f={"data.general.locale.name":{"$search":"' +
+					reg +
+					'"}}&l=' +
+					limit;
+				let full_url = proxy + api + org + '/' + srch_params;
+				const request = new XMLHttpRequest();
+				request.open('GET', full_url, true);
+				request.setRequestHeader(
+					'X-API-KEY',
+					'9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757'
+				);
+				request.setRequestHeader('x-requested-with', '*');
+				request.onload = (e) => {
+					if (request.readyState === 4) {
+						if (request.status === 200) {
+							let result = JSON.parse(request.responseText);
+							result.data.forEach((element) => {
+								let id = element.data.general.id;
+								let sub_url =
+									proxy +
+									api +
+									'events/$?f={"data.general.end":{"$gt":"' +
+									date +
+									'"},"data.general.organizerPlace.id":{"$eq":"' +
+									id +
+									'"}}&l=' +
+									limit;
+								const sub_request = new XMLHttpRequest();
+								sub_request.open('GET', sub_url, true);
+								sub_request.setRequestHeader(
+									'X-API-KEY',
+									'9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757'
+								);
+								sub_request.setRequestHeader('x-requested-with', '*');
+								sub_request.onload = (e) => {
+									if (sub_request.readyState === 4) {
+										if (sub_request.status === 200) {
+											let sub_result = JSON.parse(sub_request.responseText);
+											sub_result.data.forEach(async (element) => {
+												let api_id = element.data.general.id;
+												let body = {
+													name: element.data.general.name,
+													description: element.data.general.description,
+													isFree: element.data.general.isFree,
+													date_start: element.data.general.start,
+													date_end: element.data.general.end,
+													organization_id: element.data.general.organization.id,
+													organization_name:
+														element.data.general.organization.name,
+													api_id: api_id,
+													image_url: element.data.general.image.url,
+													url:
+														element.data.general.saleLink !== undefined
+															? element.data.general.saleLink
+															: '',
+												};
+												fetch('http://graduate-map.ru/api/event', {
+													method: 'POST',
+													headers: {
+														Authorization: 'Basic ' + btoa(auth),
+														'Content-Type': 'application/json',
+													},
+													body: JSON.stringify(body),
+												}).then((res) => {
+													console.log(res);
+												});
+											});
+										}
+									}
+								};
+								sub_request.send();
+							});
+						}
+					}
+				};
+				request.send();
+			});
+		});
+	},
     /**
      * Обработка ошибок при связи с сервером
      * @param {*} error

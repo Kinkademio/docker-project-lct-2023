@@ -1,33 +1,17 @@
 <template>
   <div>
-    <q-spinner-ball
-      v-if="!loaded"
-      class="fixed-center"
-      size="5rem"
-      color="white"
-      :thickness="3"
-    />
+    <q-spinner-ball v-if="!loaded" class="fixed-center" size="5rem" color="white" :thickness="3" />
     <div v-if="loaded && !error">
       <div class="row">
         <div class="col-auto">
-          <q-input
-            style="padding-bottom: 0px"
-            bottom-slots
-            borderless
-            v-model="text"
-            label="Поиск"
-          >
+          <q-input style="padding-bottom: 0px" bottom-slots borderless v-model="text" label="Поиск">
             <template v-slot:prepend>
               <q-icon name="search"></q-icon>
             </template>
           </q-input>
         </div>
         <div class="col-auto">
-          <q-select
-            borderless
-            v-model="this.searchSelected"
-            :options="getSearchParamsArray"
-          />
+          <q-select borderless v-model="this.searchSelected" :options="getSearchParamsArray" />
         </div>
         <div class="col q-mt-sm">
           <q-btn flat icon="add" @click="(icon = true), showAddMap()">
@@ -43,63 +27,34 @@
                 <q-card-section class="q-pt-none">
                   <q-input v-model="newName" label="Название" />
                   <q-input v-model="newDescription" label="Описание" />
-                  <q-input
-                    v-model="newSchoolImg"
-                    label="Ссылка на изображение школы"
-                  >
+                  <q-input v-model="newSchoolImg" label="Ссылка на изображение школы">
                     <q-btn flat dense :color="'grey-8'">
                       <q-icon name="upload" />
                       <q-popup-edit v-model="file_1">
-                        <q-file
-                          v-model="file"
-                          label="Выберете изображение"
-                          outlined
-                          accept=".jpg, .jpeg, .png"
-                          use-chips
-                          style="max-width: 300px"
-                          @update:model-value="uploadFileA()"
-                        ></q-file>
+                        <q-file v-model="file" label="Выберете изображение" outlined accept=".jpg, .jpeg, .png" use-chips
+                          style="max-width: 300px" @update:model-value="uploadFileA()"></q-file>
                       </q-popup-edit>
                       <q-tooltip>Загрузить новове изображение</q-tooltip>
                     </q-btn>
                   </q-input>
-                  <q-input
-                    v-model="newShoolAddressName"
-                    label="Адресс школы"
-                    readonly
-                  />
-                  <q-input
-                    v-model="newAddressComment"
-                    label="Комментарий адреса"
-                  />
+                  <q-input v-model="newShoolAddressName" label="Адресс школы" readonly />
+                  <q-input v-model="newAddressComment" label="Комментарий адреса" />
                   <div id="container"></div>
                   <q-input v-model="newWebSite" label="Адрес сайта" />
                   <q-input v-model="newMail" label="Электронная почта школы" />
-                  <q-btn
-                    class="q-mt-md"
-                    style="width: 100%; background-color: rgba(7, 7, 7, 0.05)"
-                    flat
-                    @click="addNewSchool()"
-                    >Добавить</q-btn
-                  >
+                  <q-btn class="q-mt-md" style="width: 100%; background-color: rgba(7, 7, 7, 0.05)" flat
+                    @click="addNewSchool()">Добавить</q-btn>
                 </q-card-section>
               </q-card>
             </q-dialog>
           </q-btn>
         </div>
         <div class="col-auto q-mt-sm">
-          <q-btn
-            label="Синхронизация данных"
-            style="color: #616161"
-            flat
-            no-caps
-            icon="download"
-            @click="sync = true"
-          >
+          <q-btn label="Синхронизация данных" style="color: #616161" flat no-caps icon="download" @click="sync = true">
           </q-btn>
           <q-dialog v-model="sync">
             <q-card>
-              <q-card-section v-if="syncprocess" style="text-align: center">
+              <q-card-section  persistent v-if="syncprocess" style="text-align: center">
                 Идет синхронизация данных
                 <div>
                   <q-spinner-dots color="primary" size="2em"></q-spinner-dots>
@@ -112,7 +67,7 @@
                   (внесенные изменения могут быть утеряны)
                 </q-card-section>
                 <q-card-actions align="center">
-                  <q-btn flat no-caps label="Да" @click="syncprocess = true">
+                  <q-btn flat no-caps label="Да" @click="(syncprocess = true), (getSchoolOpenData())">
                   </q-btn>
                   <q-btn flat no-caps label="Отмена" @click="sync = false">
                   </q-btn>
@@ -124,27 +79,12 @@
       </div>
       <q-separator></q-separator>
 
-      <q-table
-        flat
-        borderless
-        separator="cell"
-        :rows="getRows"
-        :columns="columns"
-        row-key="name"
-        no-data-label="Ничего не найдено"
-      >
+      <q-table flat borderless separator="cell" :rows="getRows" :columns="columns" row-key="name"
+        no-data-label="Ничего не найдено">
         <template v-slot:header-cell="props">
           <q-th :props="props">
-            <q-icon
-              v-if="props.col.canEdit"
-              name="lock_open"
-              size="1.5em"
-            ></q-icon>
-            <q-icon
-              v-else-if="props.col.canEdit != null"
-              name="lock"
-              size="1.5em"
-            ></q-icon>
+            <q-icon v-if="props.col.canEdit" name="lock_open" size="1.5em"></q-icon>
+            <q-icon v-else-if="props.col.canEdit != null" name="lock" size="1.5em"></q-icon>
             {{ props.col.label }}
           </q-th>
         </template>
@@ -153,173 +93,87 @@
           <q-tr :props="props">
             <q-td key="name" :props="props">
               <div>{{ getShortText(props.row.name) }}</div>
-              <q-popup-edit
-                v-model="props.row.name"
-                @hide="changeName(props.row._id, props.row.name)"
-              >
-                <q-input
-                  type="textarea"
-                  v-model="props.row.name"
-                  label="Название школы"
-                ></q-input>
+              <q-popup-edit v-model="props.row.name" @hide="changeName(props.row._id, props.row.name)">
+                <q-input type="textarea" v-model="props.row.name" label="Название школы"></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="description" :props="props">
               <div>{{ getShortText(props.row.description) }}</div>
-              <q-popup-edit
-                v-model="props.row.description"
-                @hide="changeDescription(props.row._id, props.row.description)"
-              >
-                <q-input
-                  type="textarea"
-                  v-model="props.row.description"
-                  label="Название школы"
-                ></q-input>
+              <q-popup-edit v-model="props.row.description"
+                @hide="changeDescription(props.row._id, props.row.description)">
+                <q-input type="textarea" v-model="props.row.description" label="Название школы"></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="shool_image" :props="props">
-              <q-btn
-                v-if="props.row.image_url"
-                :href="props.row.image_url"
-                target="_blank"
-                flat
-                dense
-                :color="'grey-8'"
-                ><q-icon name="link" />
-                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn
-              >
+              <q-btn v-if="props.row.image_url" :href="props.row.image_url" target="_blank" flat dense
+                :color="'grey-8'"><q-icon name="link" />
+                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn>
               {{ getShortText(props.row.image_url) }}
               <q-btn flat dense :color="'grey-8'">
                 <q-icon name="upload" />
-                <q-popup-edit
-                  v-model="file_2"
-                  @hide="changeSchoolImage(props.row._id, props.row.image_url)"
-                >
-                  <q-file
-                    v-model="file"
-                    @update:model-value="uploadFileB(props.row._id)"
-                    label="Выберете изображение"
-                    outlined
-                    accept=".jpg, .jpeg, .png"
-                    use-chips
-                    style="max-width: 300px"
-                  ></q-file>
+                <q-popup-edit v-model="file_2" @hide="changeSchoolImage(props.row._id, props.row.image_url)">
+                  <q-file v-model="file" @update:model-value="uploadFileB(props.row._id)" label="Выберете изображение"
+                    outlined accept=".jpg, .jpeg, .png" use-chips style="max-width: 300px"></q-file>
                 </q-popup-edit>
                 <q-tooltip>Загрузить новове изображение</q-tooltip>
               </q-btn>
-              <q-popup-edit
-                v-model="props.row.image_url"
-                @hide="changeSchoolImage(props.row._id, props.row.image_url)"
-              >
-                <q-input
-                  type="textarea"
-                  v-model="props.row.image_url"
-                  label="Ссылка на изображение школы"
-                ></q-input>
+              <q-popup-edit v-model="props.row.image_url" @hide="changeSchoolImage(props.row._id, props.row.image_url)">
+                <q-input type="textarea" v-model="props.row.image_url" label="Ссылка на изображение школы"></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="address_str" :props="props">
-              <q-btn
-                flat
-                dense
-                :color="'grey-8'"
-                @click="
-                  (iconn = true),
-                    (idMap = props.row._id),
-                    (curMapAdressAdress = props.row.address)
-                "
-                ><q-icon name="map" /> <q-tooltip> Координаты </q-tooltip>
+              <q-btn flat dense :color="'grey-8'" @click="
+                (iconn = true),
+                (idMap = props.row._id),
+                (curMapAdressAdress = props.row.address)
+              "><q-icon name="map" /> <q-tooltip> Координаты </q-tooltip>
               </q-btn>
               {{ props.row.address.address_str }}
             </q-td>
 
             <q-td key="address_comment" :props="props">
               <div>{{ getShortText(props.row.address.comment) }}</div>
-              <q-popup-edit
-                v-model="props.row.address.comment"
-                @hide="changeAddress(props.row._id, props.row.address)"
-              >
-                <q-input
-                  type="textarea"
-                  v-model="props.row.address.comment"
-                  label="Комментарий к адресу"
-                ></q-input>
+              <q-popup-edit v-model="props.row.address.comment" @hide="changeAddress(props.row._id, props.row.address)">
+                <q-input type="textarea" v-model="props.row.address.comment" label="Комментарий к адресу"></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="web_site" :props="props">
-              <q-btn
-                v-if="props.row.contacts.web_site"
-                :href="props.row.contacts.web_site"
-                target="_blank"
-                flat
-                dense
-                :color="'grey-8'"
-                ><q-icon name="link" />
-                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn
-              >
+              <q-btn v-if="props.row.contacts.web_site" :href="props.row.contacts.web_site" target="_blank" flat dense
+                :color="'grey-8'"><q-icon name="link" />
+                <q-tooltip>Перейти по ссылке</q-tooltip></q-btn>
               {{ props.row.contacts.web_site }}
-              <q-popup-edit
-                v-model="props.row.contacts.web_site"
-                @hide="changeContact(props.row._id, props.row.contacts)"
-              >
-                <q-input
-                  type="textarea"
-                  v-model="props.row.contacts.web_site"
-                  label="Веб сайт"
-                ></q-input>
+              <q-popup-edit v-model="props.row.contacts.web_site"
+                @hide="changeContact(props.row._id, props.row.contacts)">
+                <q-input type="textarea" v-model="props.row.contacts.web_site" label="Веб сайт"></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="mail" :props="props">
               <div>{{ props.row.contacts.mail }}</div>
-              <q-popup-edit
-                v-model="props.row.contacts.mail"
-                @hide="changeContact(props.row._id, props.row.contacts)"
-              >
-                <q-input
-                  type="textarea"
-                  v-model="props.row.contacts.mail"
-                  label="Адресс электронной почты"
-                ></q-input>
+              <q-popup-edit v-model="props.row.contacts.mail" @hide="changeContact(props.row._id, props.row.contacts)">
+                <q-input type="textarea" v-model="props.row.contacts.mail" label="Адресс электронной почты"></q-input>
               </q-popup-edit>
             </q-td>
 
             <q-td key="tags" :props="props">
               <div v-if="props.row.dir" v-for="dir in props.row.dir">
                 <div v-if="dir" v-for="subdir in dir">
-                  <q-chip
-                    removable
-                    clickabl
-                    @remove="delTag(props.row._id, subdir.id)"
-                    :style="{ 'background-color': `${subdir.color}` }"
-                    text-color="white"
-                  >
+                  <q-chip removable clickabl @remove="delTag(props.row._id, subdir.id)"
+                    :style="{ 'background-color': `${subdir.color}` }" text-color="white">
                     {{ subdir.name }}
                   </q-chip>
                 </div>
               </div>
               <q-btn icon="add" size="sm" round dense />
-              <q-popup-edit
-                v-model="model"
-                @hide="addNewTags(props.row._id, model)"
-              >
-                <q-select
-                  v-model="model"
-                  emit-value
-                  map-options
-                  :options="getTagSelectOptions"
-                  style="width: 250px"
-                >
+              <q-popup-edit v-model="model" @hide="addNewTags(props.row._id, model)">
+                <q-select v-model="model" emit-value map-options :options="getTagSelectOptions" style="width: 250px">
                   <template v-slot:option="scope">
                     <q-item v-bind="scope.itemProps">
-                      <q-chip
-                        :style="{ 'background-color': `${scope.opt.color}` }"
-                        text-color="white"
-                      >
+                      <q-chip :style="{ 'background-color': `${scope.opt.color}` }" text-color="white">
                         {{ scope.opt.label }}
                       </q-chip>
                     </q-item>
@@ -335,14 +189,9 @@
             </q-td>
 
             <q-td key="control">
-              <q-btn
-                @click="(confirm = true), (deleteRowId = props.row._id)"
-                flat
-                dense
-                :color="'grey-8'"
-                ><q-icon name="delete_forever" />
-                <q-tooltip>Удалить</q-tooltip></q-btn
-              >
+              <q-btn @click="(confirm = true), (deleteRowId = props.row._id)" flat dense :color="'grey-8'"><q-icon
+                  name="delete_forever" />
+                <q-tooltip>Удалить</q-tooltip></q-btn>
             </q-td>
           </q-tr>
         </template>
@@ -357,13 +206,8 @@
         </q-card-section>
         <q-card-section>
           <div id="map"></div>
-          <q-btn
-            @click="changeCoordinate()"
-            flat
-            style="width: 100%; background-color: rgba(7, 7, 7, 0.05)"
-          >
-            Принять</q-btn
-          >
+          <q-btn @click="changeCoordinate()" flat style="width: 100%; background-color: rgba(7, 7, 7, 0.05)">
+            Принять</q-btn>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -379,13 +223,7 @@
 
         <q-card-actions align="between">
           <q-btn flat label="Отмена" color="primary" v-close-popup></q-btn>
-          <q-btn
-            flat
-            label="Удалить"
-            @click="removeSchool(deleteRowId)"
-            color="primary"
-            v-close-popup
-          ></q-btn>
+          <q-btn flat label="Удалить" @click="removeSchool(deleteRowId)" color="primary" v-close-popup></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -530,7 +368,6 @@ export default {
   },
   mounted() {
     this.getSchool();
-    this.getSchoolOpenData();
     this.searchSelected = this.getSearchParamsArray[0];
   },
   methods: {
@@ -631,12 +468,18 @@ export default {
         this.onError(error);
       }
     },
+    cutTegs(str) {
+      var regex = /( |<([^>]+)>)/ig;
+      var result = str.replace(regex, " ");
+      result = result.replace('&nbsp;', " ");
+      return result;
+    },
 
     getSchoolOpenData() {
       this.sync = false;
       this.syncprocess = false;
       let dataArray;
-      let api = "https://opendata.mkrf.ru/v2/education/$?l=10";
+      let api = 'https://opendata.mkrf.ru/v2/education/$?f={"data.general.locale.name":{"$contain":"моск"}}&l=1000';
       let proxy = "https://graduate-map.ru/proxy/";
       let full_url = proxy + api;
       axios
@@ -649,42 +492,50 @@ export default {
         })
         .then((response) => {
           // Обработка успешного ответа
-          this.schoolDataArr = [response.data]; // Обернуть response.data в массив
-          console.log(this.schoolDataArr);
-          // const transformedData = dataArray.map((item) => {
-          //   console.log(item.data.general.image.url);
-          //   return {
-          //     image_url: item.data.general.image.url,
-          //     name: item.data.general.name,
-          //     description: item.data.general.description,
-          //     organization_id: item.data.general.organization_id,
-          //     address: {
-          //       address_str: item.data.general.address.street,
-          //       comment: item.data.general.address.comment,
-          //       mapPos: {
-          //         x: item.data.general.address.mapPos.x,
-          //         y: item.data.general.address.mapPos.y,
-          //       },
-          //     },
-          //     contacts: {
-          //       web_site: item.data.general.contacts.web_site,
-          //       mail: item.data.general.contacts.mail,
-          //       phone: item.data.general.contacts.phone,
-          //     },
-          //   };
-          // });
-          console.log(this.rows);
+          this.schoolDataArr = response.data.data; // Обернуть response.data в массив
+          let counter = 1;
+          this.schoolDataArr.forEach(element => {
+            //Формируем поочередно результаты и записываем в базу решение фигня но быстро
 
-          // Проверка наличия объектов из первого массива во втором массиве
-          this.schoolDataArr.forEach((obj1) => {
-            const found = this.rows.some((obj2) => obj2.id === obj1.id);
-
-            if (!found) {
-              //здесь делаем post
-            } else {
-              //здесь делаем put
+            let address = {
+							address_str: element.data.general.address.street,
+							comment: element.data.general.address.comment,
+							mapPos: {
+								x: element.data.general.address.mapPosition.coordinates[0],
+								y: element.data.general.address.mapPosition.coordinates[1],
+							},
+						};
+						let contacts = null;
+						if (element.data.general.contacts !== undefined) {
+							contacts = {
+								web_site: element.data.general.contacts.website ?? '',
+								mail: element.data.general.contacts.email ?? '',
+								phone: element.data.general.contacts.phones ?? [],
+							};
+						}
+						let school = {
+							organization_id: element.data.general.id,
+							image_url: element.data.general.image.url,
+							name: element.data.general.name,
+							description: element.data.general.description ? this.cutTegs(element.data.general.description): '',
+							address: address,
+							contacts: contacts,
+						};
+            //Вот тут написать запрос на нашу бд но только после апгрейда бека
+            const response = api.post("api/school", school);
+            //вот это кгоде придет последний респонс от нашего сервера
+            console.log(school);
+            counter++;
+            if(counter == this.schoolDataArr.length){
+              //Синхронизация закончена
+              this.syncprocess = false;
+              this.sync = false;
+              this.$q.notify({
+                type: "positive",
+                 message: "Синхронизация завершена, пожалуйста обновите страницу!",
+              });
             }
-          });
+          })
         })
         .catch((error) => {
           // Обработка ошибки
