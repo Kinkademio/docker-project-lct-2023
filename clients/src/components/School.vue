@@ -52,9 +52,9 @@
         <div class="col-auto q-mt-sm">
           <q-btn label="Синхронизация данных" style="color: #616161" flat no-caps icon="download" @click="sync = true">
           </q-btn>
-          <q-dialog v-model="sync">
+          <q-dialog persistent v-model="sync">
             <q-card>
-              <q-card-section  persistent v-if="syncprocess" style="text-align: center">
+              <q-card-section persistent v-if="syncprocess" style="text-align: center">
                 Идет синхронизация данных
                 <div>
                   <q-spinner-dots color="primary" size="2em"></q-spinner-dots>
@@ -67,7 +67,7 @@
                   (внесенные изменения могут быть утеряны)
                 </q-card-section>
                 <q-card-actions align="center">
-                  <q-btn flat no-caps label="Да" @click="(syncprocess = true), (getSchoolOpenData())">
+                  <q-btn flat no-caps label="Да" @click="(getSchoolOpenData()), (syncprocess = true)">
                   </q-btn>
                   <q-btn flat no-caps label="Отмена" @click="sync = false">
                   </q-btn>
@@ -468,6 +468,7 @@ export default {
         this.onError(error);
       }
     },
+
     cutTegs(str) {
       var regex = /( |<([^>]+)>)/ig;
       var result = str.replace(regex, " ");
@@ -475,73 +476,77 @@ export default {
       return result;
     },
 
-    getSchoolOpenData() {
-      this.sync = false;
-      this.syncprocess = false;
-      let dataArray;
-      let api = 'https://opendata.mkrf.ru/v2/education/$?f={"data.general.locale.name":{"$contain":"моск"}}&l=1000';
+    async getSchoolOpenData() {
+      let api_STR = 'https://opendata.mkrf.ru/v2/education/$?f={"data.general.locale.name":{"$contain":"моск"}}&l=1000';
       let proxy = "https://graduate-map.ru/proxy/";
-      let full_url = proxy + api;
-      axios
-        .get(full_url, {
-          headers: {
-            "X-API-KEY":
-              "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757",
-            "x-requested-with": "*",
-          },
-        })
-        .then((response) => {
+      let full_url = proxy + api_STR;
+      axios.get(full_url, {
+        headers: {
+          "X-API-KEY":
+            "9e78fe339dd2611d004c4b679f8f3bfc7dcc8ed7c5c5572ee4f45ae5752e8757",
+          "x-requested-with": "*",
+        },
+      })
+        .then(async (response) => {
           // Обработка успешного ответа
           this.schoolDataArr = response.data.data; // Обернуть response.data в массив
           let counter = 1;
-          this.schoolDataArr.forEach(element => {
+          for (const element of this.schoolDataArr) {
             //Формируем поочередно результаты и записываем в базу решение фигня но быстро
 
             let address = {
-							address_str: element.data.general.address.street,
-							comment: element.data.general.address.comment,
-							mapPos: {
-								x: element.data.general.address.mapPosition.coordinates[0],
-								y: element.data.general.address.mapPosition.coordinates[1],
-							},
-						};
-						let contacts = null;
-						if (element.data.general.contacts !== undefined) {
-							contacts = {
-								web_site: element.data.general.contacts.website ?? '',
-								mail: element.data.general.contacts.email ?? '',
-								phone: element.data.general.contacts.phones ?? [],
-							};
-						}
-						let school = {
-							organization_id: element.data.general.id,
-							image_url: element.data.general.image.url,
-							name: element.data.general.name,
-							description: element.data.general.description ? this.cutTegs(element.data.general.description): '',
-							address: address,
-							contacts: contacts,
-						};
-            //Вот тут написать запрос на нашу бд но только после апгрейда бека
-            const response = api.post("api/school", school);
+              address_str: element.data.general.address.street,
+              comment: element.data.general.address.comment,
+              mapPos: {
+                x: element.data.general.address.mapPosition.coordinates[0],
+                y: element.data.general.address.mapPosition.coordinates[1],
+              },
+            };
+            let contacts = null;
+            if (element.data.general.contacts !== undefined) {
+              contacts = {
+                web_site: element.data.general.contacts.website ?? '',
+                mail: element.data.general.contacts.email ?? '',
+                phone: element.data.general.contacts.phones ?? [],
+              };
+            }
+            let school = {
+              organization_id: element.data.general.id,
+              image_url: element.data.general.image.url,
+              name: element.data.general.name,
+              description: element.data.general.description ? this.cutTegs(element.data.general.description) : '',
+              address: address,
+              contacts: contacts,
+            };
+
             //вот это кгоде придет последний респонс от нашего сервера
-            console.log(school);
-            counter++;
-            if(counter == this.schoolDataArr.length){
+            const response = await api.post(
+              "api/school",
+              school,
+              {
+                headers: {
+                  Authorization: "Basic " + btoa(this.auth),
+                  "x-requested-with": "*",
+                },
+              }
+            );
+            if (counter == this.schoolDataArr.length) {
               //Синхронизация закончена
-              this.syncprocess = false;
               this.sync = false;
+              this.syncprocess = false;
               this.$q.notify({
                 type: "positive",
-                 message: "Синхронизация завершена, пожалуйста обновите страницу!",
+                message: "Синхронизация завершена!",
               });
+              this.getSchool();
             }
-          })
+            counter++;
+          }
         })
         .catch((error) => {
           // Обработка ошибки
           console.error(error);
         });
-      console.log(this.schoolDataArr);
     },
 
     async addNewTags(id, tegid) {

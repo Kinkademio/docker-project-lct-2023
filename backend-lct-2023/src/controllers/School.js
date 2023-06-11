@@ -111,9 +111,9 @@ module.exports ={
         try {
             let body = req.body;
 
-            let newItem = await School.findOne({'api_id': body.organization_id})
+            let newItem = await School.findOne({'organization_id': body.organization_id})
             if(newItem){
-                newItem = await School.findOneAndUpdate({'api_id': body.organization_id}, body)
+                newItem = await School.findOneAndUpdate({'organization_id': body.organization_id}, body)
             }else{
                 const item = new School(body)
                 newItem = await item.save()
